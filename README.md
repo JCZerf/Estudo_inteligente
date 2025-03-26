@@ -12,7 +12,7 @@ O projeto ‘Estudo Inteligente’ é uma ferramenta digital desenvolvida para a
 
 * José Carlos Miranda Leite
 * Hellen Oliveira Ferreira
-* Juliando Barros Alvim
+* Juliano Barros Alvim
 * Sávio Araújo Feitosa
 * Igor José de Oliveira Araújo
 * Guilherme Lodron
