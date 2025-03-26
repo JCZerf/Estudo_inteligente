@@ -14,10 +14,20 @@ mais confiante, disciplinado e motivado para conquistar seus objetivos. Afinal, 
 deve ser apenas uma obrigação, mas um caminho para o crescimento.
 
 ## Problema
-[Aqui a equipe deve fornecer uma descrição detalhada do problema a ser resolvido. Não é o momento adequado para abordar questões técnicas relacionadas ao desenvolvimento da aplicação. O objetivo é compreender e comunicar de maneira precisa qual é o desafio ou necessidade que motiva a criação da aplicação.]
-
-Este link pode ajudar a equipe a entender mais sobre definição do problema: [Objetivos, Problema de pesquisa e Justificativa.](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-
+É muito comum que os estudantes enfrentem dificuldades na organização dos estudos e no 
+gerenciamento de tempo. Isso dificulta a organização das tarefas, assuntos e tópicos, 
+resultando frequentemente na perda de prazos, acúmulo de atividades e dificuldade em 
+manter o foco. Além disso, muitos têm dificuldades com o gerenciamento do tempo, não 
+sabendo estipular metas de horas de estudo e pausas, o que acaba levando à sobrecarga.  
+A falta de organização dos estudos e o mau gerenciamento do tempo podem levar ao 
+aumento do estresse e da ansiedade, à queda no desempenho, à dificuldade em priorizar 
+os estudos e, muitas vezes, à falta de motivação, ao comprometimento do sono e à 
+dificuldade de conciliar os estudos com a vida pessoal.  
+Um mau gerenciamento do tempo, por sua vez, pode significar não conciliar aspectos da 
+vida pessoal com os acadêmicos. Não é incomum que o estudante adote diferentes 
+comportamentos disfuncionais nesse período, como estratégias de enfrentamento 
+inadequadas ou comportamentos de procrastinação (Blando, 2015; Oliveira, Carlotto, 
+Teixeira, & Dias, 2016). 
 
 ## Objetivos
 
