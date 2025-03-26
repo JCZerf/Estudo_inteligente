@@ -6,7 +6,9 @@
 
 `1º semestre/2025`
 
-O projeto ‘Estudo Inteligente’ é uma ferramenta digital desenvolvida para ajudar estudantes a organizar seus estudos, gerenciar prazos e manter a motivação. Com recursos como cronogramas personalizados, técnicas de concentração e acessibilidade para daltônicos, o software promove uma experiência de aprendizado mais eficiente e inclusiva.
+O projeto “Estudo Inteligente” é uma aplicação web desenvolvida para auxiliar estudantes na organização dos estudos e no gerenciamento do tempo. A ferramenta oferece recursos como criação de cronogramas personalizados, lembretes de prazos e técnicas de estudo eficazes, como o método Pomodoro. Além disso, visa estimular a autonomia e a motivação dos alunos, tornando a rotina de estudos mais prática e eficiente.
+
+Com foco na inclusão e acessibilidade, o software apresenta recursos para pessoas daltônicas e textos simplificados para facilitar a compreensão. Essa abordagem está alinhada com o Objetivo de Desenvolvimento Sustentável (ODS) 4 da ONU, que promove uma educação inclusiva e de qualidade.
 
 ## Integrantes
 
