@@ -6,7 +6,7 @@
 
 `1º semestre/2025`
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto desenvolvido.
+O projeto ‘Estudo Inteligente’ é uma ferramenta digital desenvolvida para ajudar estudantes a organizar seus estudos, gerenciar prazos e manter a motivação. Com recursos como cronogramas personalizados, técnicas de concentração e acessibilidade para daltônicos, o software promove uma experiência de aprendizado mais eficiente e inclusiva.
 
 ## Integrantes
 
