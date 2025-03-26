@@ -1,25 +1,25 @@
 # Título do Projeto
 
-`CURSO`
+`Estudo Inteligente`
 
-`DISCIPLINA`
+`Análise e Desenvolvimento de Sistemas - PUC Minas`
 
-`SEMESTRE`
+`1º semestre/2025`
 
 Descrever resumidamente, em um ou dois parágrafos, o projeto desenvolvido.
 
 ## Integrantes
 
-* Nome completo do aluno 1
-* Nome completo do aluno 2
-* Nome completo do aluno 3
-* Nome completo do aluno 4
-* Nome completo do aluno 5
-* Nome completo do aluno 6
+* José Carlos Miranda Leite
+* Hellen Oliveira Ferreira
+* Juliando Barros Alvim
+* Sávio Araújo Feitosa
+* Igor José de Oliveira Araújo
+* Guilherme Lodron
 
 ## Orientador
 
-* Nome completo do professor
+* Luiz Alberto Ferreira Gomes
 
 # Documentação
 
