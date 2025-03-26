@@ -66,12 +66,42 @@ Sendo assim, a criação de um ambiente onde o estudante conseguisse organizar m
 
 ## Público-Alvo
 
-[Aqui é necessário descrever os atores envolvidos no problema, destacando os diferentes perfis de usuários. O propósito é apresentar as características, necessidades, conhecimentos prévios e experiência com a tecnologia do público-alvo.
+Este projeto tem como foco principal estudantes que enfrentam dificuldades na organização 
+de suas atividades de estudo, bem como na manutenção da motivação e concentração 
+durante o aprendizado. 
 
-Sugere-se que a equipe utilize questionários e/ou entrevistas a fim de conhecer os atores que compõem o público alvo.]
+O público-alvo abrange estudantes de diversas idades e graus escolares, incluindo:  
 
-Os links abaixo podem ajudar a equipe a conhecer um pouco mais sobre o público-alvo. 
+1. Estudantes entre ensino básico e médio fundamental — Geralmente apresentam pouca 
+experiência na organização autônoma dos estudos e precisam de ferramentas intuitivas que 
+facilitem essa prática.
 
-> - [Público-alvo](https://blog.hotmart.com/pt-br/publico-alvo/)
-> - [Público-alvo: o que é, tipos, como definir seu público e exemplos](https://klickpages.com.br/blog/publico-alvo-o-que-e/)
+3. Estudantes universitários — Jovens adultos que lidam com uma carga de estudos mais 
+complexa e demandam maior organização e controle de prazos.
+
+5. Concurseiros e vestibulandos — Necessitam de recursos específicos para criar 
+cronogramas detalhados, acompanhar revisões e manter a motivação ao longo do tempo.
+
+7. Educadores e mentores — Precisam de ferramentas que permitam acompanhar o 
+progresso dos alunos, sugerir melhorias e fornecer orientações personalizadas.
+
+9. Profissionais em aperfeiçoamento — Buscam integrar os estudos na rotina diária e 
+necessitam de recursos que ajudem a manter o foco e otimizar o tempo disponível.
+
+Inclusão e Acessibilidade 
+
+Alinhado com o Objetivo de Desenvolvimento Sustentável (ODS) 4 da ONU — “Assegurar a 
+educação inclusiva, equitativa e de qualidade, e promover oportunidades de aprendizagem 
+ao longo da vida para todas e todos” — o software contará com: • Recursos para pessoas 
+daltônicas, visando melhorar a experiência visual e garantir a compreensão das 
+informações. • Textos simplificados, que facilitarão o entendimento do conteúdo, 
+independentemente do nível de escolaridade do usuário. 
+
+Coleta de Dados e Identificação de Necessidades 
+
+Para compreender melhor as necessidades do público-alvo, foram realizadas entrevistas 
+com oito estudantes em diferentes contextos escolares, incluindo ensino fundamental, 
+ensino médio, graduação e cursos diversos. Essa abordagem permitiu identificar 
+características e comportamentos comuns entre os perfis mencionados, contribuindo para o 
+desenvolvimento de uma solução que atenda efetivamente às demandas do público. 
 
