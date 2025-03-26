@@ -16,11 +16,17 @@ Este link pode ajudar a equipe a entender mais sobre definição dos objetivos: 
 
 ## Justificativa
 
-[Aqui a equipe deve descrever a importância ou a motivação para trabalhar com o problema definido. Indique as razões pelas quais a equipe escolheu o problema e definiu os objetivos.
+A dificuldade no gerenciamento de tempo está na vida de todos, tempo é um recurso que não conseguimos de volta. Na vida de um estudante isso não é diferente, às vezes tendo que conciliar família e trabalho com os estudos, quase não temos tempo para estudar. 
 
-Devem ser apresentados dados de fontes relevantes e confiáveis sobre o problema, inserindo-o como alvo de estudo. Sugere-se que a equipe utilize questionários, entrevistas e dados estatísticos, que devem ser apresentados, com o objetivo de esclarecer detalhes do problema que será abordado pela equipe.]
+De acordo com Razali et al. (2018), estudantes frequentemente reclamam de não ter tempo o suficiente para fazer todas as tarefas. Entre ler livros e capítulos atribuídos pelos professores, entregar as atividades dentro do prazo e participar de atividades extracurriculares, os estudantes podem ter a sensação de que não há tempo suficiente para terminar todas as atividades necessárias. 
 
-Este link pode ajudar a equipe a formular a justificativa: [Como montar a justificativa.](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
+A tabela abaixo, representada por Fernandes et al. (2013), mostra que no meio universitário, a maior parte dos alunos (73%), possui uma atividade remunerativa integral, fazendo com que seja ainda mais difícil conseguir tempo para estudar.
+
+![WhatsApp Image 2025-03-26 at 19 40 36](https://github.com/user-attachments/assets/7b341e80-b6ff-49b0-91bc-e74cd4cf90c0)
+Fonte: Fernandes et al. (2013) 
+
+Sendo assim, a criação de um ambiente onde o estudante conseguisse organizar melhor seu tempo de estudos seria muito importante.
+
 
 ## Público-Alvo
 
