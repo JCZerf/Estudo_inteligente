@@ -1,6 +1,17 @@
 # Introdução
 
-[Aqui a equipe deve criar um texto descritivo com a visão geral do problema abordado, apresentando o ambiente e as situações envolvidas no problema.]
+Segundo o autor Rosen, L. D, a sobrecarga de informações e os inúmeros estímulos digitais 
+comprometem a capacidade de atenção sustentada, tornando essencial o desenvolvimento 
+de estratégias metacognitivas para a autorregulação da aprendizagem. 
+Pensando nisso, este projeto nasce com o objetivo de oferecer suporte aos estudantes de 
+todos os perfis, ajudando-os a construir hábitos sólidos de estudo, otimizando seu tempo e 
+desenvolvendo uma mentalidade voltada para o crescimento e a excelência. Através de 
+estratégias práticas, metodologias baseadas em ciência cognitiva e ferramentas intuitivas, 
+buscamos transformar a rotina de estudos em um hábito prazeroso e eficiente. 
+Nosso objetivo não é simplesmente fornecer métodos para melhorar o desempenho 
+acadêmico, mas também estimular a autonomia no aprendizado, tornando cada estudante 
+mais confiante, disciplinado e motivado para conquistar seus objetivos. Afinal, estudar não 
+deve ser apenas uma obrigação, mas um caminho para o crescimento.
 
 ## Problema
 [Aqui a equipe deve fornecer uma descrição detalhada do problema a ser resolvido. Não é o momento adequado para abordar questões técnicas relacionadas ao desenvolvimento da aplicação. O objetivo é compreender e comunicar de maneira precisa qual é o desafio ou necessidade que motiva a criação da aplicação.]
