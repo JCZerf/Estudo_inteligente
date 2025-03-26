@@ -3,11 +3,13 @@
 Segundo o autor Rosen, L. D, a sobrecarga de informações e os inúmeros estímulos digitais 
 comprometem a capacidade de atenção sustentada, tornando essencial o desenvolvimento 
 de estratégias metacognitivas para a autorregulação da aprendizagem. 
+
 Pensando nisso, este projeto nasce com o objetivo de oferecer suporte aos estudantes de 
 todos os perfis, ajudando-os a construir hábitos sólidos de estudo, otimizando seu tempo e 
 desenvolvendo uma mentalidade voltada para o crescimento e a excelência. Através de 
 estratégias práticas, metodologias baseadas em ciência cognitiva e ferramentas intuitivas, 
 buscamos transformar a rotina de estudos em um hábito prazeroso e eficiente. 
+
 Nosso objetivo não é simplesmente fornecer métodos para melhorar o desempenho 
 acadêmico, mas também estimular a autonomia no aprendizado, tornando cada estudante 
 mais confiante, disciplinado e motivado para conquistar seus objetivos. Afinal, estudar não 
@@ -18,11 +20,13 @@ deve ser apenas uma obrigação, mas um caminho para o crescimento.
 gerenciamento de tempo. Isso dificulta a organização das tarefas, assuntos e tópicos, 
 resultando frequentemente na perda de prazos, acúmulo de atividades e dificuldade em 
 manter o foco. Além disso, muitos têm dificuldades com o gerenciamento do tempo, não 
-sabendo estipular metas de horas de estudo e pausas, o que acaba levando à sobrecarga.  
+sabendo estipular metas de horas de estudo e pausas, o que acaba levando à sobrecarga. 
+
 A falta de organização dos estudos e o mau gerenciamento do tempo podem levar ao 
 aumento do estresse e da ansiedade, à queda no desempenho, à dificuldade em priorizar 
 os estudos e, muitas vezes, à falta de motivação, ao comprometimento do sono e à 
 dificuldade de conciliar os estudos com a vida pessoal.  
+
 Um mau gerenciamento do tempo, por sua vez, pode significar não conciliar aspectos da 
 vida pessoal com os acadêmicos. Não é incomum que o estudante adote diferentes 
 comportamentos disfuncionais nesse período, como estratégias de enfrentamento 
