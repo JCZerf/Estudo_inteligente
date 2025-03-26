@@ -35,9 +35,19 @@ Teixeira, & Dias, 2016).
 
 ## Objetivos
 
-[Aqui a equipe deve realizar uma descrição detalhada dos objetivos do trabalho, ressaltando quais as questões principais do problema a serem resolvidas pelo projeto, não é a hora de apresentar requisitos detalhados.]
- 
-Este link pode ajudar a equipe a entender mais sobre definição dos objetivos: [Objetivos, Problema de pesquisa e Justificativa.](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
+O principal objetivo deste projeto é desenvolver uma ferramenta inovadora que ajude 
+estudantes a aprimorarem sua organização acadêmica, permitindo um melhor 
+gerenciamento do tempo de estudo, acompanhamento de prazos e manutenção do foco. A 
+desorganização nos estudos é um dos principais desafios enfrentados por alunos de 
+diferentes níveis de ensino, resultando em dificuldades para cumprir prazos, falta de 
+concentração e queda no desempenho acadêmico.
+
+Para solucionar esse problema, o aplicativo será projetado para oferecer funcionalidades 
+que auxiliem os estudantes a estruturarem suas rotinas de forma mais eficiente. Entre os 
+recursos planejados, destacam-se um calendário interativo para organização de tarefas e 
+compromissos acadêmicos, notificações e lembretes para evitar esquecimentos, técnicas de 
+estudo como o método Pomodoro para manter a concentração e ferramentas para reduzir 
+distrações. 
 
 ## Justificativa
 
