@@ -83,6 +83,17 @@ tempo. </br> </td>
 |--------------------|---------------------------|----------------------------------|
 | Estudante | Criar um cronograma personalizado | Melhorar minha organização e evitar atrasos |
 | Estudante |Receber alertas sobre prazos de tarefas | Evitar esquecimento e perda de nota|
+| Estudante | Acompanhar meu progresso nos estudos | Melhorar meu desempenho e motivar-me |
+| Estudante | Organizar minhas tarefas | Acompanhar prazos e manter meus estudos em dia |
+| Estudante | Dividir grandes projetos em pequenas tarefas | Gerenciar melhor meu tempo | 
+| Concurseiro/Vestibulando | Criar um cronograma detalhado com horários e revisões | Manter uma rotina organizado |
+| Profissional que estuda após o expediente | Planejar meus estudos | Equilibrar trabalho e aprendizado |
+| Estudante | Personalizar as cores da interface | Para visualizar melhor as informações |
+| Estudante | Textos claros e simplificados | Entender melhor as instruções |
+| Estudante | Receber lembretes motivacionais | Continuar focado nos estudos | 
+| Estudante | Obter recompensas por rank de estudos | Motivar a continuar estudando gradualmente | 
+| Estudante | Encontrar outros alunos como uma comunidade | Encontrar outros alunos como uma comunidade | 
+
 
 ## Requisitos do Projeto
 
