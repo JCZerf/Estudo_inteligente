@@ -10,14 +10,12 @@ acadêmica</th>
 </tr>
 <tr>
 <td width="150px"><b>Descrição</b></td>
-<td width="600px">Alunos de todas as áreas, incluindo estudantes do ensino fundamental,
-médio e superior. Também contempla aqueles que estudam de forma independente, mesmo que não estejam formalmente matriculados em
+<td width="600px">Alunos de todas as áreas, incluindo estudantes do ensino fundamental, médio e superior. Também contempla aqueles que estudam de forma independente, mesmo que não estejam formalmente matriculados em
 instituições.</td>
 </tr>
 <tr>
 <td><b>Necessidades</b></td>
-<td>1. Um ambiente digital para facilitar o gerenciamento de tempo nos
-estudos.</br>
+<td>1. Um ambiente digital para facilitar o gerenciamento de tempo nos estudos.</br>
 2. Ferramentas para criar cronogramas eficientes.</br>
 3. Recursos para descobrir o melhor método de estudo para o perfil</br>
 do usuário.
