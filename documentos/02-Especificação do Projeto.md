@@ -28,6 +28,47 @@ do usuário.
 </tbody>
 </table>
 
+<table>
+<tbody>
+<tr align=center>
+<th colspan="2">Perfil 02: Profissionais que estudam após o expediente
+</th>
+</tr>
+<tr>
+<td width="150px"><b>Descrição</b></td>
+<td width="600px">Adultos que buscam conciliar estudos com uma rotina de trabalho intensa.
+</td>
+</tr>
+<tr>
+<td><b>Necessidades</b></td>
+<td>1. Ferramentas para planejar os estudos de forma eficiente. </br>
+2. Recursos que ajudem a equilibrar responsabilidades profissionais
+e acadêmicas.</br> </td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<tbody>
+<tr align=center>
+<th colspan="2">Perfil 03: Concurseiros e vestibulandos</th>
+</tr>
+<tr>
+<td width="150px"><b>Descrição</b></td>
+<td width="600px">Estudantes que se preparam para exames exigentes, como concursos
+públicos e vestibulares, e precisam de uma rotina bem estruturada.</td>
+</tr>
+<tr>
+<td><b>Necessidades</b></td>
+<td>1. Cronogramas detalhados com horários e revisões. </br>
+2. Métodos de estudo eficazes, como o método Pomodoro e técnicas
+de revisão espaçada. </br>
+3. Recursos motivacionais para manter a disciplina ao longo do
+tempo. </br> </td>
+</tr>
+</tbody>
+</table>
+
 
 ## Histórias de Usuários
 
