@@ -105,8 +105,18 @@ tempo. </br> </td>
 
 |ID    | Descrição                | Prioridade |
 |-------|---------------------------------|----|
-| RF-01 |  ...                    | ...   | 
-|  ...  |  ...                    | ...   |
+| RF- 01 | Cadastrar uma conta. | Alta |
+| RF- 02 | Cadastrar e gerenciar tarefas de estudo. | Alta |
+| RF- 03 | Permitir a criação de cronogramas de estudo personalizados. | Alta |
+| RF- 04 | Notificar prazos de tarefas e atividades. | Média |
+| RF- 05 | Gerenciar lembretes e notificações. | Alta |
+| RF- 06 | Oferecer recursos de acessibilidade para daltônicos. | Alta |
+| RF- 07 | Apresentar textos simplificados para facilitar o entendimento. | Alta |
+| RF- 08 | Permitir o acompanhamento de progresso. | Média |
+| RF- 9 | Gerenciar diferentes perfis de usuário (estudantes e educadores). | Média |
+| RF- 10 | Disponibilizar versão web. | Alta |
+| RF- 11 | Oferecer interface intuitiva e fácil de usar. | Alta |
+| RF- 12 | Disponibilizar versão mobile. | Baixa |
 
 **Prioridade: Alta / Média / Baixa. 
 
