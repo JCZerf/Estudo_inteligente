@@ -7,15 +7,23 @@
 <table>
 <tbody>
 <tr align=center>
-<th colspan="2">Perfil Nome </th>
+<th colspan="2"> Perfil 01: Estudantes e alunos matriculados em alguma escola ou instituição
+acadêmica </th>
 </tr>
 <tr>
 <td width="150px"><b>Descrição</b></td>
-<td width="600px">...</td>
+<td width="600px">Alunos de todas as áreas, incluindo estudantes do ensino fundamental,
+médio e superior. Também contempla aqueles que estudam de forma independente, mesmo que não estejam formalmente matriculados em
+instituições.</td>
 </tr>
 <tr>
 <td><b>Necessidades</b></td>
-<td>...</td>
+<td>1. Um ambiente digital para facilitar o gerenciamento de tempo nos
+estudos.
+2. Ferramentas para criar cronogramas eficientes.
+3. Recursos para descobrir o melhor método de estudo para o perfil
+do usuário.
+</td>
 </tr>
 </tbody>
 </table>
