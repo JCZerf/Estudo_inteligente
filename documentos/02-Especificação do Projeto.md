@@ -10,8 +10,7 @@ acadêmica</th>
 </tr>
 <tr>
 <td width="150px"><b>Descrição</b></td>
-<td width="600px">Alunos de todas as áreas, incluindo estudantes do ensino fundamental, médio e superior. Também contempla aqueles que estudam de forma independente, mesmo que não estejam formalmente matriculados em
-instituições.</td>
+<td width="600px">Alunos de todas as áreas, incluindo estudantes do ensino fundamental, médio e superior. Também contempla aqueles que estudam de forma independente, mesmo que não estejam formalmente matriculados em instituições.</td>
 </tr>
 <tr>
 <td><b>Necessidades</b></td>
@@ -38,8 +37,7 @@ do usuário.
 <tr>
 <td><b>Necessidades</b></td>
 <td>1. Ferramentas para planejar os estudos de forma eficiente. </br>
-2. Recursos que ajudem a equilibrar responsabilidades profissionais
-e acadêmicas.</br> </td>
+2. Recursos que ajudem a equilibrar responsabilidades profissionais e acadêmicas.</br> </td>
 </tr>
 </tbody>
 </table>
@@ -51,16 +49,13 @@ e acadêmicas.</br> </td>
 </tr>
 <tr>
 <td width="150px"><b>Descrição</b></td>
-<td width="600px">Estudantes que se preparam para exames exigentes, como concursos
-públicos e vestibulares, e precisam de uma rotina bem estruturada.</td>
+<td width="600px">Estudantes que se preparam para exames exigentes, como concursos públicos e vestibulares, e precisam de uma rotina bem estruturada.</td>
 </tr>
 <tr>
 <td><b>Necessidades</b></td>
 <td>1. Cronogramas detalhados com horários e revisões. </br>
-2. Métodos de estudo eficazes, como o método Pomodoro e técnicas
-de revisão espaçada. </br>
-3. Recursos motivacionais para manter a disciplina ao longo do
-tempo. </br> </td>
+2. Métodos de estudo eficazes, como o método Pomodoro e técnicas de revisão espaçada. </br>
+3. Recursos motivacionais para manter a disciplina ao longo do tempo. </br> </td>
 </tr>
 </tbody>
 </table>
