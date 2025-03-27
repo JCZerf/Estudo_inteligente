@@ -19,9 +19,9 @@ instituições.</td>
 <tr>
 <td><b>Necessidades</b></td>
 <td>1. Um ambiente digital para facilitar o gerenciamento de tempo nos
-estudos.
-2. Ferramentas para criar cronogramas eficientes.
-3. Recursos para descobrir o melhor método de estudo para o perfil
+estudos.</br>
+2. Ferramentas para criar cronogramas eficientes.</br>
+3. Recursos para descobrir o melhor método de estudo para o perfil</br>
 do usuário.
 </td>
 </tr>
