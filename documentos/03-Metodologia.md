@@ -24,7 +24,8 @@ Para organização e distribuição das tarefas do projeto, a equipe está utili
 - Doing: Quando uma tarefa tiver sido iniciada, ela é movida para cá. 
 - Done: nesta lista são colocadas as tarefas que passaram pelos testes e controle de qualidade e estão prontos para ser entregues ao usuário. Não há mais edições ou revisões necessárias, ele está agendado e pronto para a ação.
 
-O quadro kanban do grupo no GitHub está disponível no link https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2022-1-e1-proj-web-t3-vida-de-estudante/projects/2 e é apresentado, no estado atual, na figura abaixo:
+O quadro kanban do grupo no GitHub está disponível no link [https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2022-1-e1-proj-web-t3-vida-de-estudante/projects/2](https://github.com/orgs/ICEI-PUC-Minas-PMV-ADS/projects/1967) e é apresentado, no estado atual, na figura abaixo:
+![Captura de Tela (16)](https://github.com/user-attachments/assets/e29fc9e4-2d93-46ab-89a8-5d67394d361a)
 
 > **Links Úteis**:
 > - [Project management, made simple](https://github.com/features/project-management/)
