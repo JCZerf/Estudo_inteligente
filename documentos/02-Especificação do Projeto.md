@@ -7,8 +7,8 @@
 <table>
 <tbody>
 <tr align=center>
-<th colspan="2"> Perfil 01: Estudantes e alunos matriculados em alguma escola ou instituição
-acadêmica </th>
+<th colspan="2">Perfil 01: Estudantes e alunos matriculados em alguma escola ou instituição
+acadêmica</th>
 </tr>
 <tr>
 <td width="150px"><b>Descrição</b></td>
@@ -81,7 +81,7 @@ tempo. </br> </td>
 
 |EU COMO... `QUEM`   | QUERO/PRECISO ... `O QUE` |PARA ... `PORQUE`                 |
 |--------------------|---------------------------|----------------------------------|
-| ...                | ...                       | ...                              |
+| Estudante                | ...                       | ...                              |
 | ...                | ...                       | ...                              |
 
 ## Requisitos do Projeto
