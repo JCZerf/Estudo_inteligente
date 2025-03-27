@@ -81,7 +81,7 @@ tempo. </br> </td>
 
 |EU COMO... `QUEM`   | QUERO/PRECISO ... `O QUE` |PARA ... `PORQUE`                 |
 |--------------------|---------------------------|----------------------------------|
-| Estudante                | ...                       | ...                              |
+| Estudante          | Criar um cronograma personalizado | Melhorar minha organização e evitar atrasos |
 | ...                | ...                       | ...                              |
 
 ## Requisitos do Projeto
