@@ -126,8 +126,14 @@ tempo. </br> </td>
 
 |ID      | Descrição               |Prioridade |
 |--------|-------------------------|----|
-| RNF-01 |  ...                    | ...   | 
-| ...    |  ...                    | ...   | 
+| RNF- 01 | A aplicação deve ser publicada em um ambiente acessível público na Internet. | Alta
+| RNF- 02 | A aplicação deve ser compatível com os navegadores, o site deve ser compatível com os principais navegadores do mercado: Google Chrome, Firefox e Microsoft Edge. | Alta |
+| RNF- 03 | O sistema deve carregar as principais funcionalidades (Como cronograma e lista de tarefas). | Alta |
+| RNF- 04 | As informações dos usuários devem ser criptografadas e protegidas contra acessos não autorizados. | Alta |
+| RFN- 05 | A versão mínima do navegador Chrome 122 (mais especificamente 122.0.6261.129 para desktops). | Alta |
+| RNF- 06 | O sistema deve seguir as diretrizes de acessibilidade do WCAG (Web Content Accessibility Guidelines) para anteder usuários com deficiências visuais, como daltônicos. | Alta |
+| RNF- 07 | A interface deve ser intuitiva e permitir que novos usuários realizem tarefas básicas (Como criar uma atividade) em até 5 minutos sem necessidade de instruções complexas. | Alta |
+| RNF- 08 | O sistema deve realizar backups automáticos diários e permitir a recuperação dos dados em caso de falha em até 5 minutos. | Alta |
 
 **Prioridade: Alta / Média / Baixa. 
 
