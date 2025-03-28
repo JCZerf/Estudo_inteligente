@@ -61,7 +61,7 @@ Os artefatos do projeto são desenvolvidos a partir de diversas plataformas e a 
 |-------------------------------------|------------------------------------|----------------------------------------|
 | Repositório de código fonte         | GitHub                             | https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/blob/main/codigo-fonte/README.md                            |
 | Documentos do projeto               | GitHub                             | https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/tree/main/documentos                            |
-| Projeto de Interface                | Figma                              | https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/blob/main/documentos/04-Projeto%20de%20Interface.md                            |
+| Projeto de Interface                | Figma                              | https://...                            |
 | Gerenciamento do Projeto            | GitHub Projects                    | http://....                            |
 | Hospedagem                          | GitHub Pages                       | http://....                            |
 
