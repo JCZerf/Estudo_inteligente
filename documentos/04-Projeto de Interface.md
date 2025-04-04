@@ -3,15 +3,21 @@
 
 ## User Flow
 
+Primeira estrutura de fluxo do usuário.
+
 ![useflow](https://github.com/user-attachments/assets/52650bbf-8ed3-4764-aa57-0523b20af027)
 
 Figura 1 - Fluxo de telas do usuário
 ***
 
+Segunda estrutura de fluxo do usuário.
+
 ![userflowatualizado](https://github.com/user-attachments/assets/e21ceb86-4f71-4c3d-b15c-dcd7dfb1a094)
 
 Figura 2 - Fluxo de telas do usuário
 ***
+
+Terceira estrutura de fluxo do usuário, já com as telas pré-desenvolvidas.
 
 ![Estudo Inteligente](https://github.com/user-attachments/assets/e00b5680-ce87-4e0c-ba38-d91a16d4b48f)
 
@@ -62,6 +68,7 @@ Figura 7 - Tela do cronograma
 ### Tela - Tarefas
 
 A tela de tarefas possibilitará ao usuário realizar cadastros de atividades a serem realizadas
+
 ![Tarefas](https://github.com/user-attachments/assets/a6fffce6-01f9-491b-a6b0-896e50534167)
 
 Figura 8 - Tela de tarefas
