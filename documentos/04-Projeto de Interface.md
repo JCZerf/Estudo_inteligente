@@ -25,25 +25,33 @@ As telas do sistema apresentam uma estrutura comum que é apresentada na estrutu
 
 ### Tela - Login
 
-Aqui será a tela inicial onde o usuário podera logar sua conta ou acessar a página para 
+Aqui será a tela inicial onde o usuário podera logar sua conta ou acessar a página para  realizar seu cadastro.
 
 ![Login](https://github.com/user-attachments/assets/37a568d5-f2a4-4338-9e5b-54698a8b591e)
 
 Figura 4 - Tela de login
 ***
-**Tela - Cadastro**
+
+### Tela - Cadastro
+
+Aqui o usuário realizará seu cadastro para ter acesso ao software.
 
 ![Cadastro](https://github.com/user-attachments/assets/8191ab45-8f03-4ddb-a56e-bf257911c72e)
 
-Figura 5 - Aqui será a tela para cadastro caso o usuário ainda não o tenha feito.
+Figura 5 - Tela de cadastro.
 ***
-**Tela - Inicío**
+
+### Tela - Inicío
+
+Após realizar o login o usuário verá suas principais atividades resumidas.
 
 ![Inicío](https://github.com/user-attachments/assets/12e215aa-337e-40f7-8573-d2c421c7763d)
 
-Figura 6 - Tela inicial após realizado o login, aqui o usuário verá suas principais atividades resumidas.
+Figura 6 - Tela de inicío 
 ***
-**Tela - Cronograma**
+
+
+### Tela - Cronograma
 
 ![Cronograma](https://github.com/user-attachments/assets/d62f69dd-474a-494b-ba2a-1fe615c2e089)
 
