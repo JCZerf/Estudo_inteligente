@@ -22,8 +22,11 @@ Figura 3 - Fluxo de telas do usuário
 
 As telas do sistema apresentam uma estrutura comum que é apresentada na estrutura a seguir. Nesta estrutura existem 8 grandes blocos, dispostos da seguinte forma. 
 ***
-**Tela - Login**
-Aqui será a tela inicial onde o usuário podera logar sua conta ou acessar a página para cadastro
+
+### Tela - Login
+
+Aqui será a tela inicial onde o usuário podera logar sua conta ou acessar a página para 
+
 ![Login](https://github.com/user-attachments/assets/37a568d5-f2a4-4338-9e5b-54698a8b591e)
 
 Figura 4 - Tela de login
