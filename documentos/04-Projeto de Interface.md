@@ -53,31 +53,40 @@ Figura 6 - Tela de inicío
 
 ### Tela - Cronograma
 
+Cronograma mostrando as atividades para o dia selecionado.
+
 ![Cronograma](https://github.com/user-attachments/assets/d62f69dd-474a-494b-ba2a-1fe615c2e089)
 
-Figura 7 - Cronograma mostrando as atividades para o dia selecionado.
+Figura 7 - Tela do cronograma
 ***
-**Tela - Tarefas**
+### Tela - Tarefas
 
+A tela de tarefas possibilitará ao usuário realizar cadastros de atividades a serem realizadas
 ![Tarefas](https://github.com/user-attachments/assets/a6fffce6-01f9-491b-a6b0-896e50534167)
 
-Figura 8 - Tela onde é realizado o cadastro das tarefas e atividades a serem realizadas.
+Figura 8 - Tela de tarefas
 ***
-**Tela - Ranking**
+### Tela - Ranking
+
+Tela onde é exibido o ranking geral de horas estudadas
 
 ![Ranking](https://github.com/user-attachments/assets/1087ea44-cb46-4ce2-810d-77523c6796f6)
 
-Figura 9 - Tela onde é exibido o ranking geral de horas estudadas
+Figura 9 - Tela de ranking
 ***
-**Tela - Configurações**
+### Tela - Configurações
+
+Tela onde o usuário poderá realizar as configurações do software.
 
 ![Configurações](https://github.com/user-attachments/assets/a11bf94f-3fa6-4920-a6df-ebb974b674f1)
 
-Figura 10 - Tela onde o usuário poderá realizar as configurações do software.
+Figura 10 - Tela de configurações
 ***
-**Tela - Guias**
+### Tela - Guias
+
+Tela extra onde o usuário poderá receber dicas de estudo.
 
 ![Guias](https://github.com/user-attachments/assets/046a7b5e-634a-4702-a246-740b9738319d)
 
-Figura 11 - Tela extra onde o usuário poderá receber dicas de estudo.
+Figura 11 - Tela de guias
 ***
