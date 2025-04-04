@@ -6,6 +6,7 @@
 ![useflow](https://github.com/user-attachments/assets/52650bbf-8ed3-4764-aa57-0523b20af027)
 
 Figura 1 - Fluxo de telas do usuário
+***
 
 ![userflowatualizado](https://github.com/user-attachments/assets/e21ceb86-4f71-4c3d-b15c-dcd7dfb1a094)
 
