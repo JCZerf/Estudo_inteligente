@@ -28,9 +28,9 @@ Figura 3 - Fluxo de telas do usuário
 
 As telas do sistema apresentam uma estrutura comum que é apresentada na estrutura a seguir. Nesta estrutura existem 3 grandes blocos, dispostos da seguinte forma. 
 
-* Coluna esquerda - Aqui fica o menu e logo do projeto
-* Coluna Superior central - Ficará a indicação de login do usuário, bem como ferramentas de busca e notificações
-* Centro da tela - Nessa parte é desenvolvida as principais funções da aplicação
+* Coluna esquerda - Local onde se encontra o menu e logo do projeto.
+* Coluna Superior central - Local onde se encontra a indicação de login do usuário, bem como ferramentas de busca e notificações.
+* Centro da tela - Local onde se encontra as principais funções da aplicação.
 
 ![Captura de Tela (24)](https://github.com/user-attachments/assets/c86a0296-7272-4b1f-8301-a467ce3dd58b)
 
