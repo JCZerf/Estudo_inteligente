@@ -1,8 +1,5 @@
 # Referências Bibliográficas
 
-
-> **Links Úteis**:
-
 RAZALI, S. N. A. M. et al. The Impact of Time Management on Students’ Academic Achievement. Journal of Physics: Conference Series, v. 995, n. 1, abr. 2018. 
 
  
@@ -21,6 +18,3 @@ NAÇÕES UNIDAS BRASIL. Sustainable Development Goal 4: Educação de qualidade 
 
 ROSEN, L. D. et al. O Facebook e as mensagens de texto me fizeram fazer isso: troca de tarefas induzida pela mídia durante os estudos. Disponível em: 
 
-https://www.sciencedirect.com/science/article/abs/pii/S0747563212003305?via%3Dihub 
-> - [Formato ABNT](https://www.normastecnicas.com/abnt/)
-> - [Referências Bibliográficas da ABNT](https://comunidade.rockcontent.com/referencia-bibliografica-abnt/)
