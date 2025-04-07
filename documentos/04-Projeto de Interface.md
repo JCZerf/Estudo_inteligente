@@ -19,7 +19,8 @@ Figura 2 - Fluxo de telas do usuário
 
 Terceira estrutura de fluxo do usuário, já com as telas pré-desenvolvidas.
 
-![Estudo Inteligente](https://github.com/user-attachments/assets/e00b5680-ce87-4e0c-ba38-d91a16d4b48f)
+![Estudo Inteligente](https://github.com/user-attachments/assets/5c141066-af48-4568-8dc7-c85f7c9702af)
+
 
 Figura 3 - Fluxo de telas do usuário
 ***
@@ -41,7 +42,7 @@ As telas do sistema apresentam uma estrutura comum que é apresentada na estrutu
 
 Aqui será a tela inicial onde o usuário podera logar sua conta ou acessar a página para  realizar seu cadastro.
 
-![Login](https://github.com/user-attachments/assets/37a568d5-f2a4-4338-9e5b-54698a8b591e)
+![Login](https://github.com/user-attachments/assets/b6b24286-83c4-496a-a449-8c988ae30445)
 
 Figura 4 - Tela de login
 ***
@@ -50,7 +51,7 @@ Figura 4 - Tela de login
 
 Aqui o usuário realizará seu cadastro para ter acesso ao software.
 
-![Cadastro](https://github.com/user-attachments/assets/8191ab45-8f03-4ddb-a56e-bf257911c72e)
+![Cadastro](https://github.com/user-attachments/assets/e611650f-8264-4bd6-ab1e-ab6a01d12091)
 
 Figura 5 - Tela de cadastro.
 ***
@@ -59,17 +60,16 @@ Figura 5 - Tela de cadastro.
 
 Após realizar o login o usuário verá suas principais atividades resumidas.
 
-![Inicío](https://github.com/user-attachments/assets/12e215aa-337e-40f7-8573-d2c421c7763d)
+![Inicío](https://github.com/user-attachments/assets/916df05e-5f6d-4322-8617-f74abe134095)
 
 Figura 6 - Tela de inicío 
 ***
-
 
 ### Tela - Cronograma
 
 Cronograma mostrando as atividades para o dia selecionado.
 
-![Cronograma](https://github.com/user-attachments/assets/d62f69dd-474a-494b-ba2a-1fe615c2e089)
+![Cronograma](https://github.com/user-attachments/assets/ed521861-a074-4ee6-93db-03c4362a70ad)
 
 Figura 7 - Tela do cronograma
 ***
@@ -77,7 +77,7 @@ Figura 7 - Tela do cronograma
 
 A tela de tarefas possibilitará ao usuário realizar cadastros de atividades a serem realizadas
 
-![Tarefas](https://github.com/user-attachments/assets/a6fffce6-01f9-491b-a6b0-896e50534167)
+![Tarefas](https://github.com/user-attachments/assets/5a11fb77-6897-45ad-91c2-eca95305ade9)
 
 Figura 8 - Tela de tarefas
 ***
@@ -85,7 +85,7 @@ Figura 8 - Tela de tarefas
 
 Tela onde é exibido o ranking geral de horas estudadas
 
-![Ranking](https://github.com/user-attachments/assets/1087ea44-cb46-4ce2-810d-77523c6796f6)
+![Ranking](https://github.com/user-attachments/assets/a1c070ac-54c8-40e3-a442-b8ebd77e6520)
 
 Figura 9 - Tela de ranking
 ***
@@ -93,7 +93,7 @@ Figura 9 - Tela de ranking
 
 Tela onde o usuário poderá realizar as configurações do software.
 
-![Configurações](https://github.com/user-attachments/assets/a11bf94f-3fa6-4920-a6df-ebb974b674f1)
+![Configurações](https://github.com/user-attachments/assets/6159a9ae-40ff-42cd-af65-cb01afd48d35)
 
 Figura 10 - Tela de configurações
 ***
@@ -101,7 +101,7 @@ Figura 10 - Tela de configurações
 
 Tela extra onde o usuário poderá receber dicas de estudo.
 
-![Guias](https://github.com/user-attachments/assets/046a7b5e-634a-4702-a246-740b9738319d)
+![Guias](https://github.com/user-attachments/assets/5c874483-5114-4f22-9bc8-67c2b36798f2)
 
 Figura 11 - Tela de guias
 ***
