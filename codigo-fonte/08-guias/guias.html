@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guias | Estudo Inteligente</title>
+  <link rel="stylesheet" href="../style/global.css">
+  <link rel="stylesheet" href="guias.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <a href="../03-inicio/inicio.html">
+      <img src="../img/logoestudobranco.png" alt="Estudo Inteligente" class="logo-sidebar">
+    </a>
+    <nav>
+      <a href="../03-inicio/inicio.html"><i class="fas fa-home"></i> Início</a>
+      <a href="../09-sessão_de_foco/sessao_de_foco.html"><i class="fas fa-clock"></i> Sessão de Foco</a>
+      <a href="../04-cronograma/cronograma.html"><i class="fas fa-calendar-alt"></i> Cronograma</a>
+      <a href="../05-tarefas/tarefas.html"><i class="fas fa-tasks"></i> Tarefas</a>
+      <a href="../06-ranking/ranking.html"><i class="fas fa-chart-line"></i> Ranking</a>
+      <a href="../07-configurações/configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
+      <a href="guias.html" class="active"><i class="fas fa-book"></i> Guias</a>
+      <a href="../01-login/login.html"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </nav>
+  </div>
+
+  <div class="main">
+    <div class="header">
+        <div class="user-info">
+            <span>Usuário: Joaquim Silva</span>
+            <button id="themeToggle" aria-label="Alternar tema">
+              <i class="fas fa-moon"></i>
+            </button>
+          </div>
+    </div>
+
+    <div class="content">
+      <div class="guides-container">
+        <h1><i class="fas fa-book-open"></i> Guias de Estudo</h1>
+        
+        <div class="search-filter">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar guias...">
+          </div>
+          <div class="filter-options">
+            <button class="filter-btn active">Todos</button>
+            <button class="filter-btn">Técnicas</button>
+            <button class="filter-btn">Matérias</button>
+            <button class="filter-btn">Vídeos</button>
+          </div>
+        </div>
+
+        <div class="guides-grid">
+          <!-- Guia 1 -->
+          <div class="guide-card">
+            <div class="guide-icon" style="background-color: #ebf8ff;">
+              <i class="fas fa-clock" style="color: #4299e1;"></i>
+            </div>
+            <h3>Método Pomodoro</h3>
+            <p>Técnica de gestão de tempo para estudos eficientes</p>
+            <a href="#" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
+          </div>
+
+          <!-- Guia 2 -->
+          <div class="guide-card">
+            <div class="guide-icon" style="background-color: #f0fff4;">
+              <i class="fas fa-atom" style="color: #48bb78;"></i>
+            </div>
+            <h3>Técnica Feynman</h3>
+            <p>Aprenda a aprender ensinando conceitos complexos</p>
+            <a href="#" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
+          </div>
+
+          <!-- Guia 3 -->
+          <div class="guide-card">
+            <div class="guide-icon" style="background-color: #fff5f5;">
+              <i class="fas fa-project-diagram" style="color: #f56565;"></i>
+            </div>
+            <h3>Mapas Mentais</h3>
+            <p>Como criar e utilizar mapas mentais para estudos</p>
+            <a href="#" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
+          </div>
+
+          <!-- Guia 4 -->
+          <div class="guide-card">
+            <div class="guide-icon" style="background-color: #fff6e6;">
+              <i class="fas fa-cards" style="color: #ed8936;"></i>
+            </div>
+            <h3>Flashcards</h3>
+            <p>Técnica de memorização usando cartões de estudo</p>
+            <a href="#" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
+          </div>
+
+          <!-- Guia 5 -->
+          <div class="guide-card">
+            <div class="guide-icon" style="background-color: #f0f9ff;">
+              <i class="fas fa-brain" style="color: #3182ce;"></i>
+            </div>
+            <h3>Curva do Esquecimento</h3>
+            <p>Como revisar para não esquecer o conteúdo</p>
+            <a href="#" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
+          </div>
+
+          <!-- Guia 6 -->
+          <div class="guide-card">
+            <div class="guide-icon" style="background-color: #f9f0ff;">
+              <i class="fas fa-book" style="color: #9f7aea;"></i>
+            </div>
+            <h3>Leitura Ativa</h3>
+            <p>Técnicas para melhorar sua compreensão de textos</p>
+            <a href="#" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>Estudo Inteligente - 2025</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="guias.js"></script>
+  <script src="../js/menu.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>

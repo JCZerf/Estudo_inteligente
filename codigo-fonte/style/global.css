@@ -1,0 +1,252 @@
+/* Estilos global */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --section-bg: #fff;
+  --highlight-color: #1871bb;
+  --sidebar-bg: #000;
+  --sidebar-text: white;
+  --sidebar-active: #333;
+  --text-secondary: #666;
+  --border-color: #ddd;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --section-bg: #2d2d2d;
+  --highlight-color: #4a9fe0;
+  --sidebar-active: #444;
+  --text-secondary: #aaa;
+  --border-color: #444;
+}
+
+
+/* Reset e estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 20px 0;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.logo-sidebar {
+  max-width: 180px;
+  margin: 0 auto 30px;
+  display: block;
+  padding: 0 20px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 15px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.sidebar nav a i {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background-color: var(--sidebar-active);
+  transform: translateX(5px);
+}
+
+/* Main content */
+.main {
+  margin-left: 220px;
+  padding: 30px 40px;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+}
+
+.user-info {
+  background-color: var(--section-bg);
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.content {
+  background-color: var(--section-bg);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Tema escuro */
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --section-bg: #2d2d2d;
+  --highlight-color: #4a9fe0;
+  --sidebar-active: #444;
+}
+
+[data-theme="dark"] .section h1,
+[data-theme="dark"] .section h3 {
+  color: var(--highlight-color);
+}
+
+[data-theme="dark"] .highlight {
+  color: var(--highlight-color);
+}
+
+[data-theme="dark"] .banner {
+  background: #333;
+  color: white;
+}
+
+[data-theme="dark"] footer {
+  color: #aaa;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 15px;
+  }
+  
+  .main {
+    margin-left: 0;
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .sidebar nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .sidebar nav a {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+  
+  .header {
+    justify-content: center;
+  }
+}
+
+/* Estilo para o botão de tema */
+#themeToggle {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 15px;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+#themeToggle:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+/* Estilos específicos para sections */
+.section {
+  margin-bottom: 30px;
+  background-color: var(--section-bg);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.highlight {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--highlight-color);
+}
+
+.banner {
+  background: black;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 18px;
+  margin: 20px 0;
+  border-radius: 8px;
+  animation: pulse 2s infinite;
+}
+
+/* Animações */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.task, .task * {
+  transition: background-color 0.3s ease, 
+             color 0.3s ease, 
+             border-color 0.3s ease,
+             box-shadow 0.3s ease;
+}
+
+#themeToggle {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-active {
+  transform:scale(1.1);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover; /* Mantém proporção */
+}
