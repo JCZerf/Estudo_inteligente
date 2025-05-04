@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas | Estudo Inteligente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="../style/global.css">
+    <link rel="stylesheet" href="tarefas.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="../03-inicio/inicio.html">
+            <img src="../img/logoestudobranco.png" alt="Estudo Inteligente" class="logo-sidebar">
+        </a>
+        <nav>
+            <a href="../03-inicio/inicio.html"><i class="fas fa-home"></i> Início</a>
+            <a href="../09-sessão_de_foco/sessao_de_foco.html"><i class="fas fa-clock"></i> Sessão de Foco</a>
+            <a href="../04-cronograma/cronograma.html"><i class="fas fa-calendar-alt"></i> Cronograma</a>
+            <a href="../05-tarefas/tarefas.html" class="active"><i class="fas fa-tasks"></i> Tarefas</a>
+            <a href="../06-ranking/ranking.html"><i class="fas fa-chart-line"></i> Ranking</a>
+            <a href="../07-configurações/configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
+            <a href="../08-guias/guias.html"><i class="fas fa-book"></i> Guias</a>
+            <a href="/index.html"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </nav>
+    </div>
+    
+    <div class="main">
+        <div class="header">
+            <div class="user-info">
+                <span>Usuário: Joaquim Silva</span>
+                <button id="themeToggle" aria-label="Alternar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="tasks-header">
+                <h1>Tarefas</h1>
+                <div class="tasks-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Buscar tarefas..." aria-label="Buscar tarefas">
+                    </div>
+                    <select id="filterSelect" class="filter-select">
+                        <option value="all">Todas</option>
+                        <option value="completed">Concluídas</option>
+                        <option value="pending">Pendentes</option>
+                        <option value="expired">Atrasadas</option>
+                    </select>
+                    <button id="newTaskButton" class="btn btn-primary" aria-label="Adicionar nova tarefa">
+                        <i class="fas fa-plus"></i> Nova Tarefa
+                    </button>
+                    <div class="data-actions">
+                        <button id="exportBtn" class="btn btn-secondary" title="Exportar tarefas">
+                            <i class="fas fa-file-export"></i>
+                        </button>
+                        <label for="importInput" class="btn btn-secondary" title="Importar tarefas">
+                            <i class="fas fa-file-import"></i>
+                            <input type="file" id="importInput" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="taskList" class="task-categories">
+                <!-- Tarefas serão renderizadas dinamicamente aqui -->
+            </div>
+
+            <div class="tasks-footer">
+                <span class="task-counter">Total: 0 tarefas | Concluídas: 0</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>Estudo Inteligente - 2025</p>
+        </footer>
+    </div>
+
+    <!-- Modal para Nova Tarefa -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <span class="close-modal" aria-label="Fechar modal">&times;</span>
+            <h2>Nova Tarefa</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Título:</label>
+                    <input type="text" id="taskTitle" required aria-required="true" minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="taskSubject">Matéria:</label>
+                    <select id="taskSubject" required aria-required="true">
+                        <option value="math">Matemática</option>
+                        <option value="history">História</option>
+                        <option value="biology">Biologia</option>
+                        <option value="other">Outra</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskDueDate">Prazo:</label>
+                    <input type="date" id="taskDueDate" aria-label="Data de vencimento">
+                </div>
+                <div class="form-group">
+                    <label>Prioridade:</label>
+                    <div class="priority-options">
+                        <label><input type="radio" name="priority" value="high"> <span class="priority-high"></span> Alta</label>
+                        <label><input type="radio" name="priority" value="medium" checked> <span class="priority-medium"></span> Média</label>
+                        <label><input type="radio" name="priority" value="low"> <span class="priority-low"></span> Baixa</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Descrição (opcional):</label>
+                    <textarea id="taskDescription" rows="3" aria-label="Descrição da tarefa"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="tarefas.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/theme.js"></script>
+</body>
+</html>
