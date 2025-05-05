@@ -51,6 +51,7 @@ Artefatos da funcionalidade
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL:
 
+
 Ao clicar em “Criar conta” no canto superior direito da tela, terá acesso a página de cadastro.
 
 ***
@@ -74,6 +75,8 @@ Artefatos da funcionalidade
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
+
+
 Ao clicar em “Entrar” no canto superior direito da tela, terá acesso a página de login.
 
 ***
