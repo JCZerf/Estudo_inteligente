@@ -209,14 +209,13 @@ Artefatos da funcionalidade
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
-Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
-Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
+Ao clicar em “ranking” no menu esquerdo da coluna da tela, terá acesso a página de ranking.
+Acompanhe seu progresso atraves do ranking, comparando com outros usuários.
 
 ***
 
-Tela de configurações (RF-02)
-Responsável: José Carlos
+Tela de configurações (RF-04)
+Responsável: Hellen
 
 O acesso a tela de cadastro de configurações pode feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
@@ -225,7 +224,7 @@ Exemplo da tela de configurações:
 ![Captura de Tela (53)](https://github.com/user-attachments/assets/fc4cbb19-2f03-4ced-853c-30402f3b83d7)
 
 Requisitos atendidos
-RF-05 O site deve permitir ao usuário gerenciar recursos de lembrete.
+RF-044 O site deve permitir ao usuário gerenciar recursos de notificações.
 
 Artefatos da funcionalidade
 ● configurações.html
@@ -238,7 +237,6 @@ Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
 Ao clicar em “configurações” no menu esquerdo da coluna da tela, terá acesso a página de configurações.
 Clique as opções para ativar ou desativar as notificações
-Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
 
 ***
 
