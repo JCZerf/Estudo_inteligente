@@ -17,6 +17,7 @@ Requisito atendido
 RF-10: O site deve "Disponibilizar versão web.".
 
 Artefatos da funcionalidade
+
 ●index.html
 
 ●style_landpage.css
@@ -28,4 +29,104 @@ Abra um navegador de Internet e informe a seguinte URL:
 
 Ao clicar no link  terá acesso a página de landing page.
 
+***
 
+Tela de Cadastro (RF-01)
+Responsável: Sávio
+
+O acesso a tela de cadastro poderá ser feito através da opção de menu “Cadastre-se”. As estruturas de dados foram baseadas em HTML, CSS e JS.
+
+Exemplo da tela de cadastro:
+
+![Captura de Tela (46)](https://github.com/user-attachments/assets/e7111775-d8b5-4d9a-bb64-59c51bfeb96a)
+
+Requisito atendido
+RF-01: O site deve permitir ao usuário cadastrar uma conta.
+
+Artefatos da funcionalidade
+●cadastro.html
+
+●cadastro.css
+
+Instruções de acesso
+Abra um navegador de Internet e informe a seguinte URL:
+
+Ao clicar em “Criar conta” no canto superior direito da tela, terá acesso a página de cadastro.
+
+***
+
+Tela de Login (RF-01)
+Responsável: Sávio
+
+O acesso a tela de login poderá ser feito através do menu “Entrar”. As estruturas de dados foram baseadas em HTML, CSS e JS.
+
+Exemplo da tela de login:
+
+![Captura de Tela (47)](https://github.com/user-attachments/assets/31eb1cfa-5a9e-4e1f-ba0a-e6b529e7c356)
+
+Requisito atendido
+RF-01: O site deve permitir ao usuário fazer o login da sua conta.
+
+Artefatos da funcionalidade
+● login.html
+
+● login.css
+
+Instruções de acesso
+Abra um navegador de Internet e informe a seguinte URL: 
+Ao clicar em “Entrar” no canto superior direito da tela, terá acesso a página de login.
+
+***
+
+Tela de Inicio (RF-08)
+Responsável: José Carlos
+
+A tela de incio permite que o usuário acompanhe seu progresso, tendo acesso as principais informações da aplicação é acessada logo após o login. As estruturas de dados foram baseadas em HTML, CSS e JS.
+
+Exemplo da tela de inicio:
+
+![Captura de Tela (48)](https://github.com/user-attachments/assets/a7a0267c-a145-41aa-88ba-1cc224f4e1a4)
+
+Requisitos atendidos
+RF-08 O site deve  permitir o acompanhamento de progresso.
+
+Artefatos da funcionalidade
+● inicio.html
+
+● inicio.css
+
+● inicio.js
+
+Instruções de acesso
+Abra um navegador de Internet e informe a seguinte URL: 
+Ao clicar em login no centro da tela, terá acesso a página de inicio.
+Veja os resultados de seus estudos na tela.
+
+***
+
+Tela de sessão de foco (RF-02)
+Responsável: José Carlos
+
+O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+
+Exemplo da tela de sessão de foco:
+
+![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
+
+Requisitos atendidos
+RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
+
+Artefatos da funcionalidade
+● sessao_de_foco.html
+
+● sessao_de_foco.css
+
+● sessao_de_foco.js
+
+● sessao_de_foco.js
+
+Instruções de acesso
+Abra um navegador de Internet e informe a seguinte URL: 
+Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
+Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
+Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
