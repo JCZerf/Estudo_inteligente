@@ -107,7 +107,7 @@ Veja os resultados de seus estudos na tela.
 Tela de sessão de foco (RF-02)
 Responsável: José Carlos
 
-O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+O acesso a tela de sessão de foco poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
 Exemplo da tela de sessão de foco:
 
@@ -136,7 +136,7 @@ Clique em iniciar para que o cronometro começe a marcar seu tempo investido na 
 Tela de cronograma (RF-02)
 Responsável: Igor
 
-O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+O acesso a tela de cronograma poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
 Exemplo da tela de cronograma:
 
@@ -153,8 +153,6 @@ Artefatos da funcionalidade
 
 ● cronograma.js
 
-● cronograma.js
-
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
 Ao clicar em “cronograma” no menu esquerdo da coluna da tela, terá acesso a página de cronograma.
@@ -164,54 +162,50 @@ Imprima seu cronograma para melhor acompanhamento.
 ***
 
 Tela de tarefas (RF-02)
-Responsável: José Carlos
+Responsável: Gabriel
 
-O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+O acesso a tela de tarefas poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
 Exemplo da tela de sessão de foco:
 
-![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
+![Captura de Tela (51)](https://github.com/user-attachments/assets/4e7f432d-5c6d-4747-a7c9-be9d72098268)
 
 Requisitos atendidos
 RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
 
 Artefatos da funcionalidade
-● sessao_de_foco.html
+● tarefas.html
 
-● sessao_de_foco.css
+● tarefas.css
 
-● sessao_de_foco.js
-
-● sessao_de_foco.js
+● tarefas.js
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
-Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
-Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
+Ao clicar em “tarefas” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
+Defina as tarefas, tempo de prazo, urgência da tarefa e a matéria que ela pertence. 
 
 ***
 
 Tela de ranking (RF-02)
-Responsável: José Carlos
+Responsável: Alvim
 
-O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+O acesso a tela de ranking poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
-Exemplo da tela de sessão de foco:
+Exemplo da tela de ranking:
 
-![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
+![Captura de Tela (52)](https://github.com/user-attachments/assets/ef1625be-df60-401c-82db-c05bdb121419)
+
 
 Requisitos atendidos
-RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
+RF-08 O site deve permitir ao usuário acompanhar seu progresso.
 
 Artefatos da funcionalidade
-● sessao_de_foco.html
+● ranking.html
 
-● sessao_de_foco.css
+● ranking.css
 
-● sessao_de_foco.js
-
-● sessao_de_foco.js
+● ranking.js
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
@@ -224,28 +218,26 @@ Clique em iniciar para que o cronometro começe a marcar seu tempo investido na 
 Tela de configurações (RF-02)
 Responsável: José Carlos
 
-O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+O acesso a tela de cadastro de configurações pode feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
-Exemplo da tela de sessão de foco:
+Exemplo da tela de configurações:
 
-![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
+![Captura de Tela (53)](https://github.com/user-attachments/assets/fc4cbb19-2f03-4ced-853c-30402f3b83d7)
 
 Requisitos atendidos
-RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
+RF-05 O site deve permitir ao usuário gerenciar recursos de lembrete.
 
 Artefatos da funcionalidade
-● sessao_de_foco.html
+● configurações.html
 
-● sessao_de_foco.css
+● configurações.css
 
-● sessao_de_foco.js
-
-● sessao_de_foco.js
+● configurações.js
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
-Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
+Ao clicar em “configurações” no menu esquerdo da coluna da tela, terá acesso a página de configurações.
+Clique as opções para ativar ou desativar as notificações
 Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
 
 ***
