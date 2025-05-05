@@ -269,14 +269,3 @@ Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
 Ao clicar em “guias” no menu esquerdo da coluna da tela, terá acesso a página de guias.
 Clique em algum link para ser direcionado a guias sobre aprendizado e aproveitamento do tempo.
-
-
-
-
-
-> **Links Úteis**:
-> - [Trabalhando com HTML5 Local Storage e JSON](https://www.devmedia.com.br/trabalhando-com-html5-local-storage-e-json/29045)
-> - [JSON Tutorial](https://www.w3resource.com/JSON)
-> - [JSON - Introduction (W3Schools)](https://www.w3schools.com/js/js_json_intro.asp)
-> - [JSON Tutorial (TutorialsPoint)](https://www.tutorialspoint.com/json/index.htm)
-
