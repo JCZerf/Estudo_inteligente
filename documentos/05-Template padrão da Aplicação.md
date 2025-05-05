@@ -243,11 +243,11 @@ Clique as opções para ativar ou desativar as notificações
 Tela de guias (RF-02)
 Responsável: José Carlos
 
-O acesso a tela de cadastro de livros poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
+O acesso a tela de guias poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
 
-Exemplo da tela de sessão de foco:
+Exemplo da tela de guias:
 
-![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
+![Captura de Tela (54)](https://github.com/user-attachments/assets/675726de-4978-4cc8-9d56-b8adc40dede6)
 
 Requisitos atendidos
 RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
