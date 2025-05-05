@@ -44,6 +44,7 @@ Requisito atendido
 RF-01: O site deve permitir ao usuário cadastrar uma conta.
 
 Artefatos da funcionalidade
+
 ●cadastro.html
 
 ●cadastro.css
@@ -95,6 +96,7 @@ Requisitos atendidos
 RF-08 O site deve  permitir o acompanhamento de progresso.
 
 Artefatos da funcionalidade
+
 ● inicio.html
 
 ● inicio.css
@@ -121,6 +123,7 @@ Requisitos atendidos
 RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
 
 Artefatos da funcionalidade
+
 ● sessao_de_foco.html
 
 ● sessao_de_foco.css
@@ -151,6 +154,7 @@ Requisitos atendidos
 RF-03 O site deve permitir a criação de cronogramas de estudo personalizados..
 
 Artefatos da funcionalidade
+
 ● cronograma.html
 
 ● cronograma.css
@@ -178,6 +182,7 @@ Requisitos atendidos
 RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
 
 Artefatos da funcionalidade
+
 ● tarefas.html
 
 ● tarefas.css
@@ -205,6 +210,7 @@ Requisitos atendidos
 RF-08 O site deve permitir ao usuário acompanhar seu progresso.
 
 Artefatos da funcionalidade
+
 ● ranking.html
 
 ● ranking.css
@@ -231,6 +237,7 @@ Requisitos atendidos
 RF-044 O site deve permitir ao usuário gerenciar recursos de notificações.
 
 Artefatos da funcionalidade
+
 ● configurações.html
 
 ● configurações.css
@@ -257,6 +264,7 @@ Requisitos atendidos
 RF-07 O site deve apresentar textos simplificados para facilitar o entendimento..
 
 Artefatos da funcionalidade
+
 ● guias.html
 
 ● guias.css
