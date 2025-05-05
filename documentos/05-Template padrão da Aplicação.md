@@ -39,7 +39,7 @@ Cores: #f5f5f5, #333, #fff, #1871bb, #000, #666, #1a1a1a,  #f0f0f0, #2d2d2d, #4a
 
 Font-family: Poppins, sans-serif;
 
-Fonte-size: 14px, 16px, , 18px, 24px.
+Fonte-size: 14px, 16px, 18px, 24px.
 
 Tela de Início
 
