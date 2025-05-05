@@ -240,7 +240,7 @@ Clique as opções para ativar ou desativar as notificações
 
 ***
 
-Tela de guias (RF-02)
+Tela de guias (RF-07)
 Responsável: José Carlos
 
 O acesso a tela de guias poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -250,19 +250,17 @@ Exemplo da tela de guias:
 ![Captura de Tela (54)](https://github.com/user-attachments/assets/675726de-4978-4cc8-9d56-b8adc40dede6)
 
 Requisitos atendidos
-RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
+RF-07 O site deve apresentar textos simplificados para facilitar o entendimento..
 
 Artefatos da funcionalidade
-● sessao_de_foco.html
+● guias.html
 
-● sessao_de_foco.css
+● guias.css
 
-● sessao_de_foco.js
+● guias.js
 
-● sessao_de_foco.js
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
-Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
-Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
+Ao clicar em “guias” no menu esquerdo da coluna da tela, terá acesso a página de guias.
+Clique em algum link para ser direcionado a guias sobre aprendizado e aproveitamento do tempo.
