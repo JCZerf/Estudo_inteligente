@@ -1,5 +1,40 @@
 O layout padrão do site foi construído com as linguagens de marcação HTML e CSS, e JavaScript para funcionalidades e responsividade.
 
+LANDPAGE:
+
+Cores: #1871bb, #4da3ff, #ffcc00, #f8f9fa, #b0b0b0, #121212, #1e1e1e, #2a2a2a, #28a745; 
+
+Background: #242424, #181717, #000000, #rgba(77, 163, 255, 0.1), #0d1b2a, #1b263b;
+
+Font-family: Segoe UI, Arial, sans-serif;
+
+Fonte-size: 0.9rem, 1rem, 1.1rem, 1.2rem, 1.3rem, 1.5 rem, 1.8rem, 2.2rem, 2.5rem, 2.8rem.
+
+![landpage 1](https://github.com/user-attachments/assets/5f5af551-4a1c-48ec-9291-0895bf5ab2f6)
+
+![landpage 2](https://github.com/user-attachments/assets/c16f5690-040d-4920-85da-e7f065aac3e4)
+
+![landpage 3](https://github.com/user-attachments/assets/86546107-dc9d-4ac8-ae4c-f58260d4ec60)
+
+![landpage 4](https://github.com/user-attachments/assets/74ce4f93-54a3-4323-bcfe-2e71a402dff9)
+
+
+TELA DE LOGIN, CADASTRO:
+
+Cores: rgba(0, 0, 0, 0.3), #e0e0e0, #333, #f2f2f29a, #ff0000;
+
+Font-family: Arial, sans-serif;
+
+Fonte-size: 12px, 14px.
+
+![login](https://github.com/user-attachments/assets/0d0c8cf1-88ce-43b9-9731-5991116bb66f)
+
+
+![cadastro](https://github.com/user-attachments/assets/d390983e-fcab-482f-91ab-7916089cf149)
+
+
+TELAS: INÍCIO, SESSÃO DE FOCO, CRONOGRAMA, TAREFAS, RANKING, CONFIGURAÇÕES, GUIAS. 
+
 Cores: #f5f5f5, #333, #fff, #1871bb, #000, #666, #1a1a1a,  #f0f0f0, #2d2d2d, #4a9fe0, #444, #aaa;
 
 Font-family: Poppins, sans-serif;
