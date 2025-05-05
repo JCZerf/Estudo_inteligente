@@ -1,278 +1,35 @@
-# Template padrão da Aplicação
+O layout padrão do site foi construído com as linguagens de marcação HTML e CSS, e JavaScript para funcionalidades e responsividade.
+Cores: #f5f5f5, #333, #fff, #1871bb, #000, #666, #1a1a1a,  #f0f0f0, #2d2d2d, #4ª9fe0, #444, #aaa;
+Font-family: Poppins, sans-serif;
+Fonte-size: 14px, 16px, , 18px, 24px.
 
-Layout padrão do site (HTML e CSS) que será utilizado em todas as páginas com a definição de identidade visual, aspectos de responsividade e iconografia.
+Tela de Início
+Exibe informações do usuário, como: resumo do dia, progresso semanal, tempo de estudo programado, recomendações para otimizar o estudo.
+![início](https://github.com/user-attachments/assets/5129cdf0-1969-427e-b46c-3e57f9ddcdc2)
 
-Pré-requisitos: Especificação do Projeto, Metodologia, Projeto de Interface, Arquitetura da Solução
+Tela Sessão de Foco
+Exibe informações cadastradas na página de cronogramas, sendo possível utilizar ferramentas baseados em métodos científicos para estudar qualquer matéria/assunto. 
+![sessão de foco](https://github.com/user-attachments/assets/c217479c-eec6-4484-bb91-5aea2f7efc9b)
 
-Landing page (RF-10)
-Responsável: José Carlos
+Tela de Cronograma
+Permite ao usuário visualizar, organizar e acompanhar suas atividades semanais em um cronograma distribuído por dias da semana e faixas de horário.
+![cronograma](https://github.com/user-attachments/assets/856f9724-8b6d-4601-bd74-361bfae84121)
 
-O acesso a tela de landing page poderá ser feito através da entrada na aplicação. As estruturas de dados foram baseadas em HTML, CSS e JS.
+Tela de Tarefas
+Permite ao usuário adicionar, organizar, marcar como concluídas e excluir tarefas acadêmicas, categorizadas por disciplina.
+![tarefas](https://github.com/user-attachments/assets/43b59584-950e-4ad7-8710-b7791f30ff50)
 
-Exemplo da tela de landing page:
+Tela de Ranking
+Exibe a classificação dos usuários com base na quantidade de horas estudadas, promovendo gamificação e incentivo ao progresso contínuo.
+![ranking](https://github.com/user-attachments/assets/0e18419c-5485-493a-b578-db3994ce1da1)
 
-![Captura de Tela (45)](https://github.com/user-attachments/assets/67f9a360-2504-470d-9152-abcdc99c3f33)
+Tela de Configurações
+Permite ao usuário personalizar preferências de uso, notificações e gerenciar ações críticas da conta com segurança.
+![configurações](https://github.com/user-attachments/assets/18994e00-3140-47b9-86c6-e2279b569f08)
 
-Requisito atendido
-RF-10: O site deve "Disponibilizar versão web.".
+Tela de Guias
+Fornece acesso rápido a conteúdos e técnicas de aprendizagem, organizados em cartões interativos com filtros por categoria.
+![Guias](https://github.com/user-attachments/assets/e8708eb9-5ccc-4f23-8aec-db33c11ec675)
 
-Artefatos da funcionalidade
 
-●index.html
 
-●style_landpage.css
-
-●landpage.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-
-Ao clicar no link  terá acesso a página de landing page.
-
-***
-
-Tela de Cadastro (RF-01)
-Responsável: Sávio
-
-O acesso a tela de cadastro poderá ser feito através da opção de menu “Cadastre-se”. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de cadastro:
-
-![Captura de Tela (46)](https://github.com/user-attachments/assets/e7111775-d8b5-4d9a-bb64-59c51bfeb96a)
-
-Requisito atendido
-RF-01: O site deve permitir ao usuário cadastrar uma conta.
-
-Artefatos da funcionalidade
-
-●cadastro.html
-
-●cadastro.css
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL:
-
-
-Ao clicar em “Criar conta” no canto superior direito da tela, terá acesso a página de cadastro.
-
-***
-
-Tela de Login (RF-01)
-Responsável: Sávio
-
-O acesso a tela de login poderá ser feito através do menu “Entrar”. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de login:
-
-![Captura de Tela (47)](https://github.com/user-attachments/assets/31eb1cfa-5a9e-4e1f-ba0a-e6b529e7c356)
-
-Requisito atendido
-RF-01: O site deve permitir ao usuário fazer o login da sua conta.
-
-Artefatos da funcionalidade
-
-● login.html
-
-● login.css
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-
-
-Ao clicar em “Entrar” no canto superior direito da tela, terá acesso a página de login.
-
-***
-
-Tela de Inicio (RF-08)
-Responsável: José Carlos
-
-A tela de incio permite que o usuário acompanhe seu progresso, tendo acesso as principais informações da aplicação é acessada logo após o login. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de inicio:
-
-![Captura de Tela (48)](https://github.com/user-attachments/assets/a7a0267c-a145-41aa-88ba-1cc224f4e1a4)
-
-Requisitos atendidos
-RF-08 O site deve  permitir o acompanhamento de progresso.
-
-Artefatos da funcionalidade
-
-● inicio.html
-
-● inicio.css
-
-● inicio.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em login no centro da tela, terá acesso a página de inicio.
-Veja os resultados de seus estudos na tela.
-
-***
-
-Tela de sessão de foco (RF-02)
-Responsável: José Carlos
-
-O acesso a tela de sessão de foco poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de sessão de foco:
-
-![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
-
-Requisitos atendidos
-RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
-
-Artefatos da funcionalidade
-
-● sessao_de_foco.html
-
-● sessao_de_foco.css
-
-● sessao_de_foco.js
-
-● sessao_de_foco.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
-Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
-Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
-
-***
-
-Tela de cronograma (RF-02)
-Responsável: Igor
-
-O acesso a tela de cronograma poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de cronograma:
-
-![Captura de Tela (50)](https://github.com/user-attachments/assets/60156b1e-c57e-4af4-9e63-7465ce6ea7f1)
-
-
-Requisitos atendidos
-RF-03 O site deve permitir a criação de cronogramas de estudo personalizados..
-
-Artefatos da funcionalidade
-
-● cronograma.html
-
-● cronograma.css
-
-● cronograma.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “cronograma” no menu esquerdo da coluna da tela, terá acesso a página de cronograma.
-Crie um cronograma personalizado. 
-Imprima seu cronograma para melhor acompanhamento.
-
-***
-
-Tela de tarefas (RF-02)
-Responsável: Gabriel
-
-O acesso a tela de tarefas poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de sessão de foco:
-
-![Captura de Tela (51)](https://github.com/user-attachments/assets/4e7f432d-5c6d-4747-a7c9-be9d72098268)
-
-Requisitos atendidos
-RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
-
-Artefatos da funcionalidade
-
-● tarefas.html
-
-● tarefas.css
-
-● tarefas.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “tarefas” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
-Defina as tarefas, tempo de prazo, urgência da tarefa e a matéria que ela pertence. 
-
-***
-
-Tela de ranking (RF-02)
-Responsável: Alvim
-
-O acesso a tela de ranking poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de ranking:
-
-![Captura de Tela (52)](https://github.com/user-attachments/assets/ef1625be-df60-401c-82db-c05bdb121419)
-
-
-Requisitos atendidos
-RF-08 O site deve permitir ao usuário acompanhar seu progresso.
-
-Artefatos da funcionalidade
-
-● ranking.html
-
-● ranking.css
-
-● ranking.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “ranking” no menu esquerdo da coluna da tela, terá acesso a página de ranking.
-Acompanhe seu progresso atraves do ranking, comparando com outros usuários.
-
-***
-
-Tela de configurações (RF-04)
-Responsável: Hellen
-
-O acesso a tela de cadastro de configurações pode feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de configurações:
-
-![Captura de Tela (53)](https://github.com/user-attachments/assets/fc4cbb19-2f03-4ced-853c-30402f3b83d7)
-
-Requisitos atendidos
-RF-044 O site deve permitir ao usuário gerenciar recursos de notificações.
-
-Artefatos da funcionalidade
-
-● configurações.html
-
-● configurações.css
-
-● configurações.js
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “configurações” no menu esquerdo da coluna da tela, terá acesso a página de configurações.
-Clique as opções para ativar ou desativar as notificações
-
-***
-
-Tela de guias (RF-07)
-Responsável: José Carlos
-
-O acesso a tela de guias poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
-
-Exemplo da tela de guias:
-
-![Captura de Tela (54)](https://github.com/user-attachments/assets/675726de-4978-4cc8-9d56-b8adc40dede6)
-
-Requisitos atendidos
-RF-07 O site deve apresentar textos simplificados para facilitar o entendimento..
-
-Artefatos da funcionalidade
-
-● guias.html
-
-● guias.css
-
-● guias.js
-
-
-Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
-Ao clicar em “guias” no menu esquerdo da coluna da tela, terá acesso a página de guias.
-Clique em algum link para ser direcionado a guias sobre aprendizado e aproveitamento do tempo.
