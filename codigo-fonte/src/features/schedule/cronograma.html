@@ -151,6 +151,7 @@
           <span class="legend-item"><i class="fas fa-book legend-study"></i> Estudo</span>
           <span class="legend-item"><i class="fas fa-dumbbell legend-exercise"></i> Exercício</span>
           <span class="legend-item"><i class="fas fa-utensils legend-meal"></i> Refeição</span>
+          <span class="legend-item"><i class="fas fa-tasks legend-task"></i> Tarefa</span>
         </div>
         <button class="btn btn-secondary" id="printSchedule">
           <i class="fas fa-print"></i> Imprimir Cronograma
@@ -210,6 +211,19 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal de Confirmação -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <h3 id="confirmModalTitle">Confirmar ação</h3>
+      <p id="confirmModalMessage">Tem certeza que deseja excluir este evento?</p>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" id="confirmModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="confirmModalConfirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <script src="cronograma.js"></script>
   <script src="../../shared/js/menu.js"></script>
   <script src="../../shared/js/theme.js"></script>

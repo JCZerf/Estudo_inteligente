@@ -130,6 +130,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  z-index: 1;
+  margin: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event:hover {
@@ -164,6 +169,48 @@
   border-left: 3px solid #f56565;
 }
 
+.event-task {
+  background-color: rgba(155, 89, 182, 0.1) !important;
+  border-left: 3px solid #9b59b6 !important;
+}
+
+.event-actions {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: none;
+}
+
+.event:hover .event-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.event-action-btn {
+  background: rgba(255,255,255,0.8);
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--text-color);
+}
+
+.event-done {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+.event-multi-slot {
+  position: absolute;
+  width: calc(100% - 6px);
+  z-index: 2;
+}
+
 /* Rodapé */
 .schedule-footer {
   display: flex;
@@ -191,6 +238,7 @@
 .legend-study { color: #4299e1; }
 .legend-exercise { color: #48bb78; }
 .legend-meal { color: #f56565; }
+.legend-task { color: #9b59b6; }
 
 /* Modal */
 .modal {
@@ -315,5 +363,20 @@
   .modal-content {
     margin: 20px auto;
     width: 95%;
+  }
+
+  .event {
+    font-size: 11px;
+    padding: 4px;
+  }
+  
+  .event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .event-time {
+    display: none;
   }
 }
