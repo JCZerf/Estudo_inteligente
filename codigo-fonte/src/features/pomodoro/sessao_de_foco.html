@@ -46,20 +46,26 @@
       <div class="focus-container">
         <!-- Seção de Tarefas -->
         <section class="section task-selector" aria-labelledby="task-selector-heading">
-          <h2 id="task-selector-heading"><i class="fas fa-tasks" aria-hidden="true"></i> Escolha a tarefa</h2>
+          <h2 id="task-selector-heading"><i class="fas fa-tasks" aria-hidden="true"></i> Escolha as tarefas</h2>
           <div class="task-list" role="group" aria-label="Lista de tarefas para focar">
-            <button class="btn-task active" data-task="Matemática" aria-pressed="true">
-              <i class="fas fa-square-root-alt" aria-hidden="true"></i> Estudar Matemática
-            </button>
-            <button class="btn-task" data-task="Programação" aria-pressed="false">
-              <i class="fas fa-code" aria-hidden="true"></i> Estudar Programação
-            </button>
-            <button class="btn-task" data-task="Leitura" aria-pressed="false">
-              <i class="fas fa-book" aria-hidden="true"></i> Fazer leitura técnica
-            </button>
+            <!-- Tarefas serão carregadas dinamicamente -->
           </div>
+          
+          <div class="selected-tasks-container">
+            <div class="selected-tasks-header">
+              <h3>Tarefas selecionadas</h3>
+              <span class="selected-tasks-count" id="selectedTasksCount">0/8 selecionadas</span>
+            </div>
+            <div class="selected-tasks-list" id="selectedTasksList">
+              <!-- Tarefas selecionadas aparecerão aqui -->
+            </div>
+            <div id="tasksValidation" class="time-validation" style="display: none;">
+              Você precisa de pelo menos 2 horas (120 minutos) para selecionar 8 tarefas
+            </div>
+          </div>
+          
           <div class="time-invested" aria-live="polite">
-            <i class="fas fa-clock" aria-hidden="true"></i> Tempo investido: <span id="timeInvestedDisplay">0</span> minutos
+            <i class="fas fa-clock" aria-hidden="true"></i> Tempo total investido: <span id="timeInvestedDisplay">0</span> minutos
           </div>
         </section>
 
@@ -99,21 +105,34 @@
                 Usar proporção Pomodoro padrão (pausa = 1/5 do tempo de foco)
               </label>
             </div>
-            <div id="time-validation-message" class="validation-message" style="display: none;">
+            <div id="time-validation-message" class="time-validation" style="display: none;">
               O tempo de foco deve ser pelo menos 3x o tempo de pausa para manter sessões produtivas
             </div>
           </div>
 
           <div id="manual-time-options" class="time-options">
-            <label for="tempo-select" id="timer-settings-label"><i class="fas fa-cog" aria-hidden="true"></i> Configurações do Timer</label>
-            <select id="tempo-select" class="form-select" aria-labelledby="timer-settings-label">
-              <!-- Opções serão preenchidas pelo JavaScript -->
-            </select>
-            <small class="hint">Mínimo: 15 minutos, Máximo: 240 minutos</small>
+            <label id="timer-settings-label"><i class="fas fa-cog" aria-hidden="true"></i> Configurações do Timer</label>
+            <div class="time-input-container">
+              <input type="number" id="custom-time-input" class="time-input" min="15" max="240" value="25">
+              <span class="time-input-suffix">minutos</span>
+            </div>
+            <small class="hint">Digite um valor entre 15 e 240 minutos</small>
+            <div id="timeValidation" class="time-validation" style="display: none;">
+              O tempo deve ser entre 15 e 240 minutos
+            </div>
           </div>
 
           <div class="timer-display" role="timer" aria-live="assertive">
             <div id="clock-circle" aria-label="Tempo restante">25:00</div>
+          </div>
+          
+          <div class="timer-status">
+            <div class="timer-mode-indicator focus" id="timerModeIndicator">
+              <i class="fas fa-brain"></i> Modo Foco
+            </div>
+            <div class="timer-next-session" id="nextSessionInfo">
+              Próxima pausa em: 25:00
+            </div>
           </div>
           
           <div class="timer-controls">
@@ -139,19 +158,6 @@
   <script>
     // Adiciona o ano atual ao rodapé
     document.getElementById("currentYear").textContent = new Date().getFullYear();
-
-    // Lógica para botões de tarefa
-    const taskButtons = document.querySelectorAll('.btn-task');
-    taskButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            taskButtons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.setAttribute('aria-pressed', 'false');
-            });
-            button.classList.add('active');
-            button.setAttribute('aria-pressed', 'true');
-        });
-    });
   </script>
 </body>
 </html>

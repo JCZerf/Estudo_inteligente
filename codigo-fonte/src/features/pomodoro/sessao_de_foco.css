@@ -87,6 +87,8 @@
 
 .task-list {
   margin: 15px 0;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .btn-task {
@@ -238,34 +240,113 @@
   animation: pulse 0.5s ease-in-out 2;
 }
 
-/* Dicas e mensagens de validação */
-.hint {
-  display: block;
-  font-size: 0.8rem;
-  color: var(--secondary-color);
-  margin-top: 4px;
-}
-
-.validation-message {
-  padding: 8px;
-  border-radius: 4px;
-  background-color: rgba(255, 0, 0, 0.1);
-  border-left: 3px solid red;
+/* Input de tempo personalizado */
+.time-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-top: 10px;
 }
 
-/* Esconde spinners em inputs number */
-input[type="number"] {
-  -moz-appearance: textfield;
+.time-input {
+  width: 80px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  text-align: center;
+  font-size: 1rem;
 }
 
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.time-input-suffix {
+  font-size: 0.9rem;
+  color: var(--text-color);
 }
 
-/* ===== RESPONSIVIDADE ===== */
+/* Tarefas selecionadas */
+.selected-tasks-container {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--task-bg);
+  border-radius: 8px;
+}
+
+.selected-tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.selected-tasks-count {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+
+.selected-tasks-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selected-task {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.selected-task i {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+/* Status do timer */
+.timer-status {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--task-bg);
+}
+
+.timer-mode-indicator {
+  font-weight: 600;
+}
+
+.timer-mode-indicator.focus {
+  color: var(--primary-color);
+}
+
+.timer-mode-indicator.break {
+  color: var(--secondary-color);
+}
+
+.timer-next-session {
+  font-size: 0.9rem;
+}
+
+/* Validação */
+.time-validation {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+  font-size: 0.85rem;
+}
+
+.time-validation.valid {
+  background-color: rgba(52, 199, 89, 0.1);
+  color: #34c759;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
   .focus-container {
     grid-template-columns: 1fr;
