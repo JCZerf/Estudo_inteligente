@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudo Inteligente - Criar Conta</title>
+  <link rel="stylesheet" href="cadastro.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="background" aria-hidden="true"></div>
+
+  <div class="register-container">
+    <header class="left-side">
+      <div class="logo-container">
+        <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo">
+      </div>
+    </header>
+    
+    <main class="right-side">
+      <div class="form-header">
+        <h1>Crie sua conta</h1>
+        <p>Comece sua jornada de aprendizagem</p>
+      </div>
+      
+      <form class="register-form" id="registerForm">
+        <div class="form-group">
+          <label for="name">Nome Completo</label>
+          <div class="input-container">
+            <i class="fas fa-user"></i>
+            <input type="text" id="name" placeholder="Seu nome completo" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <div class="input-container">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="seu@email.com" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <div class="input-container password-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Mínimo 8 caracteres" required>
+            <button type="button" class="toggle-password" aria-label="Mostrar senha">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="password-strength">
+            <div class="strength-bar"></div>
+            <span class="strength-text">Força da senha</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirm-password">Confirmar Senha</label>
+          <div class="input-container password-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="confirm-password" placeholder="Confirme sua senha" required>
+            <button type="button" class="toggle-password" aria-label="Mostrar senha">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div id="error-message" class="error-message" role="alert"></div>
+        
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-text">Criar Conta</span>
+          <i class="fas fa-spinner fa-spin loading-icon"></i>
+        </button>
+        
+        <div class="login-redirect">
+          Já tem uma conta? <a href="login.html" class="login-link">Faça login</a>
+        </div>
+      </form>
+      
+      <div class="social-login">
+        <p>Ou cadastre-se com</p>
+        <div class="social-buttons">
+          <button type="button" class="social-btn google">
+            <i class="fab fa-google"></i> Google
+          </button>
+          <button type="button" class="social-btn facebook">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <p>Estudo Inteligente &copy; <span id="currentYear"></span> - Todos os direitos reservados</p>
+    <div class="footer-links">
+      <a href="#">Termos de uso</a>
+      <a href="#">Política de privacidade</a>
+    </div>
+  </footer>
+
+  <script src="cadastro.js"></script>
+</body>
+</html>
