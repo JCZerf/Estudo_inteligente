@@ -145,6 +145,38 @@
     padding: 5px;
 }
 
+.task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color, #ddd);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    margin-right: 10px;
+}
+
+.task-checkbox:checked {
+    background-color: var(--highlight-color, #4682B4);
+    border-color: var(--highlight-color, #4682B4);
+}
+
+.task-checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.task-checkbox:hover {
+    border-color: var(--highlight-color, #4682B4);
+}
+
 .task-due {
     font-size: 0.9rem;
     color: var(--text-secondary, #666);
@@ -201,9 +233,18 @@
     opacity: 0.7;
 }
 
-.task-done .task-left span {
+.task-done .task-checkbox:checked {
+    opacity: 0.7;
+}
+
+.task-done .task-left span:not(.priority-high):not(.priority-medium):not(.priority-low) {
     text-decoration: line-through;
     color: var(--text-secondary, #777);
+    opacity: 0.8;
+}
+
+.task-done .task-due {
+    opacity: 0.6;
 }
 
 .task-expired {
@@ -446,31 +487,61 @@
     --danger-color: #e74c3c;
     --danger-hover: #c0392b;
     --toast-bg: #2ecc71;
+    --physics-color: #9b59b6;
+    --chemistry-color: #e67e22;
+    --geography-color: #1abc9c;
+    --philosophy-color: #7f8c8d;
+    --sociology-color: #34495e;
+    --portuguese-color: #e74c3c;
+    --literature-color: #c0392b;
+    --english-color: #3498db;
+    --spanish-color: #f1c40f;
+    --art-color: #e84393;
+    --pe-color: #27ae60;
 }
 
 [data-theme="dark"] {
-    --task-bg: #2d3748; /* Fundo mais suave para as tarefas */
-    --modal-bg: #2d3748; /* Fundo do modal mais escuro */
-    --input-bg: #1a202c; /* Fundo dos inputs mais escuro */
-    --search-bg: #1a202c; /* Fundo da busca mais escuro */
-    --secondary-bg: #2d3748; /* Botões secundários */
-    --secondary-hover: #4a5568; /* Hover dos botões secundários */
-    --highlight-color: #4299e1; /* Azul mais vibrante para ações principais */
-    --highlight-hover: #3182ce; /* Hover do azul principal */
-    --text-secondary: #a0aec0; /* Texto secundário */
-    --text-color: #e2e8f0; /* Texto principal mais claro */
-    --text-secondary: #a0aec0; /* Texto secundário */
-    --border-color: #4a5568; /* Bordas mais visíveis */
-    --priority-high: #fc8181; /* Vermelho mais suave para alta prioridade */
-    --priority-medium: #f6ad55; /* Laranja para média prioridade */
-    --priority-low: #68d391; /* Verde para baixa prioridade */
-    --danger-color: #fc8181; /* Vermelho para ações perigosas */
-    --danger-hover: #e53e3e; /* Hover do vermelho */
-    --toast-bg: #38a169; /* Verde para notificações */
-    --subject-color: #4299e1; /* Cor padrão para matérias */
+    --task-bg: #2d3748;
+    --modal-bg: #2d3748;
+    --input-bg: #1a202c;
+    --search-bg: #1a202c;
+    --secondary-bg: #2d3748;
+    --secondary-hover: #4a5568;
+    --highlight-color: #4299e1;
+    --highlight-hover: #3182ce;
+    --text-color: #e2e8f0;
+    --text-secondary: #a0aec0;
+    --border-color: #4a5568;
+    --priority-high: #fc8181;
+    --priority-medium: #f6ad55;
+    --priority-low: #68d391;
+    --danger-color: #fc8181;
+    --danger-hover: #e53e3e;
+    --toast-bg: #38a169;
+    --subject-color: #4299e1;
+    --physics-color: #9b59b6;
+    --chemistry-color: #e67e22;
+    --geography-color: #1abc9c;
+    --philosophy-color: #7f8c8d;
+    --sociology-color: #bdc3c7;
+    --portuguese-color: #e74c3c;
+    --literature-color: #c0392b;
+    --english-color: #3498db;
+    --spanish-color: #f1c40f;
+    --art-color: #fd79a8;
+    --pe-color: #00b894;
 }
 
-/* Ajustes adicionais para melhorar a legibilidade no modo escuro */
+[data-theme="dark"] .task-checkbox {
+    background-color: var(--input-bg, #1a202c);
+    border-color: var(--text-secondary, #4a5568);
+}
+
+[data-theme="dark"] .task-checkbox:checked {
+    background-color: var(--highlight-color, #4299e1);
+    border-color: var(--highlight-color, #4299e1);
+}
+
 [data-theme="dark"] .task {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -519,56 +590,86 @@
 }
 
 [data-theme="dark"] {
-    /* Adicione estas linhas às suas variáveis de tema escuro */
-    --math-color: #63b3ed; /* Azul claro para Matemática */
-    --history-color: #f6ad55; /* Laranja para História */
-    --biology-color: #68d391; /* Verde para Biologia */
-    --other-color: #a0aec0; /* Cinza claro para outras matérias */
+    --math-color: #63b3ed;
+    --history-color: #f6ad55;
+    --biology-color: #68d391;
+    --other-color: #a0aec0;
 }
 
-/* Aplicando as cores das matérias */
-[data-theme="dark"] .task[data-subject="math"] {
+/* Estilos para as cores das matérias */
+.task[data-subject="Matemática"] {
     border-left-color: var(--math-color);
-    color: var(--math-color);
 }
-
-[data-theme="dark"] .task[data-subject="history"] {
-    border-left-color: var(--history-color);
-    color: var(--history-color);
+.task[data-subject="Física"] {
+    border-left-color: var(--physics-color);
 }
-
-[data-theme="dark"] .task[data-subject="biology"] {
+.task[data-subject="Química"] {
+    border-left-color: var(--chemistry-color);
+}
+.task[data-subject="Biologia"] {
     border-left-color: var(--biology-color);
-    color: var(--biology-color);
 }
-
-[data-theme="dark"] .task[data-subject="other"] {
+.task[data-subject="História"] {
+    border-left-color: var(--history-color);
+}
+.task[data-subject="Geografia"] {
+    border-left-color: var(--geography-color);
+}
+.task[data-subject="Filosofia"] {
+    border-left-color: var(--philosophy-color);
+}
+.task[data-subject="Sociologia"] {
+    border-left-color: var(--sociology-color);
+}
+.task[data-subject="Português"] {
+    border-left-color: var(--portuguese-color);
+}
+.task[data-subject="Literatura"] {
+    border-left-color: var(--literature-color);
+}
+.task[data-subject="Inglês"] {
+    border-left-color: var(--english-color);
+}
+.task[data-subject="Espanhol"] {
+    border-left-color: var(--spanish-color);
+}
+.task[data-subject="Artes"] {
+    border-left-color: var(--art-color);
+}
+.task[data-subject="Educação Física"] {
+    border-left-color: var(--pe-color);
+}
+.task[data-subject="Outra"] {
     border-left-color: var(--other-color);
-    color: var(--other-color);
 }
 
-/* Garantir que o texto das tarefas seja legível */
 [data-theme="dark"] .task {
-    color: var(--text-color); /* Cor principal do texto */
+    color: var(--text-color);
 }
 
 [data-theme="dark"] .task-left span {
-    color: inherit; /* Herda a cor do elemento pai (.task) */
+    color: inherit;
 }
 
-[data-theme="dark"] .math-task {
-    border-left-color: var(--math-color);
-    color: var(--math-color);
+/* Classes utilitárias */
+.hidden {
+    display: none;
 }
 
-[data-theme="dark"] .history-task {
-    border-left-color: var(--history-color);
-    color: var(--history-color);
+.subject-edit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-[data-theme="dark"] .biology-task {
-    border-left-color: var(--biology-color);
-    color: var(--biology-color);
+.subject-edit i {
+    cursor: pointer;
+    color: var(--highlight-color);
+    font-size: 0.9rem;
+}
+
+.subject-edit i:hover {
+    opacity: 0.8;
 }
 
 /* Responsividade */

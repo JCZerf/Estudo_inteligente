@@ -1,4 +1,3 @@
-// tarefas.js
 let tasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
 
 const taskList = document.getElementById("taskList");
@@ -15,10 +14,21 @@ const importInput = document.getElementById("importInput");
 function getSubjectName(value) {
     const subjects = {
         "math": "Matemática",
-        "history": "História",
+        "physics": "Física",
+        "chemistry": "Química",
         "biology": "Biologia",
+        "history": "História",
+        "geography": "Geografia",
+        "philosophy": "Filosofia",
+        "sociology": "Sociologia",
+        "portuguese": "Português",
+        "literature": "Literatura",
+        "english": "Inglês",
+        "spanish": "Espanhol",
+        "art": "Artes",
+        "physical_education": "Educação Física",
         "other": "Outra",
-        "Estudos Agendados": "Estudos Agendados" // Para tarefas do cronograma
+        "Estudos Agendados": "Estudos Agendados"
     };
     return subjects[value] || value;
 }
@@ -69,9 +79,25 @@ function renderTasks() {
 function createCategoryElement(subject) {
     const categoryDiv = document.createElement("div");
     categoryDiv.className = "task-category";
+    
     const categoryTitle = document.createElement("h3");
-    categoryTitle.textContent = subject;
+    categoryTitle.innerHTML = `
+        <span>${subject}</span>
+        ${subject === "Outra" ? '<i class="fas fa-edit subject-edit" title="Editar nome da matéria"></i>' : ''}
+    `;
     categoryTitle.style.setProperty("--subject-color", getSubjectColor(subject));
+    
+    // Adicionar funcionalidade de edição para matérias "Outra"
+    if (subject === "Outra") {
+        const editIcon = categoryTitle.querySelector(".subject-edit");
+        editIcon.addEventListener("click", () => {
+            const newName = prompt("Digite o novo nome para esta matéria:", subject);
+            if (newName && newName.trim() && newName !== subject) {
+                renameSubject(subject, newName.trim());
+            }
+        });
+    }
+    
     categoryDiv.appendChild(categoryTitle);
     return categoryDiv;
 }
@@ -87,7 +113,8 @@ function createTaskElement(task, subject) {
     leftDiv.className = "task-left";
     leftDiv.innerHTML = `
         <i class="fas fa-grip-lines task-handle"></i>
-        <input type="checkbox" ${task.done ? "checked" : ""} aria-label="Marcar como concluída">
+        <input type="checkbox" class="task-checkbox" ${task.done ? "checked" : ""} 
+               aria-label="${task.done ? 'Desmarcar tarefa' : 'Marcar tarefa como concluída'}">
         <span class="priority-${task.priority}"></span>
         <span>${task.title}</span>
     `;
@@ -104,7 +131,7 @@ function createTaskElement(task, subject) {
         </button>
     `;
 
-    leftDiv.querySelector("input[type='checkbox']").addEventListener("change", () => toggleTaskDone(task.id, subject));
+    leftDiv.querySelector(".task-checkbox").addEventListener("change", () => toggleTaskDone(task.id, subject));
     actionsDiv.querySelector(".btn-focus").addEventListener("click", (e) => {
         e.stopPropagation();
         setFocusTask(task, subject);
@@ -136,10 +163,21 @@ function isTaskExpired(dueDate) {
 function getSubjectColor(subject) {
     const theme = document.documentElement.getAttribute("data-theme") || "light";
     const colors = {
-        "Matemática": theme === "dark" ? "#ff6b6b" : "#e74c3c",
-        "História": theme === "dark" ? "#5dade2" : "#3498db",
+        "Matemática": theme === "dark" ? "#63b3ed" : "#4682B4",
+        "Física": theme === "dark" ? "#9b59b6" : "#9b59b6",
+        "Química": theme === "dark" ? "#e67e22" : "#e67e22",
         "Biologia": theme === "dark" ? "#58d68d" : "#2ecc71",
-        "Outra": theme === "dark" ? "#9f7aea" : "#8a2be2",
+        "História": theme === "dark" ? "#f6ad55" : "#f39c12",
+        "Geografia": theme === "dark" ? "#1abc9c" : "#1abc9c",
+        "Filosofia": theme === "dark" ? "#7f8c8d" : "#7f8c8d",
+        "Sociologia": theme === "dark" ? "#bdc3c7" : "#34495e",
+        "Português": theme === "dark" ? "#e74c3c" : "#e74c3c",
+        "Literatura": theme === "dark" ? "#c0392b" : "#c0392b",
+        "Inglês": theme === "dark" ? "#3498db" : "#3498db",
+        "Espanhol": theme === "dark" ? "#f1c40f" : "#f1c40f",
+        "Artes": theme === "dark" ? "#fd79a8" : "#e84393",
+        "Educação Física": theme === "dark" ? "#00b894" : "#27ae60",
+        "Outra": theme === "dark" ? "#a0aec0" : "#8a2be2",
         "Estudos Agendados": theme === "dark" ? "#f1c40f" : "#f39c12"
     };
     return colors[subject] || "#4682B4";
@@ -151,13 +189,22 @@ function toggleTaskDone(taskId, taskSubject) {
         if (task) {
             task.done = !task.done;
             saveTasks();
+            showToast(task.done ? "Tarefa marcada como concluída!" : "Tarefa desmarcada.");
         }
     }
     renderTasks();
 }
 
 function addNewTask(title, subjectValue, dueDate, priority, description = "") {
-    const subjectName = getSubjectName(subjectValue);
+    let subjectName;
+    const customSubjectInput = document.getElementById("customSubject");
+    
+    if (subjectValue === "other" && customSubjectInput && customSubjectInput.value.trim()) {
+        subjectName = customSubjectInput.value.trim();
+    } else {
+        subjectName = getSubjectName(subjectValue);
+    }
+    
     const newId = `task-${Date.now()}`;
     const newTask = {
         id: newId,
@@ -167,12 +214,19 @@ function addNewTask(title, subjectValue, dueDate, priority, description = "") {
         priority: priority || "medium",
         done: false
     };
+    
     if (!tasks[subjectName]) {
         tasks[subjectName] = [];
     }
     tasks[subjectName].push(newTask);
     saveTasks();
     renderTasks();
+    
+    // Resetar o campo personalizado após adicionar
+    if (customSubjectInput) {
+        customSubjectInput.value = "";
+        customSubjectInput.classList.add("hidden");
+    }
 }
 
 function saveTasks() {
@@ -242,7 +296,7 @@ function showDeleteConfirmation(taskId, subject, taskTitle) {
         modal = document.createElement("div");
         modal.className = "modal"; 
         modal.id = modalId;
-        modal.style.display = "none"; // Start hidden
+        modal.style.display = "none";
         modal.innerHTML = `
             <div class="modal-content">
                 <span class="close-modal" data-close-id="${modalId}" aria-label="Fechar modal">&times;</span>
@@ -285,6 +339,16 @@ function deleteTask(taskId, subject) {
     }
 }
 
+function renameSubject(oldName, newName) {
+    if (tasks[oldName]) {
+        tasks[newName] = tasks[oldName];
+        delete tasks[oldName];
+        saveTasks();
+        renderTasks();
+        showToast(`Matéria renomeada para "${newName}"`);
+    }
+}
+
 function showToast(message) {
     const toastId = "toastNotification";
     let toast = document.getElementById(toastId);
@@ -298,11 +362,30 @@ function showToast(message) {
     toast.classList.add("show");
     setTimeout(() => {
         toast.classList.remove("show");
-        setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 300); // Remove from DOM after fade out
+        setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 300);
     }, 3000);
 }
 
+function setupSubjectEditing() {
+    const subjectSelect = document.getElementById("taskSubject");
+    const customSubjectInput = document.getElementById("customSubject");
+    
+    if (subjectSelect && customSubjectInput) {
+        subjectSelect.addEventListener("change", function() {
+            if (this.value === "other") {
+                customSubjectInput.classList.remove("hidden");
+                customSubjectInput.required = true;
+            } else {
+                customSubjectInput.classList.add("hidden");
+                customSubjectInput.required = false;
+            }
+        });
+    }
+}
+
 function setupEventListeners() {
+    setupSubjectEditing();
+    
     if (newTaskButton) newTaskButton.addEventListener("click", () => { if (taskModal) taskModal.style.display = "block"; });
     if (closeModalButton) closeModalButton.addEventListener("click", () => { if (taskModal) taskModal.style.display = "none"; });
     window.addEventListener("click", (e) => { if (e.target === taskModal) { if (taskModal) taskModal.style.display = "none"; } });
@@ -344,15 +427,14 @@ function setupEventListeners() {
     if (exportBtn) exportBtn.addEventListener("click", exportTasks);
     if (importInput) importInput.addEventListener("change", importTasks);
 
-    document.addEventListener("themeChanged", renderTasks); // Re-renderizar tarefas se o tema mudar (para cores)
+    document.addEventListener("themeChanged", renderTasks);
 }
 
 // Inicialização
 document.addEventListener("DOMContentLoaded", function() {
     setupEventListeners();
     if (filterSelect && filterSelect.querySelector('option[value="today"]')) {
-        filterSelect.value = "today"; // Define "Hoje" como o filtro padrão selecionado
+        filterSelect.value = "today";
     }
     renderTasks();
 });
-
