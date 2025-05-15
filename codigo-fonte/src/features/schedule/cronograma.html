@@ -62,87 +62,7 @@
             <div class="cell day-cell weekend">Sábado</div>
             <div class="cell day-cell weekend">Domingo</div>
           </div>
-          
-          <!-- Linhas de horário -->
-          <div class="row">
-            <div class="cell time-cell">08:00 - 09:30</div>
-            <div class="cell" data-day="mon" data-time="08:00">
-              <div class="event" data-subject="Matemática" data-type="study">
-                <span class="event-title">Matemática</span>
-                <span class="event-time">08:00-09:30</span>
-              </div>
-            </div>
-            <div class="cell" data-day="tue" data-time="08:00"></div>
-            <div class="cell" data-day="wed" data-time="08:00"></div>
-            <div class="cell" data-day="thu" data-time="08:00"></div>
-            <div class="cell" data-day="fri" data-time="08:00"></div>
-            <div class="cell weekend" data-day="sat" data-time="08:00"></div>
-            <div class="cell weekend" data-day="sun" data-time="08:00"></div>
-          </div>
-          
-          <div class="row">
-            <div class="cell time-cell">10:00 - 11:30</div>
-            <div class="cell" data-day="mon" data-time="10:00"></div>
-            <div class="cell" data-day="tue" data-time="10:00">
-              <div class="event" data-subject="Programação" data-type="study">
-                <span class="event-title">Programação</span>
-                <span class="event-time">10:00-11:30</span>
-              </div>
-            </div>
-            <div class="cell" data-day="wed" data-time="10:00"></div>
-            <div class="cell" data-day="thu" data-time="10:00"></div>
-            <div class="cell" data-day="fri" data-time="10:00"></div>
-            <div class="cell weekend" data-day="sat" data-time="10:00"></div>
-            <div class="cell weekend" data-day="sun" data-time="10:00"></div>
-          </div>
-          
-          <div class="row">
-            <div class="cell time-cell">14:00 - 15:30</div>
-            <div class="cell" data-day="mon" data-time="14:00"></div>
-            <div class="cell" data-day="tue" data-time="14:00"></div>
-            <div class="cell" data-day="wed" data-time="14:00">
-              <div class="event" data-subject="Inglês" data-type="study">
-                <span class="event-title">Inglês</span>
-                <span class="event-time">14:00-15:30</span>
-              </div>
-            </div>
-            <div class="cell" data-day="thu" data-time="14:00"></div>
-            <div class="cell" data-day="fri" data-time="14:00"></div>
-            <div class="cell weekend" data-day="sat" data-time="14:00"></div>
-            <div class="cell weekend" data-day="sun" data-time="14:00"></div>
-          </div>
-          
-          <div class="row">
-            <div class="cell time-cell">16:00 - 17:30</div>
-            <div class="cell" data-day="mon" data-time="16:00"></div>
-            <div class="cell" data-day="tue" data-time="16:00"></div>
-            <div class="cell" data-day="wed" data-time="16:00"></div>
-            <div class="cell" data-day="thu" data-time="16:00">
-              <div class="event" data-subject="Exercícios" data-type="exercise">
-                <span class="event-title">Exercícios</span>
-                <span class="event-time">16:00-17:30</span>
-              </div>
-            </div>
-            <div class="cell" data-day="fri" data-time="16:00"></div>
-            <div class="cell weekend" data-day="sat" data-time="16:00"></div>
-            <div class="cell weekend" data-day="sun" data-time="16:00"></div>
-          </div>
-          
-          <div class="row">
-            <div class="cell time-cell">19:00 - 20:00</div>
-            <div class="cell" data-day="mon" data-time="19:00">
-              <div class="event" data-subject="Jantar" data-type="meal">
-                <span class="event-title">Jantar</span>
-                <span class="event-time">19:00-20:00</span>
-              </div>
-            </div>
-            <div class="cell" data-day="tue" data-time="19:00"></div>
-            <div class="cell" data-day="wed" data-time="19:00"></div>
-            <div class="cell" data-day="thu" data-time="19:00"></div>
-            <div class="cell" data-day="fri" data-time="19:00"></div>
-            <div class="cell weekend" data-day="sat" data-time="19:00"></div>
-            <div class="cell weekend" data-day="sun" data-time="19:00"></div>
-          </div>
+          <!-- As linhas de horário serão geradas dinamicamente pelo JavaScript -->
         </div>
       </div>
       
@@ -171,16 +91,49 @@
       <h2>Adicionar Atividade</h2>
       <form id="eventForm">
         <div class="form-group">
-          <label for="eventSubject">Matéria/Atividade:</label>
-          <input type="text" id="eventSubject" required>
+          <label for="itemCreationType">Criar como:</label>
+          <select id="itemCreationType" name="itemCreationType" required>
+            <option value="evento" selected>Evento (Lembrete: aula, palestra, etc.)</option>
+            <option value="tarefa">Tarefa (Para fazer)</option>
+          </select>
         </div>
         <div class="form-group">
-          <label for="eventType">Tipo:</label>
-          <select id="eventType" required>
-            <option value="study">Estudo</option>
-            <option value="exercise">Exercício</option>
-            <option value="meal">Refeição</option>
-            <option value="other">Outro</option>
+          <label for="eventTitle">Título:</label>
+          <input type="text" id="eventTitle" name="eventTitle" required>
+        </div>
+        <div class="form-group" id="cronEventCategoryGroup">
+          <label for="cronEventCategory">Categoria do Evento:</label>
+          <select id="cronEventCategory" name="cronEventCategory">
+            <option value="aula">Aula</option>
+            <option value="palestra">Palestra</option>
+            <option value="oficina">Oficina</option>
+            <option value="reuniao">Reunião</option>
+            <option value="estudo_dirigido">Estudo Dirigido</option>
+            <option value="exercicio_fisico">Exercício Físico</option>
+            <option value="refeicao">Refeição</option>
+            <option value="pessoal">Pessoal</option>
+            <option value="outro_evento">Outro Evento</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="taskSubjectCronGroup">
+          <label for="taskSubjectCron">Matéria da Tarefa:</label>
+          <select id="taskSubjectCron" name="taskSubjectCron">
+            <option value="math">Matemática</option>
+            <option value="physics">Física</option>
+            <option value="chemistry">Química</option>
+            <option value="biology">Biologia</option>
+            <option value="history">História</option>
+            <option value="geography">Geografia</option>
+            <option value="philosophy">Filosofia</option>
+            <option value="sociology">Sociologia</option>
+            <option value="portuguese">Português</option>
+            <option value="literature">Literatura</option>
+            <option value="english">Inglês</option>
+            <option value="spanish">Espanhol</option>
+            <option value="art">Artes</option>
+            <option value="physical_education">Educação Física</option>
+            <option value="geral_cronograma">Geral (Cronograma)</option>
+            <option value="other_task_cron">Outra Tarefa (Cronograma)</option>
           </select>
         </div>
         <div class="form-group">
