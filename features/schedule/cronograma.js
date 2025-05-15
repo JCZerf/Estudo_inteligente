@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         // Optionally, listen for 'studySchedule' if cronograma events can be modified elsewhere
-        // and need to reflect here without page reload.
+        // and need to reflect here without page.
     });
 });
 
