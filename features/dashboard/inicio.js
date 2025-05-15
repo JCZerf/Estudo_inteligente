@@ -1,3 +1,4 @@
+//JS para sincronização do inicio
 document.addEventListener("DOMContentLoaded", function() {
     loadUserName(); // Carrega o nome do usuário
     loadTarefasAgendadas();
