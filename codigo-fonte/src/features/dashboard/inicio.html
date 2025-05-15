@@ -69,11 +69,10 @@
         <p class="highlight">1h 15min</p>
       </section>
 
-      <section class="section" aria-labelledby="recomendacoes-heading">
-        <h3 id="recomendacoes-heading">Recomendações rápidas</h3>
-        <ul>
-          <li>Use a sessão de foco!</li>
-          <li>Faltam 2 dias para a entrega do projeto!</li>
+      <section class="section" aria-labelledby="proximos-eventos-heading">
+        <h3 id="proximos-eventos-heading">Próximos Eventos</h3>
+        <ul id="listaProximosEventos">
+          <!-- Eventos dinâmicos serão inseridos aqui -->
         </ul>
       </section>
 
@@ -89,15 +88,6 @@
   <script>
     // Adiciona o ano atual ao rodapé
     document.getElementById("currentYear").textContent = new Date().getFullYear();
-    // Simulação de carregamento de tarefas
-    setTimeout(() => {
-        const tarefasSection = document.getElementById('tarefasSection');
-        const skeleton = tarefasSection.querySelector('.skeleton-loading');
-        if (skeleton) {
-            skeleton.setAttribute('aria-busy', 'false');
-            skeleton.innerHTML = '<p>Nenhuma tarefa pendente para hoje. Bom descanso!</p>'; // Exemplo de conteúdo carregado
-        }
-    }, 2000);
   </script>
 </body>
 </html>

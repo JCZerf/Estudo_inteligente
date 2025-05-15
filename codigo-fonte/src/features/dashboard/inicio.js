@@ -1,10 +1,11 @@
+//JS para sincronização 
 document.addEventListener("DOMContentLoaded", function() {
     loadUserName(); // Carrega o nome do usuário
     loadTarefasAgendadas();
     loadTempoFocoHoje();
     initProgressoSemanaChart();
     loadTempoMedioEstudoSemana();
-    loadRecomendacoesRapidas();
+    loadProximosEventos(); // Alterado de loadRecomendacoesRapidas para loadProximosEventos
     document.getElementById("currentYear").textContent = new Date().getFullYear();
     checkNotificationPermission();
 });
@@ -12,20 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
 function loadUserName() {
     const userNameSpan = document.getElementById("userName");
     if (userNameSpan) {
-        // Tenta buscar o nome do usuário do localStorage (simulando um login)
-        // Em um cenário real, o nome seria salvo no localStorage após o login/cadastro.
-        // Para fins de demonstração, vamos permitir setar via console ou usar um padrão.
         let userName = localStorage.getItem("loggedInUserName");
         if (userName) {
             userNameSpan.textContent = `Usuário: ${userName}`;
-        } else {
-            // Mantém o nome padrão ou define um genérico se não houver usuário logado
-            // userNameSpan.textContent = "Usuário: Convidado"; 
-            // Para manter o nome original como fallback:
-            // userNameSpan.textContent = "Usuário: Joaquim Silva"; // Já está no HTML, então não precisa mudar se não achar
-        }
+        } 
     }
-    // Para testar, você pode definir no console do navegador: localStorage.setItem("loggedInUserName", "Seu Nome"); e recarregar a página.
 }
 
 function loadTarefasAgendadas() {
@@ -33,10 +25,16 @@ function loadTarefasAgendadas() {
     if (!tarefasSection) return;
 
     const loadingDiv = tarefasSection.querySelector(".skeleton-loading");
-    if (loadingDiv) loadingDiv.remove();
-
-    tarefasSection.innerHTML = "<h3>Tarefas Agendadas</h3><ul id=\"listaTarefasAgendadasInicio\"></ul>"; // Adiciona ul para lista
+    
+    // Garante que o HTML da seção de tarefas seja recriado apenas se necessário
+    // ou se o loadingDiv ainda existir.
+    if (loadingDiv || !document.getElementById("listaTarefasAgendadasInicio")) {
+        if (loadingDiv) loadingDiv.remove();
+        tarefasSection.innerHTML = "<h3>Tarefas Agendadas</h3><ul id=\"listaTarefasAgendadasInicio\"></ul>";
+    }
     const listaTarefasUl = document.getElementById("listaTarefasAgendadasInicio");
+    if (!listaTarefasUl) return; // Sai se o UL não pode ser encontrado
+    listaTarefasUl.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
 
     try {
         const studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
@@ -44,7 +42,7 @@ function loadTarefasAgendadas() {
         const hoje = new Date().toISOString().split("T")[0];
 
         Object.values(studyTasks).flat().forEach(task => {
-            if (!task.done && task.due >= hoje) { // Exibe tarefas não concluídas e com prazo de hoje em diante
+            if (!task.done && task.due >= hoje) { 
                 const li = document.createElement("li");
                 li.textContent = `${task.title} (Prazo: ${new Date(task.due).toLocaleDateString("pt-BR", {timeZone: "UTC"})})`;
                 listaTarefasUl.appendChild(li);
@@ -57,12 +55,12 @@ function loadTarefasAgendadas() {
         }
     } catch (e) {
         console.error("Erro ao carregar tarefas agendadas:", e);
-        listaTarefasUl.innerHTML = "<li>Erro ao carregar tarefas.</li>";
+        if (listaTarefasUl) listaTarefasUl.innerHTML = "<li>Erro ao carregar tarefas.</li>";
     }
 }
 
 function loadTempoFocoHoje() {
-    const tempoFocoHighlight = document.querySelector(".section:nth-child(3) .highlight"); // Ajustar seletor se necessário
+    const tempoFocoHighlight = document.querySelector("section[aria-labelledby='tempo-foco-heading'] .highlight"); 
     if (!tempoFocoHighlight) return;
 
     let totalMinutosFocoHoje = 0;
@@ -95,7 +93,8 @@ function initProgressoSemanaChart() {
     const horasEstudoSemana = Array(7).fill(0);
     const hoje = new Date();
     const primeiroDiaSemana = new Date(hoje);
-    primeiroDiaSemana.setDate(hoje.getDate() - hoje.getDay()); // Domingo como primeiro dia
+    primeiroDiaSemana.setDate(hoje.getDate() - hoje.getDay()); 
+    primeiroDiaSemana.setHours(0,0,0,0);
 
     try {
         const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || [];
@@ -161,7 +160,7 @@ function initProgressoSemanaChart() {
 }
 
 function loadTempoMedioEstudoSemana() {
-    const tempoMedioHighlight = document.querySelector(".section:nth-child(5) .highlight"); // Ajustar seletor
+    const tempoMedioHighlight = document.querySelector("section[aria-labelledby='tempo-medio-heading'] .highlight");
     if (!tempoMedioHighlight) return;
 
     try {
@@ -179,18 +178,18 @@ function loadTempoMedioEstudoSemana() {
         let diasComEstudo = new Set();
 
         focusSessionsData.forEach(session => {
-            const sessionDate = new Date(session.date + "T00:00:00"); // Adiciona T00:00:00 para evitar problemas de fuso
+            const sessionDate = new Date(session.date + "T00:00:00");
             if (sessionDate >= primeiroDiaSemana && sessionDate <= ultimoDiaSemana && session.durationMinutes) {
                 totalMinutosSemana += session.durationMinutes;
                 diasComEstudo.add(session.date);
             }
         });
         
-        const numeroDiasComEstudo = diasComEstudo.size > 0 ? diasComEstudo.size : 1; // Evita divisão por zero
+        const numeroDiasComEstudo = diasComEstudo.size > 0 ? diasComEstudo.size : 1; 
         const mediaMinutosPorDia = totalMinutosSemana / numeroDiasComEstudo;
 
         const horas = Math.floor(mediaMinutosPorDia / 60);
-        const minutos = Math.round(mediaMinutosPorDia % 60); // Arredonda os minutos
+        const minutos = Math.round(mediaMinutosPorDia % 60); 
         tempoMedioHighlight.textContent = `${horas}h ${minutos}min / dia`;
 
     } catch (e) {
@@ -199,45 +198,47 @@ function loadTempoMedioEstudoSemana() {
     }
 }
 
-function loadRecomendacoesRapidas() {
-    const recomendacoesSection = document.querySelector(".section:nth-child(6) ul"); // Ajustar seletor
-    if (!recomendacoesSection) return;
+function loadProximosEventos() {
+    const proximosEventosUl = document.getElementById("listaProximosEventos");
+    if (!proximosEventosUl) return;
 
-    recomendacoesSection.innerHTML = ""; // Limpa recomendações antigas
+    proximosEventosUl.innerHTML = ""; // Limpa eventos antigos
 
     try {
-        const studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-        let recomendacoesAdicionadas = 0;
+        const studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
         const hoje = new Date();
-        hoje.setHours(0,0,0,0);
+        hoje.setHours(0, 0, 0, 0);
 
-        const tarefasPendentes = Object.values(studyTasks).flat().filter(task => !task.done && task.due);
-        tarefasPendentes.sort((a, b) => new Date(a.due) - new Date(b.due)); // Ordena por prazo
+        const dataLimite = new Date(hoje);
+        dataLimite.setDate(hoje.getDate() + 7); // Eventos nos próximos 7 dias
 
-        for (const task of tarefasPendentes) {
-            const dueDate = new Date(task.due + "T00:00:00"); // Adiciona T00:00:00 para evitar problemas de fuso
-            const diffTime = dueDate - hoje;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const eventosFiltrados = studySchedule.filter(evento => {
+            if (!evento.date) return false;
+            const dataEvento = new Date(evento.date + "T00:00:00"); // Normaliza para comparar datas
+            return dataEvento >= hoje && dataEvento < dataLimite; // Inclui hoje, até o final do 7º dia
+        });
 
-            if (diffDays >= 0 && diffDays <= 3) {
+        eventosFiltrados.sort((a, b) => new Date(a.date) - new Date(b.date)); // Ordena por data mais próxima
+
+        const eventosParaExibir = eventosFiltrados.slice(0, 4); // Limita a 4 eventos
+
+        if (eventosParaExibir.length > 0) {
+            eventosParaExibir.forEach(evento => {
                 const li = document.createElement("li");
-                if (diffDays === 0) {
-                    li.textContent = `Hoje: ${task.title}`;
-                } else {
-                    li.textContent = `Vence em ${diffDays} dia(s): ${task.title}`;
+                const dataEventoFormatada = new Date(evento.date + "T00:00:00").toLocaleDateString("pt-BR", { day: '2-digit', month: '2-digit' });
+                let textoEvento = `${dataEventoFormatada} - ${evento.subject}`;
+                if (evento.time && evento.time !== "-") {
+                    textoEvento += ` (${evento.time.substring(0,5)})`;
                 }
-                recomendacoesSection.appendChild(li);
-                recomendacoesAdicionadas++;
-                if (recomendacoesAdicionadas >= 2) break; // Limita a 2 recomendações por exemplo
-            }
-        }
-
-        if (recomendacoesAdicionadas === 0) {
-            recomendacoesSection.innerHTML = "<li>Nenhuma tarefa com prazo próximo.</li>";
+                li.textContent = textoEvento;
+                proximosEventosUl.appendChild(li);
+            });
+        } else {
+            proximosEventosUl.innerHTML = "<li>Nenhum evento próximo nos próximos 7 dias.</li>";
         }
     } catch (e) {
-        console.error("Erro ao carregar recomendações rápidas:", e);
-        recomendacoesSection.innerHTML = "<li>Erro ao carregar recomendações.</li>";
+        console.error("Erro ao carregar próximos eventos:", e);
+        proximosEventosUl.innerHTML = "<li>Erro ao carregar eventos.</li>";
     }
 }
 
@@ -248,4 +249,23 @@ function checkNotificationPermission() {
         });
     }
 }
+
+// Listener para storage events, para atualizar dinamicamente se dados mudarem em outra aba
+window.addEventListener('storage', function(event) {
+    console.log("Storage event detectado em inicio.js: ", event.key); // Debug
+    if (event.key === 'studyTasks') {
+        loadTarefasAgendadas();
+    }
+    if (event.key === 'focusSessions') {
+        loadTempoFocoHoje();
+        initProgressoSemanaChart(); // Recalcula o gráfico
+        loadTempoMedioEstudoSemana();
+    }
+    if (event.key === 'studySchedule') {
+        loadProximosEventos();
+    }
+    if (event.key === 'loggedInUserName') {
+        loadUserName();
+    }
+});
 

@@ -1,4 +1,5 @@
-let tasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
+// tarefas.js
+let tasks = {}; // Initialize, will be populated by loadTasksFromStorage on DOMContentLoaded
 
 const taskList = document.getElementById("taskList");
 const taskForm = document.getElementById("taskForm");
@@ -9,6 +10,12 @@ const searchInput = document.querySelector(".search-input");
 const filterSelect = document.getElementById("filterSelect");
 const exportBtn = document.getElementById("exportBtn");
 const importInput = document.getElementById("importInput");
+
+// Function to load tasks from localStorage and update the global 'tasks' variable
+function loadTasksFromStorage() {
+    console.log("tarefas.js: Loading tasks from storage"); // Debug
+    tasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
+}
 
 // Mapeia valores do select para nomes de matérias
 function getSubjectName(value) {
@@ -83,11 +90,11 @@ function createCategoryElement(subject) {
     const categoryTitle = document.createElement("h3");
     categoryTitle.innerHTML = `
         <span>${subject}</span>
-        ${subject === "Outra" ? '<i class="fas fa-edit subject-edit" title="Editar nome da matéria"></i>' : ''}
+        ${subject === "Outra" ? 
+        '<i class="fas fa-edit subject-edit" title="Editar nome da matéria"></i>' : ''}
     `;
     categoryTitle.style.setProperty("--subject-color", getSubjectColor(subject));
     
-    // Adicionar funcionalidade de edição para matérias "Outra"
     if (subject === "Outra") {
         const editIcon = categoryTitle.querySelector(".subject-edit");
         editIcon.addEventListener("click", () => {
@@ -149,7 +156,7 @@ function createTaskElement(task, subject) {
 function setFocusTask(task, subject) {
     const focusTask = { ...task, subject: subject };
     localStorage.setItem("focusTask", JSON.stringify(focusTask));
-    window.location.href = "../05-sessão_de_foco/sessao_de_foco.html";
+    window.location.href = "../pomodoro/sessao_de_foco.html"; // Corrected path based on original file structure
 }
 
 function isTaskExpired(dueDate) {
@@ -192,7 +199,7 @@ function toggleTaskDone(taskId, taskSubject) {
             showToast(task.done ? "Tarefa marcada como concluída!" : "Tarefa desmarcada.");
         }
     }
-    renderTasks();
+    renderTasks(); // Re-render current page
 }
 
 function addNewTask(title, subjectValue, dueDate, priority, description = "") {
@@ -220,9 +227,8 @@ function addNewTask(title, subjectValue, dueDate, priority, description = "") {
     }
     tasks[subjectName].push(newTask);
     saveTasks();
-    renderTasks();
+    renderTasks(); // Re-render current page
     
-    // Resetar o campo personalizado após adicionar
     if (customSubjectInput) {
         customSubjectInput.value = "";
         customSubjectInput.classList.add("hidden");
@@ -275,7 +281,7 @@ function importTasks(event) {
         try {
             const importedTasks = JSON.parse(e.target.result);
             if (confirm(`Deseja importar ${Object.values(importedTasks).flat().length} tarefas? Isso substituirá suas tarefas atuais.`)) {
-                tasks = importedTasks;
+                tasks = importedTasks; // Update global tasks variable
                 saveTasks();
                 renderTasks(); 
                 showToast("Tarefas importadas com sucesso!");
@@ -335,7 +341,7 @@ function deleteTask(taskId, subject) {
         }
         saveTasks();
         showToast("Tarefa excluída com sucesso!");
-        renderTasks();
+        renderTasks(); // Re-render current page
     }
 }
 
@@ -407,34 +413,28 @@ function setupEventListeners() {
             if (taskModal) taskModal.style.display = "none";
         });
     }
-
     if (searchInput) searchInput.addEventListener("input", renderTasks);
-    if (filterSelect) {
-        if (!filterSelect.querySelector('option[value="today"]')) {
-            const todayOption = document.createElement('option');
-            todayOption.value = "today";
-            todayOption.textContent = "Hoje";
-            const completedOption = filterSelect.querySelector('option[value="completed"]');
-            if (completedOption) {
-                filterSelect.insertBefore(todayOption, completedOption);
-            } else {
-                filterSelect.appendChild(todayOption);
-            }
-        }
-        filterSelect.addEventListener("change", renderTasks);
-    }
-
+    if (filterSelect) filterSelect.addEventListener("change", renderTasks);
     if (exportBtn) exportBtn.addEventListener("click", exportTasks);
     if (importInput) importInput.addEventListener("change", importTasks);
-
-    document.addEventListener("themeChanged", renderTasks);
 }
 
-// Inicialização
-document.addEventListener("DOMContentLoaded", function() {
-    setupEventListeners();
-    if (filterSelect && filterSelect.querySelector('option[value="today"]')) {
-        filterSelect.value = "today";
+// Event listener for storage changes from other tabs/windows
+window.addEventListener('storage', function(event) {
+    if (event.key === 'studyTasks') {
+        console.log("Storage event detected in tarefas.js, reloading tasks."); // Debug
+        loadTasksFromStorage(); // Reload tasks from storage
+        renderTasks();          // Re-render the task list
+        updateTaskCount();      // Also update the count after re-rendering
     }
-    renderTasks();
 });
+
+// Modified Initialization logic at the end of the file
+document.addEventListener("DOMContentLoaded", () => {
+    loadTasksFromStorage(); // Load tasks initially
+    renderTasks();
+    setupEventListeners(); 
+    // updateTaskCount(); // updateTaskCount is called within renderTasks
+    // initSortable(); // initSortable is called within renderTasks
+});
+
