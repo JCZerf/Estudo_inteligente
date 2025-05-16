@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Função para atualizar a contagem de tarefas selecionadas
     function updateSelectedTasksCount() {
         const countElement = document.getElementById('selectedTasksCount');
-        countElement.textContent = `${selectedTasks.length}/${MAX_TASKS} selecionadas`;
+        countElement.textContent = `${selectedTasks.length}/${MAX_TASKS}`;
         
         // Validação do tempo mínimo
         const validationElement = document.getElementById('tasksValidation');
