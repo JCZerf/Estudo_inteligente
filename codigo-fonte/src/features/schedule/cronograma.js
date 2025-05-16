@@ -1,7 +1,15 @@
 // cronograma.js
 
-// Helper function to get task subject display name
+// Helper function to get task subject display name from select value
 function getTaskSubjectNameForCron(value) {
+    const selectElement = document.getElementById("taskSubjectCron");
+    if (selectElement) {
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value === value) {
+                return selectElement.options[i].text;
+            }
+        }
+    }
     const subjects = {
         "math": "Matemática", "physics": "Física", "chemistry": "Química",
         "biology": "Biologia", "history": "História", "geography": "Geografia",
@@ -9,10 +17,24 @@ function getTaskSubjectNameForCron(value) {
         "literature": "Literatura", "english": "Inglês", "spanish": "Espanhol",
         "art": "Artes", "physical_education": "Educação Física",
         "geral_cronograma": "Geral (Cronograma)",
-        "other_task_cron": "Outra Tarefa (Cronograma)" // Placeholder, ideally needs custom input
+        "other_task_cron": "Outra Tarefa (Cronograma)"
     };
-    return subjects[value] || value; // Fallback to value if not in map
+    return subjects[value] || value; 
 }
+
+function mapTaskCategoryDisplayNameToSelectValue(displayName, selectElement) {
+    if (selectElement) {
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].text === displayName) {
+                return selectElement.options[i].value;
+            }
+        }
+        const otherOption = Array.from(selectElement.options).find(opt => opt.value === "other_task_cron");
+        if (otherOption) return otherOption.value;
+    }
+    return "geral_cronograma";
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const weekNav = {
@@ -21,56 +43,134 @@ document.addEventListener("DOMContentLoaded", function () {
             prevBtn: document.getElementById("prevWeek"),
             nextBtn: document.getElementById("nextWeek"),
             weekDisplay: document.getElementById("currentWeek"),
-            scheduleTable: document.querySelector(".schedule-table") // Added for grid generation
+            scheduleTable: document.querySelector(".schedule-table")
         },
         init() {
-            this.generateScheduleGrid(); // Generate grid first
+            this.generateScheduleGrid();
             this.updateWeekDisplay();
             if (this.elements.prevBtn) this.elements.prevBtn.addEventListener("click", () => this.changeWeek(-1));
             if (this.elements.nextBtn) this.elements.nextBtn.addEventListener("click", () => this.changeWeek(1));
-            // Event listener for storage changes from other tabs/windows for studyTasks
-            window.addEventListener('studyItemsChanged', (event) => {
-                if (event.detail && (event.detail.storageKey === 'studyTasks' || event.detail.storageKey === 'studySchedule')) {
-                    console.log(`cronograma.js: studyItemsChanged event detected for ${event.detail.storageKey}, reloading schedule and tasks.`);
+            window.addEventListener("studyItemsChanged", (event) => {
+                if (event.detail && (event.detail.storageKey === "studyTasks" || event.detail.storageKey === "studySchedule")) {
                     this.loadScheduleAndTasks();
                 }
             });
-            this.loadScheduleAndTasks(); // Initial load of tasks into the generated grid
+            this.loadScheduleAndTasks(); // Load tasks first
+            this.initSortableGrid(); // Then initialize sortable
         },
         generateScheduleGrid() {
             if (!this.elements.scheduleTable) return;
-
-            // Clear existing rows except the header
             const existingRows = this.elements.scheduleTable.querySelectorAll(".row:not(.header-row)");
             existingRows.forEach(row => row.remove());
-
             const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
             const dayClasses = { sat: "weekend", sun: "weekend" };
-
             for (let hour = 0; hour < 24; hour += 2) {
                 const row = document.createElement("div");
                 row.classList.add("row");
-
                 const timeCell = document.createElement("div");
                 timeCell.classList.add("cell", "time-cell");
-                const startTime = `${String(hour).padStart(2, '0')}:00`;
+                const startTime = `${String(hour).padStart(2, "0")}:00`;
                 const endTimeHour = (hour + 2) % 24;
-                const endTime = `${String(endTimeHour).padStart(2, '0')}:00`;
+                const endTime = `${String(endTimeHour).padStart(2, "0")}:00`;
                 timeCell.textContent = `${startTime} - ${endTime}`;
                 row.appendChild(timeCell);
-
                 days.forEach(day => {
                     const dayCell = document.createElement("div");
-                    dayCell.classList.add("cell");
-                    if (dayClasses[day]) {
-                        dayCell.classList.add(dayClasses[day]);
-                    }
+                    dayCell.classList.add("cell", "schedule-cell"); // Added class for sortable target
+                    if (dayClasses[day]) dayCell.classList.add(dayClasses[day]);
                     dayCell.dataset.day = day;
-                    dayCell.dataset.time = startTime; // Use the start time for the slot
+                    dayCell.dataset.time = startTime;
                     row.appendChild(dayCell);
                 });
                 this.elements.scheduleTable.appendChild(row);
             }
+        },
+        initSortableGrid() {
+            const cells = document.querySelectorAll(".schedule-cell");
+            cells.forEach(cell => {
+                new Sortable(cell, {
+                    group: "schedule-items", // Allow moving items between cells
+                    animation: 150,
+                    ghostClass: "sortable-ghost-event", // Custom class for ghost element
+                    chosenClass: "sortable-chosen-event", // Custom class for chosen element
+                    dragClass: "sortable-drag-event", // Custom class for dragging element
+                    onEnd: (evt) => {
+                        const itemEl = evt.item; // The dragged element (.event)
+                        const toCell = evt.to;   // The target cell element
+                        const fromCell = evt.from; // The source cell element
+
+                        const itemId = itemEl.dataset.id;
+                        const itemType = itemEl.dataset.itemType;
+                        let fullData = JSON.parse(itemEl.dataset.fullData);
+
+                        const newDayAbbrev = toCell.dataset.day;
+                        const newTime = toCell.dataset.time; // This is the start time of the slot
+
+                        const weekDaysMapping = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
+                        const dayIndex = weekDaysMapping[newDayAbbrev];
+                        const currentWeekDaysISO = this.getWeekDays();
+                        const newDateISO = currentWeekDaysISO[dayIndex];
+
+                        const confirmModal = document.getElementById("confirmModal");
+                        const confirmTitle = document.getElementById("confirmModalTitle");
+                        const confirmMessage = document.getElementById("confirmModalMessage");
+                        const confirmBtn = document.getElementById("confirmModalConfirm");
+                        const cancelBtn = document.getElementById("confirmModalCancel");
+
+                        confirmTitle.textContent = "Confirmar Mudança";
+                        const newDateFormatted = new Date(newDateISO + "T00:00:00").toLocaleDateString("pt-BR");
+                        confirmMessage.innerHTML = `Mover "<strong>${fullData.title}</strong>" para <br><strong>${newDateFormatted}</strong> às <strong>${newTime}</strong>?`;
+
+                        confirmModal.style.display = "block";
+
+                        const handleConfirm = () => {
+                            if (itemType === "tarefa") {
+                                let studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
+                                const originalCategory = fullData.originalCategoryName;
+                                if (studyTasks[originalCategory]) {
+                                    const taskIndex = studyTasks[originalCategory].findIndex(t => t.id === itemId);
+                                    if (taskIndex !== -1) {
+                                        studyTasks[originalCategory][taskIndex].due = newDateISO;
+                                        studyTasks[originalCategory][taskIndex].time = newTime;
+                                        // Recalculate endTime if duration exists
+                                        if (studyTasks[originalCategory][taskIndex].duration) {
+                                            const durationMinutes = parseInt(studyTasks[originalCategory][taskIndex].duration);
+                                            const startTimeObj = new Date(`${newDateISO}T${newTime}:00`);
+                                            const endTimeObj = new Date(startTimeObj.getTime() + durationMinutes * 60000);
+                                            studyTasks[originalCategory][taskIndex].endTime = endTimeObj.toTimeString().substring(0, 5);
+                                        }
+                                        localStorage.setItem("studyTasks", JSON.stringify(studyTasks));
+                                        window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
+                                    } else { console.error("Tarefa não encontrada para mover."); }
+                                } else { console.error("Categoria original da tarefa não encontrada."); }
+                            } else if (itemType === "evento") {
+                                // Logic for moving non-task events if they are stored and handled similarly
+                                console.warn("Movimentação de eventos gerais ainda não implementada.");
+                            }
+                            this.loadScheduleAndTasks(); // Reload to reflect changes and correct placement
+                            cleanUp();
+                        };
+
+                        const handleCancel = () => {
+                            // Revert the move visually by moving the item back to the original cell
+                            // SortableJS might do this if the list isn't 'saved', but to be sure:
+                            fromCell.insertBefore(itemEl, fromCell.children[evt.oldDraggableIndex]);
+                            // If the above doesn't work perfectly due to re-rendering, a full reload is a fallback
+                            // this.loadScheduleAndTasks(); // This will redraw based on localStorage
+                            cleanUp();
+                        };
+
+                        const cleanUp = () => {
+                            confirmBtn.removeEventListener("click", handleConfirm);
+                            cancelBtn.removeEventListener("click", handleCancel);
+                            confirmModal.style.display = "none";
+                        };
+
+                        confirmBtn.addEventListener("click", handleConfirm, { once: true });
+                        cancelBtn.addEventListener("click", handleCancel, { once: true });
+                    }
+                });
+            });
         },
         changeWeek(weeks) {
             this.currentDate.setDate(this.currentDate.getDate() + weeks * 7);
@@ -81,10 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const startOfWeek = new Date(this.currentDate);
             const dayOfWeek = startOfWeek.getDay();
             startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
-
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(endOfWeek.getDate() + 6);
-
             const options = { day: "numeric", month: "long" };
             const startStr = startOfWeek.toLocaleDateString("pt-BR", options);
             const endStr = endOfWeek.toLocaleDateString("pt-BR", options);
@@ -105,67 +203,62 @@ document.addEventListener("DOMContentLoaded", function () {
             return weekDays;
         },
         loadScheduleAndTasks() {
-            console.log("cronograma.js: Loading schedule and tasks for the grid");
             document.querySelectorAll(".schedule-table .event").forEach(eventEl => eventEl.remove());
             const weekDaysISO = this.getWeekDays();
-
-            // CRONOGRAMA GRID NOW ONLY DISPLAYS TASKS FROM studyTasks
-            // Eventos from studySchedule are displayed on inicio.html
-
-            // Carregar tarefas (studyTasks)
             try {
                 const studyTasksData = JSON.parse(localStorage.getItem("studyTasks")) || {};
-                Object.values(studyTasksData).flat().forEach(task => {
-                    if (task.due && weekDaysISO.includes(task.due)) {
-                        const taskDisplayData = {
-                            id: task.id,
-                            subject: task.title, // Use task's title as the display subject
-                            type: "task",        // For styling or specific logic in addEventToCalendar
-                            itemType: "tarefa",  // Actual type of the item
-                            date: task.due,
-                            day: new Date(task.due + "T00:00:00Z").toLocaleDateString("en-US", { weekday: "short" }).toLowerCase().substring(0,3),
-                            time: task.time || "-", 
-                            endTime: task.endTime || "-",
-                            done: task.done
-                        };
-                        this.addEventToCalendar(taskDisplayData, true); // true because it's a task
-                    }
+                const taskSubjectCronSelect = document.getElementById("taskSubjectCron");
+
+                Object.entries(studyTasksData).forEach(([categoryName, tasksInCategory]) => {
+                    tasksInCategory.forEach(task => {
+                        if (task.due && weekDaysISO.includes(task.due)) {
+                            let taskOriginalCategorySelectValue = mapTaskCategoryDisplayNameToSelectValue(categoryName, taskSubjectCronSelect);
+                            const taskDisplayData = {
+                                id: task.id,
+                                title: task.title,
+                                itemType: "tarefa",
+                                date: task.due,
+                                day: new Date(task.due + "T00:00:00").toLocaleDateString("en-US", { weekday: "short" }).toLowerCase().substring(0,3),
+                                time: task.time || "-",
+                                endTime: task.endTime || "-", 
+                                duration: task.duration, 
+                                description: task.description || "",
+                                priority: task.priority || "medium",
+                                done: task.done || false,
+                                originalCategoryName: categoryName, 
+                                originalCategoryKeyForSelect: taskOriginalCategorySelectValue 
+                            };
+                            this.addEventToCalendar(taskDisplayData, true);
+                        }
+                    });
                 });
             } catch (e) {
                 console.error("Erro ao carregar tarefas para o cronograma:", e);
             }
         },
-        addEventToCalendar(eventData, isTask) { // eventData is taskDisplayData for tasks
+        addEventToCalendar(eventData, isTask) {
             const dayAbbrev = eventData.day.substring(0,3);
             let targetCell = null;
-
             if (isTask && eventData.time && eventData.time !== "-") {
-                const eventStartTime = eventData.time.substring(0,5); // HH:MM format
-
+                const eventStartTime = eventData.time.substring(0,5);
                 const dayCellsWithTime = Array.from(
                     document.querySelectorAll(`.cell[data-day="${dayAbbrev}"][data-time]`)
                 ).sort((a, b) => (a.dataset.time || "").localeCompare(b.dataset.time || ""));
-
                 if (dayCellsWithTime.length > 0) {
                     for (let i = dayCellsWithTime.length - 1; i >= 0; i--) {
                         const cell = dayCellsWithTime[i];
                         const cellStartTime = cell.dataset.time;
                         if (eventStartTime >= cellStartTime) {
-                            targetCell = cell;
-                            break;
+                            targetCell = cell; break;
                         }
                     }
-                    if (!targetCell) {
-                        targetCell = dayCellsWithTime[0]; // Fallback to the first slot if event is earlier
-                    }
+                    if (!targetCell) targetCell = dayCellsWithTime[0];
                 }
             }
-
             if (!targetCell) {
                 const dayCells = document.querySelectorAll(`.cell[data-day="${dayAbbrev}"][data-time]`);
-                if (dayCells.length > 0) {
-                    targetCell = dayCells[0];
-                } else {
+                if (dayCells.length > 0) targetCell = dayCells[0];
+                else {
                     const anyDayCell = document.querySelector(`.cell[data-day="${dayAbbrev}"]`);
                     if (anyDayCell) targetCell = anyDayCell;
                 }
@@ -175,19 +268,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 const existingElement = targetCell.querySelector(`.event[data-id="${eventData.id}"]`);
                 if (existingElement) {
                     existingElement.className = `event event-task ${eventData.done ? "event-done" : ""}`;
+                    existingElement.dataset.fullData = JSON.stringify(eventData); // Update fullData on re-render
                     const toggleBtn = existingElement.querySelector("button[data-action=\"toggle-done\"] i");
-                    if (toggleBtn) {
-                        toggleBtn.className = `fas fa-${eventData.done ? 'undo' : 'check'}`;
-                    }
+                    if (toggleBtn) toggleBtn.className = `fas fa-${eventData.done ? "undo" : "check"}`;
                     return; 
                 }
 
                 const eventElement = document.createElement("div");
                 eventElement.className = `event event-task ${eventData.done ? "event-done" : ""}`;
                 eventElement.dataset.id = eventData.id;
-                eventElement.dataset.itemType = eventData.itemType; 
+                eventElement.dataset.itemType = eventData.itemType;
                 eventElement.dataset.date = eventData.date;
                 eventElement.dataset.time = eventData.time;
+                eventElement.dataset.fullData = JSON.stringify(eventData); 
+                eventElement.draggable = true; // Make the event element draggable
 
                 let eventTimeDisplay = "";
                 if (eventData.time && eventData.time !== "-" && eventData.endTime && eventData.endTime !== "-") {
@@ -201,140 +295,110 @@ document.addEventListener("DOMContentLoaded", function () {
                         <button class="event-action-btn" data-action="delete" title="Excluir Tarefa">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        <button class="event-action-btn" data-action="toggle-done" title="${eventData.done ? 'Marcar como pendente' : 'Marcar como concluída'}">
-                            <i class="fas fa-${eventData.done ? 'undo' : 'check'}"></i>
+                        <button class="event-action-btn" data-action="toggle-done" title="${eventData.done ? "Marcar como pendente" : "Marcar como concluída"}">
+                            <i class="fas fa-${eventData.done ? "undo" : "check"}"></i>
                         </button>
                     </div>
                 `;
-
                 eventElement.innerHTML = `
-                    <span class="event-title">[T] ${eventData.subject}</span>
+                    <span class="event-title">[T] ${eventData.title}</span>
                     ${eventTimeDisplay}
                     ${actionsHtml}
                 `;
                 
-                eventElement.querySelectorAll('.event-action-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
+                eventElement.addEventListener("click", (e) => {
+                    if (e.target.closest(".event-action-btn")) return;
+                    const fullData = JSON.parse(eventElement.dataset.fullData);
+                    eventModal.open(fullData);
+                });
+
+                eventElement.querySelectorAll(".event-action-btn").forEach(btn => {
+                    btn.addEventListener("click", (e) => {
                         e.stopPropagation();
                         const action = btn.dataset.action;
-                        if (action === 'delete') {
-                            this.confirmDeleteEvent(eventData.id, true, eventData.subject); // isTask is true
-                        } else if (action === 'toggle-done') {
-                            this.toggleTaskDone(eventData.id); // No longer needs category/subject here
+                        if (action === "delete") {
+                            this.confirmDeleteEvent(eventData.id, true, eventData.title, eventData.originalCategoryName);
+                        } else if (action === "toggle-done") {
+                            this.toggleTaskDone(eventData.id, eventData.originalCategoryName);
                         }
                     });
                 });
-
                 targetCell.appendChild(eventElement);
             } else {
                 console.warn("Célula não encontrada para a tarefa no cronograma:", eventData, `dayAbbrev: ${dayAbbrev}`);
             }
         },
-        confirmDeleteEvent(eventId, isTask, taskSubject) {
-            const modal = document.getElementById('confirmModal');
-            const title = document.getElementById('confirmModalTitle');
-            const message = document.getElementById('confirmModalMessage');
-            const confirmBtn = document.getElementById('confirmModalConfirm');
-            const cancelBtn = document.getElementById('confirmModalCancel');
+        confirmDeleteEvent(itemId, isTask, itemTitle, itemCategoryName) { 
+            const modal = document.getElementById("confirmModal");
+            const titleEl = document.getElementById("confirmModalTitle");
+            const messageEl = document.getElementById("confirmModalMessage");
+            const confirmBtn = document.getElementById("confirmModalConfirm");
+            const cancelBtn = document.getElementById("confirmModalCancel");
             
-            title.textContent = isTask ? 'Excluir Tarefa do Cronograma' : 'Excluir Evento';
-            message.textContent = isTask 
-                ? 'Tem certeza que deseja excluir esta tarefa do cronograma e da lista de tarefas?' 
-                : 'Tem certeza que deseja excluir este evento?';
+            titleEl.textContent = isTask ? "Excluir Tarefa do Cronograma" : "Excluir Evento";
+            messageEl.innerHTML = `Tem certeza que deseja excluir "<strong>${itemTitle}</strong>"? Esta ação não pode ser desfeita.`;
             
-            modal.style.display = 'block';
-            
+            modal.style.display = "block";
             const cleanUp = () => {
-                confirmBtn.onclick = null;
-                cancelBtn.onclick = null;
-                modal.style.display = 'none';
+                confirmBtn.removeEventListener("click", handleConfirmClick); // Use named function for removal
+                cancelBtn.removeEventListener("click", handleCancelClick);
+                modal.style.display = "none";
             };
-            
-            confirmBtn.onclick = () => {
+
+            const handleConfirmClick = () => {
                 if (isTask) {
-                    this.deleteTask(eventId, taskSubject);
-                } else {
-                    this.deleteEvent(eventId);
-                }
+                    this.deleteTask(itemId, itemCategoryName);
+                } 
                 cleanUp();
             };
-            
-            cancelBtn.onclick = cleanUp;
+            const handleCancelClick = () => {
+                cleanUp();
+            };
+
+            confirmBtn.addEventListener("click", handleConfirmClick, { once: true });
+            cancelBtn.addEventListener("click", handleCancelClick, { once: true });
         },
-        deleteEvent(eventId) { // For non-task events from studySchedule
-            try {
-                let savedSchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-                savedSchedule = savedSchedule.filter(e => e.id !== eventId);
-                localStorage.setItem("studySchedule", JSON.stringify(savedSchedule));
-                this.loadScheduleAndTasks(); // Reload to reflect change
-            } catch (e) {
-                console.error("Erro ao excluir evento do cronograma:", e);
-            }
-        },
-        deleteTask(taskId, taskSubjectName) { // For tasks from studyTasks, taskSubjectName is the original category
+        deleteTask(taskId, taskCategoryName) { 
             try {
                 let currentTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-                let taskFoundAndRemoved = false;
-                for (const category in currentTasks) {
-                    const originalLength = currentTasks[category].length;
-                    currentTasks[category] = currentTasks[category].filter(t => t.id !== taskId);
-                    if (currentTasks[category].length < originalLength) {
-                        taskFoundAndRemoved = true;
-                        if (currentTasks[category].length === 0) {
-                            delete currentTasks[category];
+                if (currentTasks[taskCategoryName]) {
+                    const originalLength = currentTasks[taskCategoryName].length;
+                    currentTasks[taskCategoryName] = currentTasks[taskCategoryName].filter(t => t.id !== taskId);
+                    if (currentTasks[taskCategoryName].length < originalLength) {
+                        if (currentTasks[taskCategoryName].length === 0) {
+                            delete currentTasks[taskCategoryName];
                         }
-                        break; // Assume task ID is unique across categories
+                        localStorage.setItem("studyTasks", JSON.stringify(currentTasks));
+                        this.loadScheduleAndTasks(); 
+                        window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
+                    } else {
+                        console.warn("Tarefa não encontrada para exclusão no cronograma:", taskId, taskCategoryName);
                     }
-                }
-                if (taskFoundAndRemoved){
-                    localStorage.setItem("studyTasks", JSON.stringify(currentTasks));
-                    // loadScheduleAndTasks will be called by the storage event listener or if on same page, called directly
-                    // To ensure immediate update if on the same page:
-                    this.loadScheduleAndTasks(); 
                 } else {
-                    console.warn("Tarefa não encontrada para exclusão no cronograma:", taskId);
+                     console.warn("Categoria da tarefa não encontrada para exclusão:", taskCategoryName);
                 }
             } catch (e) {
                 console.error("Erro ao excluir tarefa via cronograma:", e);
             }
         },
-        toggleTaskDone(taskId, taskSubjectName) { // For tasks from studyTasks
+        toggleTaskDone(taskId, taskCategoryName) { 
             try {
                 let currentTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-                let taskFound = false;
-                
-                for (const category in currentTasks) {
-                    const taskIndex = currentTasks[category].findIndex(t => t.id === taskId);
+                if (currentTasks[taskCategoryName]){
+                    const taskIndex = currentTasks[taskCategoryName].findIndex(t => t.id === taskId);
                     if (taskIndex !== -1) {
-                        currentTasks[category][taskIndex].done = !currentTasks[category][taskIndex].done;
-                        taskFound = true;
-                        break; // Assume task ID is unique
+                        currentTasks[taskCategoryName][taskIndex].done = !currentTasks[taskCategoryName][taskIndex].done;
+                        localStorage.setItem("studyTasks", JSON.stringify(currentTasks));
+                        this.loadScheduleAndTasks(); 
+                        window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
+                    } else {
+                        console.warn("Tarefa não encontrada para marcar como concluída/pendente:", taskId, taskCategoryName);
                     }
-                }
-                
-                if (taskFound) {
-                    localStorage.setItem("studyTasks", JSON.stringify(currentTasks));
-                    // loadScheduleAndTasks will be called by the storage event listener or if on same page, called directly
-                    // To ensure immediate update if on the same page:
-                    this.loadScheduleAndTasks(); 
                 } else {
-                     console.warn("Tarefa não encontrada para marcar como concluída/pendente no cronograma:", taskId);
+                    console.warn("Categoria da tarefa não encontrada para toggle done:", taskCategoryName);
                 }
             } catch (e) {
                 console.error("Erro ao alternar estado da tarefa via cronograma:", e);
-            }
-        },
-        editEvent(eventId) {
-            // This is for cronograma-specific events, not tasks from studyTasks
-            console.log("Editar evento do cronograma (não tarefa):", eventId);
-            // Logic to open modal with eventId details and save changes to 'studySchedule'
-            // For example, find the event in localStorage.studySchedule, populate modal, save on submit
-            const savedSchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-            const eventToEdit = savedSchedule.find(e => e.id === eventId);
-            if (eventToEdit && eventModal.elements.modal) {
-                eventModal.open(eventToEdit); // Pass event data to modal open function
-            } else {
-                console.warn("Evento não encontrado para edição ou modal não disponível");
             }
         }
     };
@@ -342,22 +406,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const eventModal = {
         elements: {
             modal: document.getElementById("eventModal"),
+            title: document.getElementById("eventModalTitle"),
             openBtn: document.getElementById("addEvent"),
             closeBtn: document.querySelector("#eventModal .close-modal"),
             form: document.getElementById("eventForm"),
-            itemCreationType: document.getElementById("itemCreationType"), // Novo
-            eventTitle: document.getElementById("eventTitle"), // Renomeado de eventSubject
-            cronEventCategoryGroup: document.getElementById("cronEventCategoryGroup"), // Novo
-            cronEventCategory: document.getElementById("cronEventCategory"), // Novo
-            taskSubjectCronGroup: document.getElementById("taskSubjectCronGroup"), // Novo
-            taskSubjectCron: document.getElementById("taskSubjectCron"), // Novo
-            eventDay: document.getElementById("eventDay"),
+            itemCreationType: document.getElementById("itemCreationType"),
+            eventTitle: document.getElementById("eventTitle"),
+            cronEventCategoryGroup: document.getElementById("cronEventCategoryGroup"),
+            cronEventCategory: document.getElementById("cronEventCategory"),
+            taskSubjectCronGroup: document.getElementById("taskSubjectCronGroup"),
+            taskSubjectCron: document.getElementById("taskSubjectCron"),
+            eventDate: document.getElementById("eventDate"), 
             eventTime: document.getElementById("eventTime"),
             eventDuration: document.getElementById("eventDuration"),
             eventNotes: document.getElementById("eventNotes"),
-            eventIdField: document.getElementById("eventId") // Hidden field for editing (usado para id de evento)
+            eventIdField: document.getElementById("eventIdField"),
+            saveButton: document.getElementById("saveActivityButton")
         },
-        currentEditId: null, // To store ID of event being edited (apenas para studySchedule)
+        currentEditId: null, 
+        currentEditItemType: null,
+        currentEditOriginalCategoryName: null, 
+
         init() {
             if (this.elements.openBtn) this.elements.openBtn.addEventListener("click", () => this.open());
             if (this.elements.closeBtn) this.elements.closeBtn.addEventListener("click", () => this.close());
@@ -365,62 +434,67 @@ document.addEventListener("DOMContentLoaded", function () {
             window.addEventListener("click", (e) => {
                 if (e.target === this.elements.modal) this.close();
             });
-
-            // Novo: Listener para alternar campos do formulário
             if (this.elements.itemCreationType) {
                 this.elements.itemCreationType.addEventListener("change", (e) => {
                     this.toggleFormFields(e.target.value);
                 });
             }
-            // Inicializa a visibilidade dos campos
             this.toggleFormFields(this.elements.itemCreationType ? this.elements.itemCreationType.value : "evento");
         },
         toggleFormFields(selectedType) {
             if (selectedType === "evento") {
                 if (this.elements.cronEventCategoryGroup) this.elements.cronEventCategoryGroup.classList.remove("hidden");
                 if (this.elements.taskSubjectCronGroup) this.elements.taskSubjectCronGroup.classList.add("hidden");
-                if (this.elements.eventDuration) this.elements.eventDuration.parentElement.classList.remove("hidden"); // Duração é para eventos
             } else if (selectedType === "tarefa") {
                 if (this.elements.cronEventCategoryGroup) this.elements.cronEventCategoryGroup.classList.add("hidden");
                 if (this.elements.taskSubjectCronGroup) this.elements.taskSubjectCronGroup.classList.remove("hidden");
-                // Para tarefas, a duração pode não ser estritamente necessária ou pode ser opcional
-                // Por ora, vamos manter o campo de duração visível, mas pode ser ajustado conforme a necessidade
-                if (this.elements.eventDuration) this.elements.eventDuration.parentElement.classList.remove("hidden"); 
             }
         },
-        open(eventData = null) { // eventData is for editing an existing event from studySchedule
+        open(itemData = null) { 
             if (this.elements.form) this.elements.form.reset();
             this.currentEditId = null;
+            this.currentEditItemType = null;
+            this.currentEditOriginalCategoryName = null;
             if(this.elements.eventIdField) this.elements.eventIdField.value = "";
-
-            // Default to "evento" and show relevant fields when opening for a new item
-            if(this.elements.itemCreationType) {
-                this.elements.itemCreationType.value = "evento"; 
-                this.elements.itemCreationType.disabled = false; // Ensure type can be changed for new items
-            }
-            this.toggleFormFields("evento"); // Show event fields by default
-
-            if (eventData && eventData.itemType === "evento") { // Check if editing an existing EVENT from studySchedule
-                this.currentEditId = eventData.id; // Only set for events from studySchedule being edited
-                if(this.elements.eventIdField) this.elements.eventIdField.value = eventData.id;
-                
+            
+            if (itemData) { 
+                this.currentEditId = itemData.id;
+                this.currentEditItemType = itemData.itemType;
+                if(this.elements.eventIdField) this.elements.eventIdField.value = itemData.id;
+                if(this.elements.title) this.elements.title.textContent = itemData.itemType === "tarefa" ? "Editar Tarefa" : "Editar Evento";
+                if(this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Alterações";
+                if(this.elements.eventTitle) this.elements.eventTitle.value = itemData.title || "";
                 if(this.elements.itemCreationType) {
-                    this.elements.itemCreationType.value = "evento";
-                    this.elements.itemCreationType.disabled = true; // Disable type change when editing an existing event
+                    this.elements.itemCreationType.value = itemData.itemType; 
+                    this.elements.itemCreationType.disabled = true; 
                 }
-                this.toggleFormFields("evento"); // Ensure event fields are shown
+                this.toggleFormFields(itemData.itemType);
 
-                if(this.elements.eventTitle) this.elements.eventTitle.value = eventData.title || (eventData.subject || ""); // Use title, fallback to subject
-                if(this.elements.cronEventCategory) this.elements.cronEventCategory.value = eventData.type || "pessoal"; // 'type' in studySchedule is category for event
-                if(this.elements.eventDay) this.elements.eventDay.value = eventData.day || "mon";
-                if(this.elements.eventTime) this.elements.eventTime.value = eventData.time || "";
-                if(this.elements.eventDuration) this.elements.eventDuration.value = eventData.duration || "60";
-                if(this.elements.eventNotes) this.elements.eventNotes.value = eventData.notes || "";
+                if (itemData.itemType === "tarefa") {
+                    this.currentEditOriginalCategoryName = itemData.originalCategoryName;
+                    if(this.elements.taskSubjectCron && itemData.originalCategoryKeyForSelect) { 
+                        this.elements.taskSubjectCron.value = itemData.originalCategoryKeyForSelect;
+                    } else if (this.elements.taskSubjectCron) {
+                        // Fallback if originalCategoryKeyForSelect is missing (e.g. older data)
+                        this.elements.taskSubjectCron.value = mapTaskCategoryDisplayNameToSelectValue(itemData.originalCategoryName, this.elements.taskSubjectCron);
+                    }
+                    if(this.elements.eventDate) this.elements.eventDate.value = itemData.date || "";
+                    if(this.elements.eventTime) this.elements.eventTime.value = itemData.time && itemData.time !== "-" ? itemData.time.substring(0,5) : "";
+                    if(this.elements.eventDuration) this.elements.eventDuration.value = itemData.duration || "30";
+                    if(this.elements.eventNotes) this.elements.eventNotes.value = itemData.description || ""; 
+                }
             } else { 
-                 // This branch is for opening the modal for a NEW item (task or event)
-                 // The itemCreationType is already defaulted to "evento" and enabled.
-                 // toggleFormFields has already been called to show "evento" fields.
-                 // No specific population needed here as it's a new item.
+                if(this.elements.title) this.elements.title.textContent = "Adicionar Atividade";
+                if(this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Atividade";
+                if(this.elements.itemCreationType) {
+                    this.elements.itemCreationType.value = "tarefa"; // Default to task for new from cronograma
+                    this.elements.itemCreationType.disabled = false;
+                }
+                this.toggleFormFields("tarefa");
+                if (this.elements.eventDate) { 
+                    this.elements.eventDate.value = new Date().toISOString().split("T")[0];
+                }
+                 if(this.elements.taskSubjectCron) this.elements.taskSubjectCron.value = "geral_cronograma"; // Default subject
             }
             if (this.elements.modal) this.elements.modal.style.display = "block";
         },
@@ -428,145 +502,93 @@ document.addEventListener("DOMContentLoaded", function () {
             if (this.elements.modal) this.elements.modal.style.display = "none";
             if (this.elements.form) this.elements.form.reset();
             this.currentEditId = null;
+            this.currentEditItemType = null;
+            this.currentEditOriginalCategoryName = null;
             if(this.elements.eventIdField) this.elements.eventIdField.value = "";
+            if(this.elements.itemCreationType) this.elements.itemCreationType.disabled = false;
         },
         handleSubmit(e) {
             e.preventDefault();
-
-            const creationType = this.elements.itemCreationType.value;
+            const creationType = this.currentEditId ? this.currentEditItemType : this.elements.itemCreationType.value;
             const title = this.elements.eventTitle.value.trim();
-            const dayAbbrev = this.elements.eventDay.value;
+            const itemDateISO = this.elements.eventDate.value; 
             const time = this.elements.eventTime.value;
             const duration = parseInt(this.elements.eventDuration.value);
             const notes = this.elements.eventNotes.value.trim();
 
-            if (!title) {
-                alert("O título é obrigatório.");
-                return;
+            if (!title || !itemDateISO || !time || isNaN(duration) || duration <= 0) {
+                 alert("Por favor, preencha todos os campos obrigatórios corretamente (Título, Data, Horário, Duração)."); return; 
             }
-            if (!time) {
-                alert("O horário é obrigatório.");
-                return;
-            }
-            if (isNaN(duration) || duration <= 0) {
-                alert("A duração deve ser um número positivo.");
-                return;
-            }
-
-            const weekDays = weekNav.getWeekDays(); // weekNav is in the outer scope
-            const dayMap = { mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6, sun: 0 }; // Assuming Sunday is 0
-            let itemDateISO = null;
-            for (const dateStr of weekDays) {
-                const d = new Date(dateStr + "T00:00:00Z"); // Use UTC for date part consistency
-                if (d.getUTCDay() === dayMap[dayAbbrev]) {
-                    itemDateISO = dateStr;
-                    break;
-                }
-            }
-
-            if (!itemDateISO) {
-                alert("Não foi possível determinar a data para o item. Verifique a semana selecionada.");
-                return;
-            }
-
+            
             const startTimeObj = new Date(`${itemDateISO}T${time}:00`);
             const endTimeObj = new Date(startTimeObj.getTime() + duration * 60000);
             const endTimeString = endTimeObj.toTimeString().substring(0, 5);
 
-            if (creationType === "evento") {
-                const eventCategory = this.elements.cronEventCategory.value;
-                const eventId = this.currentEditId || `event-${Date.now()}`; // Use currentEditId if editing an event
-
-                const eventData = {
-                    id: eventId,
-                    title: title,
-                    type: eventCategory, // Category of the event (e.g., "aula", "palestra")
-                    itemType: "evento", // Explicitly mark as an event
-                    day: dayAbbrev,      // Day abbreviation (mon, tue, etc.)
-                    date: itemDateISO,    // YYYY-MM-DD
-                    time: time,          // HH:MM
-                    endTime: endTimeString,  // HH:MM
-                    duration: duration,    // in minutes
-                    notes: notes,
-                };
-
-                try {
-                    let savedSchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-                    if (this.currentEditId) { // Editing existing event
-                        savedSchedule = savedSchedule.map(ev => ev.id === this.currentEditId ? eventData : ev);
-                    } else {
-                        savedSchedule.push(eventData);
-                    }
-                    localStorage.setItem("studySchedule", JSON.stringify(savedSchedule));
-                    console.log("Evento salvo:", eventData);
-                    // Eventos são para a tela de início, não para o grid do cronograma.
-                    // Disparar evento para notificar outras partes da aplicação (ex: tela de início)
-                    window.dispatchEvent(new CustomEvent('studyItemsChanged', { detail: { storageKey: 'studySchedule' } }));
-                } catch (er) {
-                    console.error("Erro ao salvar evento no localStorage:", er);
-                    alert("Ocorreu um erro ao salvar o evento.");
-                }
-
-            } else if (creationType === "tarefa") {
+            if (creationType === "tarefa") {
                 const taskSubjectValue = this.elements.taskSubjectCron.value;
-                const taskCategoryName = getTaskSubjectNameForCron(taskSubjectValue); // Helper function defined at the top
-                const taskId = `task-cron-${Date.now()}`;
+                const newTaskCategoryName = getTaskSubjectNameForCron(taskSubjectValue); 
+                let studyTasksData = JSON.parse(localStorage.getItem("studyTasks")) || {};
 
-                const newTaskData = {
-                    id: taskId,
-                    title: title,
-                    itemType: "tarefa", // Explicitly mark as a task
-                    due: itemDateISO,    // YYYY-MM-DD
-                    time: time,          // HH:MM
-                    endTime: endTimeString,  // HH:MM
-                    description: notes,
-                    priority: "medium",  // Default priority
-                    done: false,
-                    // A categoria (taskCategoryName) é a chave no objeto studyTasks, não um campo da tarefa em si.
-                };
-
-                try {
-                    let studyTasksData = JSON.parse(localStorage.getItem("studyTasks")) || {};
-                    if (!studyTasksData[taskCategoryName]) {
-                        studyTasksData[taskCategoryName] = [];
+                if (this.currentEditId) { 
+                    const originalCategoryName = this.currentEditOriginalCategoryName;
+                    if (!originalCategoryName || !studyTasksData[originalCategoryName]) {
+                        alert("Erro: Categoria original da tarefa não encontrada para edição."); return;
                     }
-                    studyTasksData[taskCategoryName].push(newTaskData);
-                    localStorage.setItem("studyTasks", JSON.stringify(studyTasksData));
-                    console.log("Tarefa salva:", newTaskData, "na categoria:", taskCategoryName);
-                    // Disparar evento para notificar outras partes da aplicação (ex: tela de tarefas, tela de início)
-                    window.dispatchEvent(new CustomEvent('studyItemsChanged', { detail: { storageKey: 'studyTasks' } }));
-                } catch (er) {
-                    console.error("Erro ao salvar tarefa no localStorage:", er);
-                    alert("Ocorreu um erro ao salvar a tarefa.");
-                }
-            }
+                    const taskIndex = studyTasksData[originalCategoryName].findIndex(t => t.id === this.currentEditId);
+                    if (taskIndex === -1) {
+                        alert("Erro: Tarefa não encontrada para edição."); return;
+                    }
+                    const originalTask = studyTasksData[originalCategoryName][taskIndex];
+                    const updatedTaskData = {
+                        ...originalTask, 
+                        title: title,
+                        due: itemDateISO,
+                        time: time,
+                        endTime: endTimeString,
+                        duration: duration,
+                        description: notes,
+                    };
 
-            weekNav.loadScheduleAndTasks(); // Recarrega o grid do cronograma (que agora só deve mostrar tarefas)
+                    if (originalCategoryName !== newTaskCategoryName) {
+                        studyTasksData[originalCategoryName].splice(taskIndex, 1);
+                        if (studyTasksData[originalCategoryName].length === 0) delete studyTasksData[originalCategoryName];
+                        if (!studyTasksData[newTaskCategoryName]) studyTasksData[newTaskCategoryName] = [];
+                        studyTasksData[newTaskCategoryName].push(updatedTaskData);
+                    } else {
+                        studyTasksData[originalCategoryName][taskIndex] = updatedTaskData;
+                    }
+                } else { 
+                    const taskId = `task-cron-${Date.now()}`;
+                    const taskData = {
+                        id: taskId, title: title, itemType: "tarefa", due: itemDateISO, time: time, 
+                        endTime: endTimeString, duration: duration, description: notes, 
+                        priority: "medium", done: false, 
+                    };
+                    if (!studyTasksData[newTaskCategoryName]) studyTasksData[newTaskCategoryName] = [];
+                    studyTasksData[newTaskCategoryName].push(taskData);
+                }
+                localStorage.setItem("studyTasks", JSON.stringify(studyTasksData));
+                window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
+            } else if (creationType === "evento") {
+                alert("Funcionalidade de adicionar/editar eventos gerais ainda em desenvolvimento a partir do cronograma.");
+            }
+            weekNav.loadScheduleAndTasks(); 
             this.close();
         }
     };
 
     const printBtn = document.getElementById("printSchedule");
-    if (printBtn) {
-      printBtn.addEventListener("click", function () {
-        window.print();
-      });
-    }
+    if (printBtn) printBtn.addEventListener("click", () => window.print());
 
-    // Initialize components
     weekNav.init();
     eventModal.init();
 
-    // Event listener for storage changes from other tabs/windows
-    window.addEventListener('storage', function(event) {
-        if (event.key === 'studyTasks') {
-            console.log("Storage event detected in cronograma.js for studyTasks, reloading schedule."); // Debug
-            if (weekNav && typeof weekNav.loadScheduleAndTasks === 'function') {
-                weekNav.loadScheduleAndTasks(); // Reload tasks on the schedule
+    window.addEventListener("storage", function(event) {
+        if (event.key === "studyTasks" || event.key === "studySchedule") {
+            if (weekNav && typeof weekNav.loadScheduleAndTasks === "function") {
+                weekNav.loadScheduleAndTasks();
             }
         }
-        // Optionally, listen for 'studySchedule' if cronograma events can be modified elsewhere
-        // and need to reflect here without page reload.
     });
 });
 

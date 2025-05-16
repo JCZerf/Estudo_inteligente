@@ -1,5 +1,6 @@
 // tarefas.js
 let tasks = {}; // Initialize, will be populated by loadTasksFromStorage on DOMContentLoaded
+let currentEditTaskId = null; // To track the ID of the task being edited
 
 const taskList = document.getElementById("taskList");
 const taskForm = document.getElementById("taskForm");
@@ -10,6 +11,8 @@ const searchInput = document.querySelector(".search-input");
 const filterSelect = document.getElementById("filterSelect");
 const exportBtn = document.getElementById("exportBtn");
 const importInput = document.getElementById("importInput");
+const taskModalTitle = document.getElementById("taskModalTitle");
+const saveTaskButton = document.getElementById("saveTaskButton");
 
 // Function to load tasks from localStorage and update the global 'tasks' variable
 function loadTasksFromStorage() {
@@ -40,6 +43,34 @@ function getSubjectName(value) {
     return subjects[value] || value;
 }
 
+// Mapeia nomes de matérias para valores do select (inverso de getSubjectName)
+function getSubjectValue(name) {
+    const subjectMap = {
+        "Matemática": "math",
+        "Física": "physics",
+        "Química": "chemistry",
+        "Biologia": "biology",
+        "História": "history",
+        "Geografia": "geography",
+        "Filosofia": "philosophy",
+        "Sociologia": "sociology",
+        "Português": "portuguese",
+        "Literatura": "literature",
+        "Inglês": "english",
+        "Espanhol": "spanish",
+        "Artes": "art",
+        "Educação Física": "physical_education"
+    };
+    // Se não encontrar no mapa, verifica se é uma matéria personalizada (não listada)
+    if (!subjectMap[name]) {
+        // Verifica se existe uma option com esse nome (improvável para personalizadas)
+        // A lógica para "Outra" e customSubject deve ser tratada separadamente ao popular o form
+        return "other"; // Default para 'Outra' se não mapeado diretamente
+    }
+    return subjectMap[name] || "other";
+}
+
+
 // Renderiza todas as tarefas com filtros
 function renderTasks() {
     if (!taskList) return;
@@ -52,6 +83,7 @@ function renderTasks() {
     Object.entries(tasks).forEach(([subject, taskItems]) => {
         const filteredTasks = taskItems.filter(task => {
             const matchesSearch = task.title.toLowerCase().includes(searchTerm) || 
+                                (task.description && task.description.toLowerCase().includes(searchTerm)) ||
                                 (task.due && task.due.toLowerCase().includes(searchTerm));
             
             let matchesFilter = true;
@@ -63,8 +95,6 @@ function renderTasks() {
                 matchesFilter = !task.done;
             } else if (filterValue === "expired") {
                 matchesFilter = !task.done && task.due && task.due < today && !isNaN(Date.parse(task.due));
-            } else if (filterValue === "today") {
-                matchesFilter = task.due === today && !task.done;
             }
             return matchesSearch && matchesFilter;
         });
@@ -90,19 +120,22 @@ function createCategoryElement(subject) {
     const categoryTitle = document.createElement("h3");
     categoryTitle.innerHTML = `
         <span>${subject}</span>
-        ${subject === "Outra" ? 
+        ${subject.toLowerCase() !== "estudos agendados" && !Object.values(getSubjectName("")).includes(subject) ? 
         '<i class="fas fa-edit subject-edit" title="Editar nome da matéria"></i>' : ''}
-    `;
+    `; // Não permite editar "Estudos Agendados" ou matérias padrão
     categoryTitle.style.setProperty("--subject-color", getSubjectColor(subject));
     
-    if (subject === "Outra") {
+    if (subject.toLowerCase() !== "estudos agendados" && !Object.values(getSubjectName("")).includes(subject)) {
         const editIcon = categoryTitle.querySelector(".subject-edit");
-        editIcon.addEventListener("click", () => {
-            const newName = prompt("Digite o novo nome para esta matéria:", subject);
-            if (newName && newName.trim() && newName !== subject) {
-                renameSubject(subject, newName.trim());
-            }
-        });
+        if(editIcon) {
+            editIcon.addEventListener("click", (e) => {
+                e.stopPropagation(); // Impede que o clique no ícone abra o modal da tarefa
+                const newName = prompt("Digite o novo nome para esta matéria:", subject);
+                if (newName && newName.trim() && newName !== subject) {
+                    renameSubject(subject, newName.trim());
+                }
+            });
+        }
     }
     
     categoryDiv.appendChild(categoryTitle);
@@ -113,8 +146,11 @@ function createTaskElement(task, subject) {
     const taskDiv = document.createElement("div");
     taskDiv.className = `task ${task.done ? "task-done" : ""} ${isTaskExpired(task.due) && !task.done ? "task-expired" : ""}`;
     taskDiv.dataset.taskId = task.id;
-    taskDiv.dataset.subject = subject;
+    taskDiv.dataset.subject = subject; // Armazena a categoria/matéria original
     taskDiv.dataset.priority = task.priority;
+
+    // Adiciona evento de clique para abrir o modal de edição
+    taskDiv.addEventListener("click", () => openEditTaskModal(task.id, subject));
 
     const leftDiv = document.createElement("div");
     leftDiv.className = "task-left";
@@ -138,7 +174,10 @@ function createTaskElement(task, subject) {
         </button>
     `;
 
-    leftDiv.querySelector(".task-checkbox").addEventListener("change", () => toggleTaskDone(task.id, subject));
+    leftDiv.querySelector(".task-checkbox").addEventListener("click", (e) => {
+        e.stopPropagation(); // Impede que o clique no checkbox abra o modal
+        toggleTaskDone(task.id, subject);
+    });
     actionsDiv.querySelector(".btn-focus").addEventListener("click", (e) => {
         e.stopPropagation();
         setFocusTask(task, subject);
@@ -153,10 +192,56 @@ function createTaskElement(task, subject) {
     return taskDiv;
 }
 
+function openNewTaskModal() {
+    currentEditTaskId = null;
+    if (taskModalTitle) taskModalTitle.textContent = "Nova Tarefa";
+    if (saveTaskButton) saveTaskButton.textContent = "Salvar Tarefa";
+    if (taskForm) taskForm.reset();
+    document.getElementById("customSubject").classList.add("hidden");
+    document.getElementById("taskSubject").value = "math"; // Default
+    document.querySelector('input[name="priority"][value="medium"]').checked = true; // Default priority
+    if (taskModal) taskModal.style.display = "block";
+}
+
+function openEditTaskModal(taskId, subjectName) {
+    const task = tasks[subjectName]?.find(t => t.id === taskId);
+    if (!task) {
+        console.error("Tarefa não encontrada para edição:", taskId, subjectName);
+        return;
+    }
+    currentEditTaskId = taskId;
+    if (taskModalTitle) taskModalTitle.textContent = "Editar Tarefa";
+    if (saveTaskButton) saveTaskButton.textContent = "Salvar Alterações";
+
+    document.getElementById("editTaskId").value = taskId;
+    document.getElementById("taskTitle").value = task.title;
+    
+    const subjectSelect = document.getElementById("taskSubject");
+    const customSubjectInput = document.getElementById("customSubject");
+    const subjectValue = getSubjectValue(subjectName); // Tenta mapear o nome da matéria para o valor do select
+    
+    if (subjectSelect.querySelector(`option[value="${subjectValue}"]`)) {
+        subjectSelect.value = subjectValue;
+        customSubjectInput.classList.add("hidden");
+        customSubjectInput.value = "";
+    } else { // Matéria personalizada (não está no select padrão)
+        subjectSelect.value = "other";
+        customSubjectInput.classList.remove("hidden");
+        customSubjectInput.value = subjectName;
+    }
+    
+    document.getElementById("taskDueDate").value = task.due || "";
+    document.querySelector(`input[name="priority"][value="${task.priority || 'medium'}"]`).checked = true;
+    document.getElementById("taskDescription").value = task.description || "";
+
+    if (taskModal) taskModal.style.display = "block";
+}
+
+
 function setFocusTask(task, subject) {
     const focusTask = { ...task, subject: subject };
     localStorage.setItem("focusTask", JSON.stringify(focusTask));
-    window.location.href = "../pomodoro/sessao_de_foco.html"; // Corrected path based on original file structure
+    window.location.href = "../pomodoro/sessao_de_foco.html";
 }
 
 function isTaskExpired(dueDate) {
@@ -199,45 +284,112 @@ function toggleTaskDone(taskId, taskSubject) {
             showToast(task.done ? "Tarefa marcada como concluída!" : "Tarefa desmarcada.");
         }
     }
-    renderTasks(); // Re-render current page
+    renderTasks(); 
 }
 
-function addNewTask(title, subjectValue, dueDate, priority, description = "") {
-    let subjectName;
+function handleTaskFormSubmit(event) {
+    event.preventDefault();
+    const title = document.getElementById("taskTitle").value.trim();
+    const subjectValue = document.getElementById("taskSubject").value;
     const customSubjectInput = document.getElementById("customSubject");
-    
-    if (subjectValue === "other" && customSubjectInput && customSubjectInput.value.trim()) {
+    const dueDate = document.getElementById("taskDueDate").value;
+    const priority = taskForm.querySelector("input[name='priority']:checked").value;
+    const description = document.getElementById("taskDescription").value.trim();
+    const editingId = document.getElementById("editTaskId").value;
+
+    let subjectName;
+    if (subjectValue === "other" && customSubjectInput.value.trim()) {
         subjectName = customSubjectInput.value.trim();
     } else {
         subjectName = getSubjectName(subjectValue);
     }
-    
-    const newId = `task-${Date.now()}`;
-    const newTask = {
-        id: newId,
-        title: title,
-        due: dueDate || null,
-        description: description,
-        priority: priority || "medium",
-        done: false
-    };
-    
-    if (!tasks[subjectName]) {
-        tasks[subjectName] = [];
+
+    if (!title) {
+        alert("O título da tarefa é obrigatório.");
+        return;
     }
-    tasks[subjectName].push(newTask);
+
+    if (editingId) { // Editing existing task
+        let originalSubjectName = null;
+        // Find the original subject name of the task being edited
+        for (const subj in tasks) {
+            if (tasks[subj].find(t => t.id === editingId)) {
+                originalSubjectName = subj;
+                break;
+            }
+        }
+
+        if (!originalSubjectName) {
+            console.error("Não foi possível encontrar a tarefa original para edição.");
+            return;
+        }
+
+        const taskIndex = tasks[originalSubjectName].findIndex(t => t.id === editingId);
+        if (taskIndex === -1) {
+             console.error("Índice da tarefa não encontrado para edição.");
+            return;
+        }
+
+        const updatedTask = {
+            ...tasks[originalSubjectName][taskIndex], // Preserve existing properties like 'id', 'done'
+            title: title,
+            due: dueDate || null,
+            description: description,
+            priority: priority || "medium",
+            // Matéria (subjectName) pode ter mudado
+        };
+
+        if (originalSubjectName !== subjectName) {
+            // Remove from old subject category
+            tasks[originalSubjectName].splice(taskIndex, 1);
+            if (tasks[originalSubjectName].length === 0) {
+                delete tasks[originalSubjectName];
+            }
+            // Add to new subject category
+            if (!tasks[subjectName]) {
+                tasks[subjectName] = [];
+            }
+            tasks[subjectName].push(updatedTask);
+            showToast("Tarefa atualizada e movida para " + subjectName + "!");
+        } else {
+            // Update in the same subject category
+            tasks[originalSubjectName][taskIndex] = updatedTask;
+            showToast("Tarefa atualizada com sucesso!");
+        }
+
+    } else { // Adding new task
+        const newId = `task-${Date.now()}`;
+        const newTask = {
+            id: newId,
+            title: title,
+            due: dueDate || null,
+            description: description,
+            priority: priority || "medium",
+            done: false
+        };
+        
+        if (!tasks[subjectName]) {
+            tasks[subjectName] = [];
+        }
+        tasks[subjectName].push(newTask);
+        showToast("Nova tarefa adicionada!");
+    }
+    
     saveTasks();
-    renderTasks(); // Re-render current page
-    
-    if (customSubjectInput) {
-        customSubjectInput.value = "";
-        customSubjectInput.classList.add("hidden");
-    }
+    renderTasks(); 
+    if (taskModal) taskModal.style.display = "none";
+    taskForm.reset();
+    document.getElementById("editTaskId").value = ""; // Clear edit ID
+    customSubjectInput.value = "";
+    customSubjectInput.classList.add("hidden");
 }
+
 
 function saveTasks() {
     localStorage.setItem("studyTasks", JSON.stringify(tasks));
     updateTaskCount();
+    // Disparar evento para notificar outras partes da aplicação (ex: cronograma)
+    window.dispatchEvent(new CustomEvent('studyItemsChanged', { detail: { storageKey: 'studyTasks' } }));
 }
 
 function updateTaskCount() {
@@ -252,10 +404,55 @@ function updateTaskCount() {
 
 function initSortable() {
     if (typeof Sortable !== "undefined" && taskList) {
+        // Destruir instâncias Sortable existentes para evitar duplicatas ou comportamento inesperado
+        const sortableInstances = Sortable.get(taskList);
+        if (sortableInstances) {
+            // Sortable.get pode retornar uma instância ou undefined. Não há um método destroyAll.
+            // Se for uma instância única, podemos tentar destruí-la.
+            // Esta parte é complexa pois Sortable não tem um método fácil para gerenciar múltiplas instâncias em filhos.
+            // A melhor abordagem é inicializar Sortable nos elementos filhos (categorias) se necessário.
+            // Por ora, a inicialização no taskList (pai) pode ser suficiente se a estrutura for simples.
+        }
         new Sortable(taskList, {
+            group: 'shared-categories',
             animation: 150,
-            handle: ".task-handle",
+            // handle: ".task-handle", // Comentado para permitir arrastar a categoria inteira se desejado
             ghostClass: "sortable-ghost",
+            onEnd: function (evt) {
+                // Lógica para salvar a nova ordem das categorias (se aplicável)
+                // Esta parte requer mais detalhes sobre como a ordem das categorias é armazenada e gerenciada
+            }
+        });
+
+        // Habilitar sortable para tarefas dentro de cada categoria
+        document.querySelectorAll('.task-category').forEach(categoryEl => {
+            new Sortable(categoryEl, {
+                group: 'shared-tasks',
+                animation: 150,
+                handle: '.task-handle',
+                ghostClass: 'sortable-ghost-task',
+                onEnd: function(evt) {
+                    const taskId = evt.item.dataset.taskId;
+                    const oldSubject = evt.from.querySelector('h3 span').textContent;
+                    const newSubject = evt.to.querySelector('h3 span').textContent;
+                    const newIndex = evt.newDraggableIndex;
+
+                    // Encontrar a tarefa
+                    const taskToMove = tasks[oldSubject]?.find(t => t.id === taskId);
+                    if (!taskToMove) return;
+
+                    // Remover da lista antiga
+                    tasks[oldSubject] = tasks[oldSubject].filter(t => t.id !== taskId);
+                    if (tasks[oldSubject].length === 0) delete tasks[oldSubject];
+
+                    // Adicionar à nova lista na nova posição
+                    if (!tasks[newSubject]) tasks[newSubject] = [];
+                    tasks[newSubject].splice(newIndex, 0, taskToMove);
+                    
+                    saveTasks();
+                    renderTasks(); // Re-render para garantir consistência, especialmente se a categoria mudou
+                }
+            });
         });
     }
 }
@@ -280,11 +477,16 @@ function importTasks(event) {
     reader.onload = function(e) {
         try {
             const importedTasks = JSON.parse(e.target.result);
-            if (confirm(`Deseja importar ${Object.values(importedTasks).flat().length} tarefas? Isso substituirá suas tarefas atuais.`)) {
-                tasks = importedTasks; // Update global tasks variable
-                saveTasks();
-                renderTasks(); 
-                showToast("Tarefas importadas com sucesso!");
+            // Validação básica da estrutura importada
+            if (typeof importedTasks === 'object' && importedTasks !== null) {
+                if (confirm(`Deseja importar as tarefas? Isso substituirá suas tarefas atuais.`)) {
+                    tasks = importedTasks; 
+                    saveTasks();
+                    renderTasks(); 
+                    showToast("Tarefas importadas com sucesso!");
+                }
+            } else {
+                alert("Formato de arquivo inválido.");
             }
         } catch (error) {
             alert("Erro ao importar tarefas. O arquivo pode estar corrompido.");
@@ -325,10 +527,13 @@ function showDeleteConfirmation(taskId, subject, taskTitle) {
     
     const confirmDeleteBtnEl = modal.querySelector("#confirmDeleteBtn");
     if(confirmDeleteBtnEl) {
-        confirmDeleteBtnEl.onclick = () => {
+        // Remove previous listener to avoid multiple deletions
+        const newConfirmBtn = confirmDeleteBtnEl.cloneNode(true);
+        confirmDeleteBtnEl.parentNode.replaceChild(newConfirmBtn, confirmDeleteBtnEl);
+        newConfirmBtn.addEventListener('click', () => {
             deleteTask(taskId, subject);
             modal.style.display = "none";
-        };
+        });
     }
     modal.style.display = "block";
 }
@@ -341,17 +546,25 @@ function deleteTask(taskId, subject) {
         }
         saveTasks();
         showToast("Tarefa excluída com sucesso!");
-        renderTasks(); // Re-render current page
+        renderTasks(); 
     }
 }
 
 function renameSubject(oldName, newName) {
-    if (tasks[oldName]) {
-        tasks[newName] = tasks[oldName];
+    if (tasks[oldName] && oldName !== newName) {
+        if (tasks[newName]) { // If newName category already exists, merge tasks
+            tasks[newName] = tasks[newName].concat(tasks[oldName]);
+        } else {
+            tasks[newName] = tasks[oldName];
+        }
         delete tasks[oldName];
         saveTasks();
         renderTasks();
-        showToast(`Matéria renomeada para "${newName}"`);
+        showToast(`Matéria "${oldName}" renomeada para "${newName}"`);
+    } else if (oldName === newName) {
+        showToast("O novo nome da matéria é igual ao antigo.");
+    } else {
+        showToast("Matéria original não encontrada.");
     }
 }
 
@@ -384,6 +597,7 @@ function setupSubjectEditing() {
             } else {
                 customSubjectInput.classList.add("hidden");
                 customSubjectInput.required = false;
+                customSubjectInput.value = ""; // Clear custom input when a standard subject is chosen
             }
         });
     }
@@ -392,49 +606,51 @@ function setupSubjectEditing() {
 function setupEventListeners() {
     setupSubjectEditing();
     
-    if (newTaskButton) newTaskButton.addEventListener("click", () => { if (taskModal) taskModal.style.display = "block"; });
-    if (closeModalButton) closeModalButton.addEventListener("click", () => { if (taskModal) taskModal.style.display = "none"; });
-    window.addEventListener("click", (e) => { if (e.target === taskModal) { if (taskModal) taskModal.style.display = "none"; } });
+    if (newTaskButton) newTaskButton.addEventListener("click", openNewTaskModal);
+    if (closeModalButton) closeModalButton.addEventListener("click", () => { 
+        if (taskModal) taskModal.style.display = "none"; 
+        if (taskForm) taskForm.reset(); 
+        document.getElementById("editTaskId").value = ""; 
+    });
+    window.addEventListener("click", (e) => { 
+        if (e.target === taskModal) { 
+            if (taskModal) taskModal.style.display = "none"; 
+            if (taskForm) taskForm.reset(); 
+            document.getElementById("editTaskId").value = ""; 
+        }
+    });
 
     if (taskForm) {
-        taskForm.addEventListener("submit", function(e) {
-            e.preventDefault();
-            const title = document.getElementById("taskTitle").value.trim();
-            const subject = document.getElementById("taskSubject").value;
-            const dueDate = document.getElementById("taskDueDate").value;
-            const priority = taskForm.querySelector("input[name='priority']:checked").value;
-            const description = document.getElementById("taskDescription").value;
-            if (title.length < 3) {
-                alert("O título deve ter pelo menos 3 caracteres.");
-                return;
-            }
-            addNewTask(title, subject, dueDate, priority, description);
-            this.reset();
-            if (taskModal) taskModal.style.display = "none";
-        });
+        taskForm.addEventListener("submit", handleTaskFormSubmit);
     }
+
     if (searchInput) searchInput.addEventListener("input", renderTasks);
     if (filterSelect) filterSelect.addEventListener("change", renderTasks);
     if (exportBtn) exportBtn.addEventListener("click", exportTasks);
     if (importInput) importInput.addEventListener("change", importTasks);
+
+    // Listener for storage changes from other tabs/windows
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'studyTasks') {
+            console.log("Storage event detected in tarefas.js for studyTasks, reloading tasks.");
+            loadTasksFromStorage(); // Reload tasks from storage
+            renderTasks(); // Re-render the UI
+        }
+    });
+    // Listener for custom event from cronograma.js or other internal changes
+    window.addEventListener('studyItemsChanged', (event) => {
+        if (event.detail && event.detail.storageKey === 'studyTasks') {
+            console.log("tarefas.js: studyItemsChanged event detected for studyTasks, reloading tasks.");
+            loadTasksFromStorage();
+            renderTasks();
+        }
+    });
 }
 
-// Event listener for storage changes from other tabs/windows
-window.addEventListener('storage', function(event) {
-    if (event.key === 'studyTasks') {
-        console.log("Storage event detected in tarefas.js, reloading tasks."); // Debug
-        loadTasksFromStorage(); // Reload tasks from storage
-        renderTasks();          // Re-render the task list
-        updateTaskCount();      // Also update the count after re-rendering
-    }
-});
-
-// Modified Initialization logic at the end of the file
+// Initial setup
 document.addEventListener("DOMContentLoaded", () => {
-    loadTasksFromStorage(); // Load tasks initially
+    loadTasksFromStorage();
     renderTasks();
-    setupEventListeners(); 
-    // updateTaskCount(); // updateTaskCount is called within renderTasks
-    // initSortable(); // initSortable is called within renderTasks
+    setupEventListeners();
 });
 

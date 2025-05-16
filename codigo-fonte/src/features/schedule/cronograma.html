@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../../shared/css/global.css" />
   <link rel="stylesheet" href="cronograma.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script> <!-- Adicionado SortableJS -->
 </head>
 <body>
   <div class="sidebar">
@@ -84,12 +85,13 @@
     </div>
   </div>
 
-  <!-- Modal para Adicionar Evento -->
+  <!-- Modal para Adicionar/Editar Evento/Tarefa -->
   <div class="modal" id="eventModal">
     <div class="modal-content">
       <span class="close-modal">&times;</span>
-      <h2>Adicionar Atividade</h2>
+      <h2 id="eventModalTitle">Adicionar Atividade</h2> <!-- Título dinâmico -->
       <form id="eventForm">
+        <input type="hidden" id="eventIdField" name="eventIdField"> <!-- Para ID do item em edição -->
         <div class="form-group">
           <label for="itemCreationType">Criar como:</label>
           <select id="itemCreationType" name="itemCreationType" required>
@@ -137,16 +139,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="eventDay">Dia da Semana:</label>
-          <select id="eventDay" required>
-            <option value="mon">Segunda-feira</option>
-            <option value="tue">Terça-feira</option>
-            <option value="wed">Quarta-feira</option>
-            <option value="thu">Quinta-feira</option>
-            <option value="fri">Sexta-feira</option>
-            <option value="sat">Sábado</option>
-            <option value="sun">Domingo</option>
-          </select>
+          <label for="eventDate">Data:</label>
+          <input type="date" id="eventDate" name="eventDate" required>
         </div>
         <div class="form-group">
           <label for="eventTime">Horário:</label>
@@ -154,22 +148,22 @@
         </div>
         <div class="form-group">
           <label for="eventDuration">Duração (minutos):</label>
-          <input type="number" id="eventDuration" min="15" max="240" value="90" required>
+          <input type="number" id="eventDuration" min="15" max="240" value="90" step="15" required>
         </div>
         <div class="form-group">
           <label for="eventNotes">Observações:</label>
           <textarea id="eventNotes" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Salvar Atividade</button>
+        <button type="submit" class="btn btn-primary" id="saveActivityButton">Salvar Atividade</button> <!-- Botão com ID -->
       </form>
     </div>
   </div>
 
-  <!-- Modal de Confirmação -->
+  <!-- Modal de Confirmação (Genérico) -->
   <div class="modal" id="confirmModal">
     <div class="modal-content" style="max-width: 400px;">
       <h3 id="confirmModalTitle">Confirmar ação</h3>
-      <p id="confirmModalMessage">Tem certeza que deseja excluir este evento?</p>
+      <p id="confirmModalMessage">Tem certeza?</p>
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" id="confirmModalCancel">Cancelar</button>
         <button class="btn btn-primary" id="confirmModalConfirm">Confirmar</button>
