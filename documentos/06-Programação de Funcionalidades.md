@@ -27,7 +27,7 @@ Artefatos da funcionalidade
 ●landpage.js
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 
 Ao clicar no link  terá acesso a página de landing page.
 
@@ -51,7 +51,7 @@ Artefatos da funcionalidade
 ●cadastro.css
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL:
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/
 
 
 Ao clicar em “Criar conta” no canto superior direito da tela, terá acesso a página de cadastro.
@@ -76,7 +76,7 @@ Artefatos da funcionalidade
 ● login.css
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 
 
 Ao clicar em “Entrar” no canto superior direito da tela, terá acesso a página de login.
@@ -103,7 +103,7 @@ Artefatos da funcionalidade
 ● inicio.js
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 Ao clicar em login no centro da tela, terá acesso a página de inicio.
 Veja os resultados de seus estudos na tela.
 
@@ -131,7 +131,7 @@ Artefatos da funcionalidade
 ● sessao_de_foco.js
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 Ao clicar em “sessão de foco” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
 Escolha a tarefa a qual deseja realizar, escolhar um tempo para focar. 
 Clique em iniciar para que o cronometro começe a marcar seu tempo investido na tarefa.
@@ -186,7 +186,7 @@ Artefatos da funcionalidade
 ● tarefas.js
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 Ao clicar em “tarefas” no menu esquerdo da coluna da tela, terá acesso a página de sessão de foco.
 Defina as tarefas, tempo de prazo, urgência da tarefa e a matéria que ela pertence. 
 
@@ -213,7 +213,7 @@ Artefatos da funcionalidade
 ● ranking.js
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 Ao clicar em “ranking” no menu esquerdo da coluna da tela, terá acesso a página de ranking.
 Acompanhe seu progresso atraves do ranking, comparando com outros usuários.
 
@@ -239,7 +239,7 @@ Artefatos da funcionalidade
 ● configurações.js
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 Ao clicar em “configurações” no menu esquerdo da coluna da tela, terá acesso a página de configurações.
 Clique as opções para ativar ou desativar as notificações
 
@@ -266,6 +266,6 @@ Artefatos da funcionalidade
 
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL: 
+Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/ 
 Ao clicar em “guias” no menu esquerdo da coluna da tela, terá acesso a página de guias.
 Clique em algum link para ser direcionado a guias sobre aprendizado e aproveitamento do tempo.
