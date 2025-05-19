@@ -51,6 +51,8 @@ Artefatos da funcionalidade
 
 ●cadastro.css
 
+●cadastro.js
+
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL:[https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/](https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/codigo-fonte/src/features/auth/cadastro.html)
 
@@ -76,6 +78,8 @@ Artefatos da funcionalidade
 ● login.html
 
 ● login.css
+
+●login.js
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL:[https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/](https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/codigo-fonte/src/features/auth/login.html) 
