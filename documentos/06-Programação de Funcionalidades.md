@@ -51,7 +51,7 @@ Artefatos da funcionalidade
 ●cadastro.css
 
 Instruções de acesso
-Abra um navegador de Internet e informe a seguinte URL:https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/
+Abra um navegador de Internet e informe a seguinte URL:[https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/](https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/codigo-fonte/src/features/auth/cadastro.html)
 
 
 Ao clicar em “Criar conta” no canto superior direito da tela, terá acesso a página de cadastro.
