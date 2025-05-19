@@ -46,6 +46,7 @@ Requisito atendido
 RF-01: O site deve permitir ao usuário cadastrar uma conta.
 
 Artefatos da funcionalidade
+
 ●cadastro.html
 
 ●cadastro.css
@@ -71,6 +72,7 @@ Requisito atendido
 RF-01: O site deve permitir ao usuário fazer o login da sua conta.
 
 Artefatos da funcionalidade
+
 ● login.html
 
 ● login.css
@@ -84,6 +86,7 @@ Ao clicar em “Entrar” no canto superior direito da tela, terá acesso a pág
 ***
 
 Tela de Inicio (RF-08)
+
 Responsável: José Carlos
 
 A tela de incio permite que o usuário acompanhe seu progresso, tendo acesso as principais informações da aplicação é acessada logo após o login. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -96,6 +99,7 @@ Requisitos atendidos
 RF-08 O site deve  permitir o acompanhamento de progresso.
 
 Artefatos da funcionalidade
+
 ● inicio.html
 
 ● inicio.css
@@ -110,6 +114,7 @@ Veja os resultados de seus estudos na tela.
 ***
 
 Tela de sessão de foco (RF-02)
+
 Responsável: José Carlos
 
 O acesso a tela de sessão de foco poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -119,16 +124,17 @@ Exemplo da tela de sessão de foco:
 ![Captura de Tela (49)](https://github.com/user-attachments/assets/ad7444c0-8333-4b1a-b7bb-80da338e6a40)
 
 Requisitos atendidos
+
 RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
 
 Artefatos da funcionalidade
+
 ● sessao_de_foco.html
 
 ● sessao_de_foco.css
 
 ● sessao_de_foco.js
 
-● sessao_de_foco.js
 
 Instruções de acesso
 Abra um navegador de Internet e informe a seguinte URL:[https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/](https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/codigo-fonte/src/features/pomodoro/sessao_de_foco.html) 
@@ -139,6 +145,7 @@ Clique em iniciar para que o cronometro começe a marcar seu tempo investido na 
 ***
 
 Tela de cronograma (RF-02)
+
 Responsável: Igor
 
 O acesso a tela de cronograma poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -149,9 +156,11 @@ Exemplo da tela de cronograma:
 
 
 Requisitos atendidos
+
 RF-03 O site deve permitir a criação de cronogramas de estudo personalizados..
 
 Artefatos da funcionalidade
+
 ● cronograma.html
 
 ● cronograma.css
@@ -167,6 +176,7 @@ Imprima seu cronograma para melhor acompanhamento.
 ***
 
 Tela de tarefas (RF-02)
+
 Responsável: Gabriel
 
 O acesso a tela de tarefas poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -176,9 +186,11 @@ Exemplo da tela de sessão de foco:
 ![Captura de Tela (51)](https://github.com/user-attachments/assets/4e7f432d-5c6d-4747-a7c9-be9d72098268)
 
 Requisitos atendidos
+
 RF-02 O site deve permitir ao usuário gerenciar suas tarefas.
 
 Artefatos da funcionalidade
+
 ● tarefas.html
 
 ● tarefas.css
@@ -193,6 +205,7 @@ Defina as tarefas, tempo de prazo, urgência da tarefa e a matéria que ela pert
 ***
 
 Tela de ranking (RF-02)
+
 Responsável: Alvim
 
 O acesso a tela de ranking poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -203,9 +216,11 @@ Exemplo da tela de ranking:
 
 
 Requisitos atendidos
+
 RF-08 O site deve permitir ao usuário acompanhar seu progresso.
 
 Artefatos da funcionalidade
+
 ● ranking.html
 
 ● ranking.css
@@ -220,6 +235,7 @@ Acompanhe seu progresso atraves do ranking, comparando com outros usuários.
 ***
 
 Tela de configurações (RF-04)
+
 Responsável: Hellen
 
 O acesso a tela de cadastro de configurações pode feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -229,9 +245,11 @@ Exemplo da tela de configurações:
 ![Captura de Tela (53)](https://github.com/user-attachments/assets/fc4cbb19-2f03-4ced-853c-30402f3b83d7)
 
 Requisitos atendidos
+
 RF-044 O site deve permitir ao usuário gerenciar recursos de notificações.
 
 Artefatos da funcionalidade
+
 ● configurações.html
 
 ● configurações.css
@@ -246,6 +264,7 @@ Clique as opções para ativar ou desativar as notificações
 ***
 
 Tela de guias (RF-07)
+
 Responsável: José Carlos
 
 O acesso a tela de guias poderá ser feito após o login do usuário. As estruturas de dados foram baseadas em HTML, CSS e JS.
@@ -255,9 +274,11 @@ Exemplo da tela de guias:
 ![Captura de Tela (54)](https://github.com/user-attachments/assets/675726de-4978-4cc8-9d56-b8adc40dede6)
 
 Requisitos atendidos
+
 RF-07 O site deve apresentar textos simplificados para facilitar o entendimento..
 
 Artefatos da funcionalidade
+
 ● guias.html
 
 ● guias.css
