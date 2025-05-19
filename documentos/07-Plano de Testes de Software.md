@@ -10,24 +10,6 @@ Os requisitos para realização dos testes de software são:
 
 Os testes funcionais a serem realizados na aplicação são descritos a seguir.
 
-<table>
- <tr>
-  <th>Caso de testes</th>
-  <th>Requisitos associados</th>
-  <th>Objetivo do teste</th>
-  <th>Passos</th>
-  <th>Critérios de êxito</th>
-  <th>Responsável</th>
- </tr>
- <tr>
-  <td>CT-01 – Verificar funcionamento dos links da página Inicial</td
-  <td><ul><li>RF-001: Navegação entre páginas do menu lateral</li></ul></td>
-  <td>Validar redirecionamento dos links principais</td>
-  <td><ol><li>Acessar aplicação</li><li>Clicar em: Cronograma, Tarefas, Sessão de Foco</li></ol></td>
-  <td>Redirecionamento correto para cada página</td>
-  <td>José Carlos</td>
- </tr>
-</table>
 
 
 <table>
