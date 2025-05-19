@@ -1,218 +1,73 @@
-# Plano de Testes de Software
+## Plano de Testes de Software
 
-# Plano de Testes de Software – Estudo Inteligente
-
-## Pré-requisitos
-- Especificação do Projeto
-- Protótipos das Telas
-- Regras de Negócio
-
-## Requisitos para realização dos testes
-- Aplicação publicada em ambiente local ou remoto
-- Navegadores recomendados: Google Chrome, Mozilla Firefox ou Microsoft Edge
+*Pré-requisitos:* Especificação do Projeto, Projeto de Interface  
+*Ambiente necessário:*  
+- Site publicado na internet  
+- Navegador da internet: Chrome, Firefox ou Edge  
 
 ---
 
-## CT-01 – Verificar o funcionamento dos links da página Inicial
-
-- *Requisitos associados:*  
-  RF-001: O sistema deve permitir navegação entre as páginas do menu lateral.
-
-- *Objetivo do teste:*  
-  Verificar se os links da página Inicial levam corretamente às páginas internas.
-
-- *Passos:*  
-  1. Acessar o navegador  
-  2. Informar o endereço da aplicação  
-  3. Clicar nos links: Cronograma, Tarefas, Sessão de Foco e Configurações
-
-- *Critérios de êxito:*  
-  Todos os links devem redirecionar corretamente para suas respectivas páginas.
-
-- *Responsável:* José Carlos
-
----
-
-## CT-02 – Verificar o funcionamento da página de Cronograma
-
-- *Requisitos associados:*  
-  RF-002: O sistema deve exibir os temas de estudo distribuídos no cronograma.
-
-- *Objetivo do teste:*  
-  Confirmar a correta distribuição visual dos temas no cronograma com base nas datas.
-
-- *Passos:*  
-  1. Acessar a página Cronograma  
-  2. Verificar a visualização dos temas por dia  
-  3. Conferir se a ordem respeita o planejamento
-
-- *Critérios de êxito:*  
-  O cronograma deve exibir corretamente os temas de estudo distribuídos por data.
-
-- *Responsável:* Sávio
-
----
-
-## CT-03 – Verificar o cadastro e exibição de tarefas
-
-- *Requisitos associados:*  
-  RF-003: O sistema deve permitir ao usuário cadastrar e visualizar tarefas.
-
-- *Objetivo do teste:*  
-  Garantir que o cadastro e a visualização de tarefas estejam funcionando corretamente.
-
-- *Passos:*  
-  1. Acessar a página Tarefas  
-  2. Cadastrar uma nova tarefa com título, descrição e prioridade  
-  3. Verificar se a tarefa aparece na lista
-
-- *Critérios de êxito:*  
-  A tarefa deve aparecer imediatamente na lista após o cadastro.
-
-- *Responsável:* José Carlos
-
----
-
-## CT-04 – Verificar edição e exclusão de tarefas
-
-- *Requisitos associados:*  
-  RF-004: O sistema deve permitir ao usuário editar e excluir tarefas.
-
-- *Objetivo do teste:*  
-  Confirmar se as funcionalidades de edição e exclusão funcionam corretamente.
-
-- *Passos:*  
-  1. Acessar a página Tarefas  
-  2. Clicar para editar uma tarefa  
-  3. Alterar campos e salvar  
-  4. Verificar a atualização  
-  5. Clicar para excluir uma tarefa  
-  6. Confirmar a exclusão
-
-- *Critérios de êxito:*  
-  As alterações devem ser salvas e as tarefas devem ser excluídas corretamente.
-
-- *Responsável:* Sávio
-
----
-
-## CT-05 – Verificar seleção de tarefa na Sessão de Foco
-
-- *Requisitos associados:*  
-  RF-005: O sistema deve permitir a seleção de uma tarefa para a sessão de foco.
-
-- *Objetivo do teste:*  
-  Verificar se a seleção é refletida visualmente e vinculada ao tempo de estudo.
-
-- *Passos:*  
-  1. Acessar Sessão de Foco  
-  2. Selecionar uma tarefa  
-  3. Iniciar o cronômetro  
-  4. Finalizar a sessão
-
-- *Critérios de êxito:*  
-  A tarefa deve estar visivelmente selecionada, e o tempo registrado após a sessão.
-
-- *Responsável:* José Carlos
-
----
-
-## CT-06 – Verificar funcionamento do cronômetro regressivo
-
-- *Requisitos associados:*  
-  RF-006: O sistema deve conter um cronômetro regressivo funcional com tempos de 10 a 120 minutos.
-
-- *Objetivo do teste:*  
-  Garantir o funcionamento preciso do cronômetro.
-
-- *Passos:*  
-  1. Selecionar um tempo de 25 minutos  
-  2. Iniciar o cronômetro  
-  3. Observar a contagem  
-  4. Aguardar finalização
-
-- *Critérios de êxito:*  
-  O cronômetro deve contar corretamente até 0 e exibir um alerta visual.
-
-- *Responsável:* Sávio
-
----
-
-## CT-07 – Verificar barra de progresso visual (“subir a escada da inteligência”)
-
-- *Requisitos associados:*  
-  RF-007: O sistema deve apresentar uma barra de progresso animada durante a sessão.
-
-- *Objetivo do teste:*  
-  Confirmar se a barra se atualiza proporcionalmente ao tempo decorrido.
-
-- *Passos:*  
-  1. Iniciar uma sessão de foco  
-  2. Observar a evolução da barra visual conforme o tempo passa
-
-- *Critérios de êxito:*  
-  A barra deve crescer de forma contínua até o fim da sessão.
-
-- *Responsável:* José Carlos
-
----
-
-## CT-08 – Verificar a contagem de tempo total de foco
-
-- *Requisitos associados:*  
-  RF-008: O sistema deve somar apenas sessões concluídas ao total de tempo.
-
-- *Objetivo do teste:*  
-  Validar o comportamento correto da contagem acumulada.
-
-- *Passos:*  
-  1. Concluir uma sessão de foco  
-  2. Observar o tempo total aumentado  
-  3. Iniciar outra sessão e interromper  
-  4. Confirmar que o tempo não foi somado
-
-- *Critérios de êxito:*  
-  Apenas sessões completas devem contribuir para o total exibido.
-
-- *Responsável:* Sávio
-
----
-
-## CT-09 – Verificar a mudança de tema claro/escuro
-
-- *Requisitos associados:*  
-  RF-009: O sistema deve permitir a troca entre temas claro e escuro.
-
-- *Objetivo do teste:*  
-  Testar se o sistema aplica corretamente a troca de tema.
-
-- *Passos:*  
-  1. Acessar a página Configurações  
-  2. Alterar o tema para escuro  
-  3. Verificar a mudança  
-  4. Alterar novamente para o tema claro
-
-- *Critérios de êxito:*  
-  As cores do sistema devem se atualizar corretamente em ambas as opções.
-
-- *Responsável:* José Carlos
-
----
-
-## CT-10 – Verificar personalização do nome do usuário
-
-- *Requisitos associados:*  
-  RF-010: O sistema deve exibir o nome do usuário nas telas após o login.
-
-- *Objetivo do teste:*  
-  Garantir que o nome do usuário seja exibido corretamente nas telas.
-
-- *Passos:*  
-  1. Informar o nome no início da aplicação  
-  2. Navegar pelas telas  
-  3. Verificar o nome nas interfaces superiores
-
-- *Critérios de êxito:*  
-  O nome deve ser exibido corretamente em todas as páginas principais.
-
-- *Responsável:* Sávio
+### Casos de Teste
+
+| Caso de teste | Requisitos associados | Objetivo do teste | Passos | Critérios de êxito | Responsável |
+|---------------|------------------------|-------------------|--------|---------------------|-------------|
+| *CT-01: Verificar o funcionamento dos links da página Home* | - RF-001: O site deve permitir ao usuário cadastrar uma conta.  
+- RF-002: O site deve permitir ao usuário fazer o login da sua conta.  
+- RF-005: O site deve permitir ao usuário disponibilizar informações das disciplinas de tutoria e suas informações para contato.  
+- RF-007: O site deve permitir ao usuário visualizar os detalhes do livro. | Verificar se os links da página Home estão encaminhando para as respectivas páginas corretamente | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar nos links da página Home. | Todos os links da página Home devem encaminhar os usuários para as páginas descritas. | Maria |
+| *CT-02: Verificar o funcionamento do filtro de pesquisa* | - RF-003: O site deve oferecer uma funcionalidade de filtro/pesquisa para permitir ao usuário localizar livros e disciplinas das tutorias disponíveis. | Verificar se o filtro de pesquisa está recuperando os dados inseridos pelo usuário | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar na página Livros.  
+5. Digitar no filtro de pesquisa algum dado presente na página Livros e verificar se o resultado é exibido na página. | Os dados inseridos no filtro de pesquisa devem mostrar o livro onde há o dado informado. | Maria |
+| *CT-03: Verificar detalhes dos livros* | - RF-006: O site deve apresentar, para cada livro, uma imagem correspondente à capa.  
+- RF-007: O site deve permitir ao usuário visualizar os detalhes do livro. | Verificar se todas as informações referentes aos livros estão disponíveis na página Livros | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar na página Livros.  
+5. Visualizar as informações referentes aos livros disponíveis na página. | Todas as informações, incluindo imagens das capas, referentes aos livros estão disponíveis na página Livros. | João |
+| *CT-04: Verificar o cadastro de usuários* | - RF-001: O site deve permitir ao usuário cadastrar uma conta. | Verificar se o cadastro está sendo feito corretamente | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar em "Cadastre-se", no Menu.  
+5. Preencher o formulário e clicar em “Cadastrar”. | Deve ocorrer uma validação das informações fornecidas pelo usuário, e ao clicar em "Cadastrar", deve aparecer a mensagem "Usuário cadastrado com sucesso". | Silvia |
+| *CT-05: Verificar o login de usuários* | - RF-002: O site deve permitir ao usuário fazer o login da sua conta. | Verificar se o login está sendo feito corretamente | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar em “Entrar”, no menu.  
+5. Preencher seus dados e clicar em “Entrar”. | Após o login, o usuário deverá ser redirecionado para a sua página de perfil. | Maria |
+| *CT-06: Verificar o cadastro de livros* | - RF-004: O site deve permitir ao usuário fazer o cadastro de livros. | Verificar se o cadastro de livros está sendo feito corretamente | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar em “Entrar”, no menu.  
+5. Preencher seus dados e clicar em “Entrar”.  
+6. Visualizar a página Perfil.  
+7. Clicar em “Cadastro de livros”, no menu.  
+8. Inserir as informações sobre o livro.  
+9. Clicar em “Cadastrar”. | Deve ocorrer uma validação das informações fornecidas pelo usuário, e ao clicar em "Cadastrar", deve aparecer a mensagem "Livro cadastrado com sucesso". | João |
+| *CT-07: Verificar o cadastro de tutores* | - RF-005: O site deve permitir ao usuário disponibilizar informações das disciplinas de tutoria e suas informações para contato. | Verificar se o cadastro de tutores está sendo feito corretamente | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar em “Entrar”, no menu.  
+5. Preencher seus dados e clicar em “Entrar”.  
+6. Visualizar a página Perfil.  
+7. Clicar em “Cadastro de tutores”, no menu.  
+8. Inserir as informações sobre o tutor.  
+9. Clicar em “Cadastrar”. | Deve ocorrer uma validação das informações fornecidas pelo usuário, e ao clicar em "Cadastrar", deve aparecer a mensagem "Tutoria cadastrada com sucesso". | Beatriz |
+| *CT-08: Verificar a página de Tutores* | - RF-008: O site deve permitir ao usuário visualizar os detalhes dos tutores. | Verificar os detalhes dos Tutores e visualizar seus respectivos perfis | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar em “Tutores”, no menu.  
+5. Visualizar a página "Tutores".  
+6. Verificar os perfis com foto e informações dos tutores, além da barra de pesquisa. | Deve ser possível visualizar todos os perfis de Tutores, com suas respectivas fotos e informações, além da visualização da barra de pesquisa acima dos perfis. | Pedro |
+| *CT-09: Verificar a página de perfil de usuários cadastrados* | - RF-009: O site deve permitir ao usuário verificar as informações registradas no cadastro na página Perfil, após fazer seu login. | Verificar se a página Perfil está apresentando as informações cadastradas pelo usuário corretamente | 1. Acessar o navegador.  
+2. Informar o endereço do site.  
+3. Visualizar a página Home.  
+4. Clicar em "Cadastre-se", no Menu.  
+5. Preencher o formulário e clicar em “Cadastrar”.  
+6. Visualizar a página Login.  
+7. Preencher seus dados e clicar em “Entrar”.  
+8. Visualizar a página Perfil. | As informações registradas pelo usuário no momento do cadastro devem estar disponibilizadas na página Perfil. | Silvia |
