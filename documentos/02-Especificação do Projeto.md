@@ -93,7 +93,7 @@ do usuário.
 | RF- 06 | Oferecer recursos de acessibilidade para daltônicos. | Alta |
 | RF- 07 | Apresentar textos simplificados para facilitar o entendimento. | Alta |
 | RF- 08 | Permitir o acompanhamento de progresso. | Média |
-| RF- 9 | Gerenciar diferentes perfis de usuário (estudantes e educadores). | Média |
+| RF- 09 | Gerenciar diferentes perfis de usuário (estudantes e educadores). | Média |
 | RF- 10 | Disponibilizar versão web. | Alta |
 | RF- 11 | Oferecer interface intuitiva e fácil de usar. | Alta |
 | RF- 12 | Disponibilizar versão mobile. | Baixa |
