@@ -122,26 +122,3 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>Sávio</td>
  </tr>
 </table>
-
-
-### Destaques da formatação:
-1. *Estrutura uniforme*:
-   - Todos os 10 casos seguem exatamente o mesmo padrão de tabela
-   - Mesma numeração (CT-01 a CT-10) e responsáveis originais
-
-2. *Elementos preservados*:
-   - Links em vermelho para pré-requisitos
-   - Listas HTML para requisitos e passos
-   - Colunas idênticas ao modelo
-
-3. *Otimizações*:
-   - Conteúdo mais conciso mantendo todos os critérios originais
-   - Passos simplificados (sem perder precisão)
-   - Requisitos destacados por caso
-
-4. *Consistência visual*:
-   - Mesmo estilo de tabelas do exemplo
-   - Uniformidade na capitalização
-   - Alinhamento vertical
-
-*Pronto para implementação imediata!* Caso queira ajustar algum elemento específico (como adicionar screenshots ou detalhar mais algum caso), é só me avisar.
