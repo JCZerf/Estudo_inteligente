@@ -227,21 +227,3 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
  </tr>
 </table>
 
-<table>
- <tr>
-  <th>Caso de testes</th>
-  <th>Requisitos associados</th>
-  <th>Objetivo do teste</th>
-  <th>Passos</th>
-  <th>Critérios de êxito</th>
-  <th>Responsável</th>
- </tr>
- <tr>
-  <td>CT-12 – Adicionar, concluir e excluir atividades do cronograma</td>
-  <td><ul><li>RF-03: Cronogramas personalizados</li></ul></td>
-  <td>Funcionamento da adição, conclusão e exclusão de atividades</td>
-  <td><ol><li>Acessar Cronograma</li><li>Adicionar atividade</li><li>Concluir ou excluir atividade</li></ol></td>
-  <td>Atividades podem ser adicionadas, concluídas e excluídas</td>
-  <td>Guilherme</td>
- </tr>
-</table>
