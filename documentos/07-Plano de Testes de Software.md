@@ -207,3 +207,22 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>Hellen</td>
  </tr>
 </table>
+
+<table>
+ <tr>
+  <th>Caso de testes</th>
+  <th>Requisitos associados</th>
+  <th>Objetivo do teste</th>
+  <th>Passos</th>
+  <th>Critérios de êxito</th>
+  <th>Responsável</th>
+ </tr>
+ <tr>
+  <td>CT-11 – Verificar funcionamento dos guias de estudo</td>
+  <td><ul><li>RF-011: Interface intuitiva e fácil de usar</li></ul></td>
+  <td>Testar acesso e funcionamento dos guias de estudo</td>
+  <td><ol><li>Acessar Guias</li><li>Clicar em Acessar Guias</li></ol></td>
+  <td>Guias de estudo funcionam corretamente</td>
+  <td>Hellen</td>
+ </tr>
+</table>
