@@ -13,13 +13,24 @@ Os resultados dos testes funcionais realizados na aplicação são descritos a s
 
 ___ 
 
-|Caso de Teste    | CT-10 - Testar ajuste de texto |
+|Caso de Teste    | CT- 10 - Testar ajuste de texto |
 |:---|:---|
 | Resultados obtidos | Mudança imediata no tamanho da fonte  |
 | Responsável pela execução do caso de Teste | Hellen |
 
 https://github.com/user-attachments/assets/817b28b6-4ffc-40ce-a960-35c80fd80a3d
 ___ 
+
+|Caso de Teste    | CT- 11 - Funcionamento das guias de estudo |
+|:---|:---|
+| Resultados obtidos | Guias de estudo funcionam corretamente  |
+| Responsável pela execução do caso de Teste | Hellen |
+
+https://github.com/user-attachments/assets/5c384211-b6d7-4c1e-a350-d40cf8a59c3f
+___
+
+
+
 
 
 
