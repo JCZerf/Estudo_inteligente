@@ -10,3 +10,13 @@ Os resultados dos testes funcionais realizados na aplicação são descritos a s
 | Responsável pela execução do caso de Teste | Nome do integrante da equipe |
 
 [Inserir aqui as evidências de teste que podem ser apresentadas por print de telas ou por .gif de execução de teste]
+
+|Caso de Teste    | CT-10 - Testar ajuste de texto |
+|:---|:---|
+| Resultados obtidos | Mudança imediata no tamanho da fonte  |
+| Responsável pela execução do caso de Teste | Hellen |
+
+https://github.com/user-attachments/assets/817b28b6-4ffc-40ce-a960-35c80fd80a3d
+
+
+
