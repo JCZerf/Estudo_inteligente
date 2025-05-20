@@ -219,7 +219,7 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
  </tr>
  <tr>
   <td>CT-11 – Verificar funcionamento dos guias de estudo</td>
-  <td><ul><li>RF-011: Interface intuitiva e fácil de usar</li></ul></td>
+  <td><ul><li>RF-011: Interface intuitiva</li></ul></td>
   <td>Funcionamento dos guias de estudo</td>
   <td><ol><li>Acessar Guias</li><li>Clicar em Acessar Guias</li></ol></td>
   <td>Guias de estudo funcionam corretamente</td>
