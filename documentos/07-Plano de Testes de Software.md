@@ -188,3 +188,27 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>José Carlos</td>
  </tr>
 </table>
+
+<table>
+ <tr>
+  <th>Caso de testes</th>
+  <th>Requisitos associados</th>
+  <th>Objetivo do teste</th>
+  <th>Passos</th>
+  <th>Critérios de êxito</th>
+  <th>Responsável</th>
+ </tr>
+ <tr>
+  <td>CT-10 – Alteração do tamanho da fonte</td>
+  <td><ul><li>RF-011 – Oferecer interface intuitiva e fácil de usar</li></ul></td>
+  <td>Verificar se a alteração do tamanho da fonte é aplicada corretamente em toda a interface</td>
+  <td>
+    <ol>
+      <li>Acessar a página "Configurações"</li>
+      <li>Selecionar uma opção em "Tamanho do texto" (Pequeno, Médio ou Grande)</li>
+    </ol>
+  </td>
+  <td>O tamanho da fonte deve ser alterado imediatamente e refletido em todas as páginas do sistema</td>
+  <td>Hellen</td>
+ </tr>
+</table>
