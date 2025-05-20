@@ -10,3 +10,9 @@ Os resultados dos testes funcionais realizados na aplicação são descritos a s
 | Responsável pela execução do caso de Teste | Nome do integrante da equipe |
 
 [Inserir aqui as evidências de teste que podem ser apresentadas por print de telas ou por .gif de execução de teste]
+
+
+
+
+https://github.com/user-attachments/assets/ef449f24-65d8-4ded-9165-5918f69184df
+
