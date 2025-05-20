@@ -11,6 +11,8 @@ Os resultados dos testes funcionais realizados na aplicação são descritos a s
 
 [Inserir aqui as evidências de teste que podem ser apresentadas por print de telas ou por .gif de execução de teste]
 
+___ 
+
 |Caso de Teste    | CT-10 - Testar ajuste de texto |
 |:---|:---|
 | Resultados obtidos | Mudança imediata no tamanho da fonte  |
