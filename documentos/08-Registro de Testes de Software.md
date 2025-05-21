@@ -18,7 +18,7 @@ ___
 | Resultados obtidos | Mudança imediata no tamanho da fonte  |
 | Responsável pela execução do caso de Teste | Hellen |
 
-https://github.com/user-attachments/assets/817b28b6-4ffc-40ce-a960-35c80fd80a3d
+<video width="320" controls src="https://github.com/user-attachments/assets/817b28b6-4ffc-40ce-a960-35c80fd80a3d"></video>
 ___ 
 
 |Caso de Teste    | CT- 11 - Funcionamento das guias de estudo |
