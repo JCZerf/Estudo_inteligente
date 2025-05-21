@@ -75,7 +75,7 @@ ___
 | Resultados obtidos | Guias de estudo funcionam corretamente  |
 | Responsável pela execução do caso de Teste | Hellen |
 
-![guias-de-estudo](https://github.com/user-attachments/assets/94cda88e-4b3d-4889-b33b-47aa51b60c7f)
+https://github.com/user-attachments/assets/fa8a3cf2-2c68-4331-9b1b-cbfebc7ac2da
 ___
 
 
