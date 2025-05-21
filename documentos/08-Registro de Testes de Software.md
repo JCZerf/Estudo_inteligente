@@ -14,6 +14,54 @@ ___
 ![redirecionamento-dos-links-principais](https://github.com/user-attachments/assets/8d7c3926-7000-4a8c-8c7c-2673577a24cc)
 ___ 
 
+|Caso de Teste    | CT-02 - Confirmar distribuição correta de temas |
+|:---|:---|
+| Resultados obtidos | Temas exibidos na ordem planejada |
+| Responsável pela execução do caso de Teste | Sávio |
+___ 
+
+|Caso de Teste    | CT-03 - Validar fluxo completo de criação |
+|:---|:---|
+| Resultados obtidos | Tarefa visível imediatamente após cadastro |
+| Responsável pela execução do caso de Teste | José Carlos |
+___ 
+
+|Caso de Teste    | CT-04 - Testar modificações e remoção |
+|:---|:---|
+| Resultados obtidos | Alterações persistidas e exclusão efetiva |
+| Responsável pela execução do caso de Teste | Sávio |
+___ 
+
+|Caso de Teste    | CT-05 - Validar associação entre tarefa e timer |
+|:---|:---|
+| Resultados obtidos | Tarefa vinculada ao tempo registrado |
+| Responsável pela execução do caso de Teste | José Carlos |
+___ 
+
+|Caso de Teste    | CT-06 - Testar precisão temporal |
+|:---|:---|
+| Resultados obtidos | Contagem precisa até zero com alerta |
+| Responsável pela execução do caso de Teste | Sávio |
+___ 
+
+|Caso de Teste    | CT-07 - Validar atualização proporcional |
+|:---|:---|
+| Resultados obtidos | Progresso contínuo até 100% |
+| Responsável pela execução do caso de Teste | José Carlos |
+___ 
+
+|Caso de Teste    | CT-08 - Validar acumulação correta |
+|:---|:---|
+| Resultados obtidos | Somente sessões completas contabilizadas |
+| Responsável pela execução do caso de Teste | Sávio |
+___ 
+
+|Caso de Teste    | CT-09 - Testar alternância visual |
+|:---|:---|
+| Resultados obtidos | Mudança imediata de cores |
+| Responsável pela execução do caso de Teste | José Carlos |
+___ 
+
 |Caso de Teste    | CT- 10 - Testar ajuste de texto |
 |:---|:---|
 | Resultados obtidos | Mudança imediata no tamanho da fonte  |
