@@ -6,20 +6,12 @@ Os resultados dos testes funcionais realizados na aplicação são descritos a s
 
 ___ 
 
-|Caso de Teste    | CT-01 - Título Caso de Teste |
+|Caso de Teste    | CT-01 - Validar redirecionamento dos links principais |
 |:---|:---|
 | Resultados obtidos | Redirecionamento correto para cada página |
 | Responsável pela execução do caso de Teste | José Carlos |
 
 ![redirecionamento-dos-links-principais](https://github.com/user-attachments/assets/8d7c3926-7000-4a8c-8c7c-2673577a24cc)
-___ 
-
-|Caso de Teste    | CT-X - Título Caso de Teste |
-|:---|:---|
-| Resultados obtidos | Descrever resultados do teste  |
-| Responsável pela execução do caso de Teste | Nome do integrante da equipe |
-
-[Inserir aqui as evidências de teste que podem ser apresentadas por print de telas ou por .gif de execução de teste]
 ___ 
 
 |Caso de Teste    | CT- 10 - Testar ajuste de texto |
