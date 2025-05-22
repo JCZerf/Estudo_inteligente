@@ -724,6 +724,55 @@
     }
 }
 
+/*
+ * Tooltip de observações
+ * Exibe as observações ao passar o mouse sobre eventos e tarefas
+ */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--modal-bg, white);
+  color: var(--text-color, #333);
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  width: max-content;
+  max-width: 250px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border: 1px solid var(--border-color, #ddd);
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Seta do tooltip */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--modal-bg, white) transparent transparent transparent;
+}
+
 /* 
  * Variáveis de tema claro
  * Define as cores e estilos para o tema claro
@@ -781,303 +830,91 @@
     --danger-color: #fc8181;
     --danger-hover: #e53e3e;
     --toast-bg: #38a169;
-    --subject-color: #4299e1;
-    --physics-color: #9b59b6;
-    --chemistry-color: #e67e22;
-    --geography-color: #1abc9c;
-    --philosophy-color: #7f8c8d;
-    --sociology-color: #bdc3c7;
-    --portuguese-color: #e74c3c;
-    --literature-color: #c0392b;
-    --english-color: #3498db;
-    --spanish-color: #f1c40f;
-    --art-color: #fd79a8;
-    --pe-color: #00b894;
 }
 
 /* 
- * Checkbox no tema escuro
- * Ajusta a aparência do checkbox no tema escuro
- */
-[data-theme="dark"] .task-checkbox {
-    background-color: var(--input-bg, #1a202c);
-    border-color: var(--text-secondary, #4a5568);
-}
-
-/* 
- * Checkbox marcado no tema escuro
- * Ajusta a aparência do checkbox marcado no tema escuro
- */
-[data-theme="dark"] .task-checkbox:checked {
-    background-color: var(--highlight-color, #4299e1);
-    border-color: var(--highlight-color, #4299e1);
-}
-
-/* 
- * Sombra da tarefa no tema escuro
- * Ajusta a sombra dos cards de tarefa no tema escuro
- */
-[data-theme="dark"] .task {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* 
- * Campos de formulário no tema escuro
- * Ajusta a aparência dos campos no tema escuro
- */
-[data-theme="dark"] .form-group input,
-[data-theme="dark"] .form-group select,
-[data-theme="dark"] .form-group textarea {
-    border-color: #4a5568;
-    color: #e2e8f0;
-}
-
-/* 
- * Campo de busca no tema escuro
- * Ajusta a cor do texto no campo de busca
- */
-[data-theme="dark"] .search-input {
-    color: #e2e8f0;
-}
-
-/* 
- * Seletor de filtro no tema escuro
- * Ajusta a aparência do dropdown de filtro
- */
-[data-theme="dark"] .filter-select {
-    color: #e2e8f0;
-    background-color: #1a202c;
-}
-
-/* 
- * Botão secundário no tema escuro
- * Ajusta a aparência dos botões secundários
- */
-[data-theme="dark"] .btn-secondary {
-    background-color: #2d3748;
-    color: #e2e8f0;
-    border-color: #4a5568;
-}
-
-/* 
- * Hover do botão secundário no tema escuro
- * Ajusta o efeito de hover no tema escuro
- */
-[data-theme="dark"] .btn-secondary:hover {
-    background-color: #4a5568;
-}
-
-/* 
- * Tarefa concluída no tema escuro
- * Ajusta a aparência de tarefas concluídas
- */
-[data-theme="dark"] .task-done {
-    opacity: 0.8;
-    background-color: rgba(45, 55, 72, 0.7);
-}
-
-/* 
- * Texto de tarefa concluída no tema escuro
- * Ajusta a cor do texto em tarefas concluídas
- */
-[data-theme="dark"] .task-done .task-left span {
-    color: #a0aec0;
-}
-
-/* 
- * Título do modal de confirmação no tema escuro
- * Ajusta a cor do título no modal
- */
-[data-theme="dark"] .confirm-content h3 {
-    color: #fc8181;
-}
-
-/* 
- * Labels de prioridade no tema escuro
- * Ajusta a cor do texto nos labels de prioridade
- */
-[data-theme="dark"] .priority-options label {
-    color: #e2e8f0;
-}
-
-/* 
- * Cores de matérias no tema escuro
- * Define cores específicas para matérias no tema escuro
- */
-[data-theme="dark"] {
-    --math-color: #63b3ed;
-    --history-color: #f6ad55;
-    --biology-color: #68d391;
-    --other-color: #a0aec0;
-}
-
-/* 
- * Cores de borda para matérias
- * Define as cores da borda esquerda para cada matéria
- */
-.task[data-subject="Matemática"] {
-    border-left-color: var(--math-color);
-}
-.task[data-subject="Física"] {
-    border-left-color: var(--physics-color);
-}
-.task[data-subject="Química"] {
-    border-left-color: var(--chemistry-color);
-}
-.task[data-subject="Biologia"] {
-    border-left-color: var(--biology-color);
-}
-.task[data-subject="História"] {
-    border-left-color: var(--history-color);
-}
-.task[data-subject="Geografia"] {
-    border-left-color: var(--geography-color);
-}
-.task[data-subject="Filosofia"] {
-    border-left-color: var(--philosophy-color);
-}
-.task[data-subject="Sociologia"] {
-    border-left-color: var(--sociology-color);
-}
-.task[data-subject="Português"] {
-    border-left-color: var(--portuguese-color);
-}
-.task[data-subject="Literatura"] {
-    border-left-color: var(--literature-color);
-}
-.task[data-subject="Inglês"] {
-    border-left-color: var(--english-color);
-}
-.task[data-subject="Espanhol"] {
-    border-left-color: var(--spanish-color);
-}
-.task[data-subject="Artes"] {
-    border-left-color: var(--art-color);
-}
-.task[data-subject="Educação Física"] {
-    border-left-color: var(--pe-color);
-}
-.task[data-subject="Outra"] {
-    border-left-color: var(--other-color);
-}
-
-/* 
- * Cor do texto da tarefa no tema escuro
- * Garante a legibilidade do texto no tema escuro
- */
-[data-theme="dark"] .task {
-    color: var(--text-color);
-}
-
-/* 
- * Cor do texto no lado esquerdo da tarefa
- * Mantém a cor do texto consistente com o tema
- */
-[data-theme="dark"] .task-left span {
-    color: inherit;
-}
-
-/* 
- * Classes utilitárias
- * Classe para ocultar elementos
- */
-.hidden {
-    display: none;
-}
-
-/* 
- * Edição de matéria
- * Estiliza o container para edição de matéria personalizada
- */
-.subject-edit {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* 
- * Ícone de edição de matéria
- * Estiliza o ícone para editar matéria
- */
-.subject-edit i {
-    cursor: pointer;
-    color: var(--highlight-color);
-    font-size: 0.9rem;
-}
-
-/* 
- * Hover do ícone de edição
- * Efeito ao passar o mouse sobre o ícone de edição
- */
-.subject-edit i:hover {
-    opacity: 0.8;
-}
-
-/* 
- * Responsividade para tablets e dispositivos menores
- * Ajusta o layout para telas de até 768px
+ * Responsividade para tablets e celulares
+ * Ajusta o layout para telas menores
  */
 @media (max-width: 768px) {
     /* Reorganiza o cabeçalho em coluna */
     .tasks-header {
         flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
+        align-items: flex-start;
     }
     
-    /* Reorganiza os controles em coluna */
+    /* Ajusta os controles para ocupar toda a largura */
     .tasks-controls {
         flex-direction: column;
-        gap: 10px;
+        width: 100%;
     }
     
-    /* Ajusta a largura dos elementos de controle */
-    .search-box,
-    .filter-select,
-    #newTaskButton {
+    /* Ajusta a caixa de busca para ocupar toda a largura */
+    .search-box {
         max-width: 100%;
         width: 100%;
     }
     
-    /* Reorganiza o layout das tarefas */
+    /* Ajusta o seletor de filtro para ocupar toda a largura */
+    .filter-select {
+        width: 100%;
+    }
+    
+    /* Ajusta os botões para ocupar toda a largura */
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Reorganiza o layout das tarefas para melhor visualização em telas pequenas */
     .task {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
     
-    /* Reposiciona a data de vencimento */
-    .task-due {
-        align-self: flex-end;
-        margin-left: 0;
-        margin-top: 5px;
+    /* Ajusta as ações da tarefa para alinhar à esquerda */
+    .task-actions {
+        width: 100%;
+        justify-content: flex-end;
     }
     
-    /* Ajusta as margens do modal */
-    .modal-content {
-        margin: 20px auto;
+    /* Ajusta o modal para telas menores */
+    .modal-content, .confirm-content {
         width: 95%;
+        margin: 5% auto;
+    }
+    
+    /* Ajusta o tooltip para telas menores */
+    .tooltip-text {
+        max-width: 200px;
     }
 }
 
 /* 
- * Responsividade para smartphones
- * Ajusta o layout para telas de até 480px
+ * Responsividade para telas muito pequenas
+ * Ajustes adicionais para smartphones
  */
 @media (max-width: 480px) {
-    /* Reorganiza as opções de prioridade em coluna */
-    .priority-options {
-        flex-direction: column;
-        gap: 8px;
+    /* Reduz o padding das tarefas */
+    .task {
+        padding: 12px 15px;
     }
     
-    /* Reposiciona as ações da tarefa */
+    /* Reduz o tamanho da fonte */
+    .task-left span {
+        font-size: 0.9rem;
+    }
+    
+    /* Ajusta o espaçamento dos botões de ação */
     .task-actions {
-        align-self: flex-end;
+        gap: 5px;
     }
     
-    /* Reorganiza os botões de confirmação em coluna */
-    .confirm-buttons {
-        flex-direction: column;
+    /* Reduz o tamanho dos botões de ação */
+    .btn-focus, .btn-delete {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
     }
 }

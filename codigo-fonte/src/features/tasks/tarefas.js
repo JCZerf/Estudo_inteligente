@@ -193,6 +193,15 @@ function createTaskElement(task, subject) {
     // Adiciona evento de clique para abrir o modal de edição
     taskDiv.addEventListener("click", () => openEditTaskModal(task.id, subject));
 
+    // Adiciona tooltip para observações se existirem
+    if (task.description && task.description.trim()) {
+        taskDiv.classList.add("tooltip-container");
+        const tooltipText = document.createElement("span");
+        tooltipText.classList.add("tooltip-text");
+        tooltipText.textContent = "Observações: " + task.description;
+        taskDiv.appendChild(tooltipText);
+    }
+
     // Cria a parte esquerda do item de tarefa (checkbox, título, etc.)
     const leftDiv = document.createElement("div");
     leftDiv.className = "task-left";

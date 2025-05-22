@@ -45,6 +45,40 @@ function mapTaskCategoryDisplayNameToSelectValue(displayName, selectElement) {
     return "geral_cronograma";
 }
 
+// Função auxiliar para obter o nome de exibição da categoria de evento a partir do valor do select
+function getEventCategoryNameForCron(value) {
+    // Tenta obter o nome da categoria diretamente do elemento select
+    const selectElement = document.getElementById("cronEventCategory");
+    if (selectElement) {
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value === value) {
+                return selectElement.options[i].text;
+            }
+        }
+    }
+    
+    // Mapeamento de fallback caso o select não esteja disponível
+    const categories = {
+        "aula": "Aula", "palestra": "Palestra", "oficina": "Oficina",
+        "reuniao": "Reunião", "estudo_dirigido": "Estudo Dirigido", 
+        "exercicio_fisico": "Exercício Físico", "refeicao": "Refeição",
+        "pessoal": "Pessoal", "outro_evento": "Outro Evento"
+    };
+    return categories[value] || value; 
+}
+
+// Função auxiliar para mapear a categoria de evento para o tipo de visualização
+function mapEventCategoryToDisplayType(category) {
+    // Mapeamento de categorias para tipos de visualização
+    const typeMapping = {
+        "aula": "study", "palestra": "study", "oficina": "study",
+        "estudo_dirigido": "study", "exercicio_fisico": "exercise",
+        "refeicao": "meal", "reuniao": "study", "pessoal": "study",
+        "outro_evento": "study"
+    };
+    return typeMapping[category] || "study";
+}
+
 // Inicialização quando o DOM estiver carregado
 document.addEventListener("DOMContentLoaded", function () {
     // Objeto principal para gerenciar a navegação e exibição do cronograma
@@ -199,8 +233,29 @@ document.addEventListener("DOMContentLoaded", function () {
                                     console.error("Categoria original da tarefa não encontrada."); 
                                 }
                             } else if (itemType === "evento") {
-                                // Lógica para mover eventos não-tarefa (se implementada futuramente)
-                                console.warn("Movimentação de eventos gerais ainda não implementada.");
+                                // Lógica para mover eventos
+                                let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
+                                const eventIndex = studySchedule.findIndex(e => e.id === itemId);
+                                
+                                if (eventIndex !== -1) {
+                                    // Atualiza data e hora do evento
+                                    studySchedule[eventIndex].date = newDateISO;
+                                    studySchedule[eventIndex].time = newTime;
+                                    
+                                    // Recalcula horário de término se houver duração
+                                    if (studySchedule[eventIndex].duration) {
+                                        const durationMinutes = parseInt(studySchedule[eventIndex].duration);
+                                        const startTimeObj = new Date(`${newDateISO}T${newTime}:00`);
+                                        const endTimeObj = new Date(startTimeObj.getTime() + durationMinutes * 60000);
+                                        studySchedule[eventIndex].endTime = endTimeObj.toTimeString().substring(0, 5);
+                                    }
+                                    
+                                    // Salva alterações e dispara evento de atualização
+                                    localStorage.setItem("studySchedule", JSON.stringify(studySchedule));
+                                    window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
+                                } else {
+                                    console.error("Evento não encontrado para mover.");
+                                }
                             }
                             
                             // Recarrega para refletir as mudanças
@@ -275,7 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return weekDays;
         },
         
-        // Carrega e exibe tarefas no cronograma
+        // Carrega e exibe tarefas e eventos no cronograma
         loadScheduleAndTasks() {
             // Remove eventos existentes
             document.querySelectorAll(".schedule-table .event").forEach(eventEl => eventEl.remove());
@@ -300,207 +355,226 @@ document.addEventListener("DOMContentLoaded", function () {
                             const taskDisplayData = {
                                 id: task.id,
                                 title: task.title,
-                                itemType: "tarefa",
                                 date: task.due,
-                                day: new Date(task.due + "T00:00:00").toLocaleDateString("en-US", { weekday: "short" }).toLowerCase().substring(0,3),
                                 time: task.time || "-",
-                                endTime: task.endTime || "-", 
-                                duration: task.duration, 
+                                endTime: task.endTime || "-",
+                                duration: task.duration || "30",
                                 description: task.description || "",
-                                priority: task.priority || "medium",
                                 done: task.done || false,
-                                originalCategoryName: categoryName, 
-                                originalCategoryKeyForSelect: taskOriginalCategorySelectValue 
+                                itemType: "tarefa",
+                                originalCategoryName: categoryName,
+                                originalCategoryKeyForSelect: taskOriginalCategorySelectValue
                             };
                             
-                            // Adiciona a tarefa ao calendário
-                            this.addEventToCalendar(taskDisplayData, true);
+                            // Adiciona a tarefa à grade
+                            this.addItemToGrid(taskDisplayData);
                         }
                     });
+                });
+                
+                // Carrega eventos do localStorage
+                const studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
+                
+                // Filtra eventos para a semana atual
+                studySchedule.forEach(event => {
+                    if (event.date && weekDaysISO.includes(event.date)) {
+                        // Adiciona o evento à grade
+                        this.addItemToGrid(event);
+                    }
                 });
             } catch (e) {
-                console.error("Erro ao carregar tarefas para o cronograma:", e);
+                console.error("Erro ao carregar tarefas e eventos:", e);
             }
         },
         
-        // Adiciona um evento/tarefa ao calendário
-        addEventToCalendar(eventData, isTask) {
-            // Obtém a abreviação do dia (mon, tue, etc.)
-            const dayAbbrev = eventData.day.substring(0,3);
-            let targetCell = null;
+        // Adiciona um item (tarefa ou evento) à grade do cronograma
+        addItemToGrid(itemData) {
+            // Mapeia a data ISO para o dia da semana
+            const itemDate = new Date(itemData.date + "T00:00:00");
+            const dayOfWeek = itemDate.getDay(); // 0 = Domingo, 1 = Segunda, ...
+            const dayAbbrev = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][dayOfWeek];
             
-            // Encontra a célula correta para o horário da tarefa
-            if (isTask && eventData.time && eventData.time !== "-") {
-                const eventStartTime = eventData.time.substring(0,5);
-                const dayCellsWithTime = Array.from(
-                    document.querySelectorAll(`.cell[data-day="${dayAbbrev}"][data-time]`)
-                ).sort((a, b) => (a.dataset.time || "").localeCompare(b.dataset.time || ""));
-                
-                if (dayCellsWithTime.length > 0) {
-                    // Encontra a célula mais próxima do horário da tarefa
-                    for (let i = dayCellsWithTime.length - 1; i >= 0; i--) {
-                        const cell = dayCellsWithTime[i];
-                        const cellStartTime = cell.dataset.time;
-                        if (eventStartTime >= cellStartTime) {
-                            targetCell = cell; break;
-                        }
-                    }
-                    if (!targetCell) targetCell = dayCellsWithTime[0];
-                }
-            }
+            // Encontra a célula correspondente ao dia e horário
+            const timeStr = itemData.time && itemData.time !== "-" ? itemData.time.substring(0, 5) : "08:00";
+            const hour = parseInt(timeStr.split(":")[0]);
+            const roundedHour = Math.floor(hour / 2) * 2; // Arredonda para o intervalo de 2 horas
+            const formattedHour = String(roundedHour).padStart(2, "0") + ":00";
             
-            // Se não encontrou célula específica, usa a primeira do dia
-            if (!targetCell) {
-                const dayCells = document.querySelectorAll(`.cell[data-day="${dayAbbrev}"][data-time]`);
-                if (dayCells.length > 0) targetCell = dayCells[0];
-                else {
-                    const anyDayCell = document.querySelector(`.cell[data-day="${dayAbbrev}"]`);
-                    if (anyDayCell) targetCell = anyDayCell;
-                }
-            }
-
-            // Se encontrou uma célula alvo, cria ou atualiza o elemento do evento
-            if (targetCell) {
-                // Verifica se o evento já existe
-                const existingElement = targetCell.querySelector(`.event[data-id="${eventData.id}"]`);
-                if (existingElement) {
-                    // Atualiza o elemento existente
-                    existingElement.className = `event event-task ${eventData.done ? "event-done" : ""}`;
-                    existingElement.dataset.fullData = JSON.stringify(eventData); // Atualiza dados completos
-                    const toggleBtn = existingElement.querySelector("button[data-action=\"toggle-done\"] i");
-                    if (toggleBtn) toggleBtn.className = `fas fa-${eventData.done ? "undo" : "check"}`;
-                    return; 
-                }
-
-                // Cria um novo elemento para o evento
-                const eventElement = document.createElement("div");
-                eventElement.className = `event event-task ${eventData.done ? "event-done" : ""}`;
-                eventElement.dataset.id = eventData.id;
-                eventElement.dataset.itemType = eventData.itemType;
-                eventElement.dataset.fullData = JSON.stringify(eventData);
-
-                // Prepara a exibição do horário
-                let eventTimeDisplay = "";
-                if (eventData.time && eventData.time !== "-") {
-                    eventTimeDisplay = `<span class="event-time">${eventData.time}`;
-                    if (eventData.endTime && eventData.endTime !== "-") {
-                        eventTimeDisplay += ` - ${eventData.endTime}`;
-                    }
-                    eventTimeDisplay += `</span>`;
-                }
-
-                // Prepara os botões de ação
-                const actionsHtml = `
-                    <div class="event-actions">
-                        <button class="event-action-btn" data-action="toggle-done" title="${eventData.done ? 'Marcar como pendente' : 'Marcar como concluída'}">
-                            <i class="fas fa-${eventData.done ? 'undo' : 'check'}"></i>
-                        </button>
-                        <button class="event-action-btn" data-action="delete" title="Excluir">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                `;
-                
-                // Define o conteúdo HTML do evento
-                eventElement.innerHTML = `
-                    <span class="event-title">[T] ${eventData.title}</span>
-                    ${eventTimeDisplay}
-                    ${actionsHtml}
-                `;
-                
-                // Adiciona evento de clique para abrir o modal de edição
-                eventElement.addEventListener("click", (e) => {
-                    if (e.target.closest(".event-action-btn")) return;
-                    const fullData = JSON.parse(eventElement.dataset.fullData);
-                    eventModal.open(fullData);
-                });
-
-                // Adiciona eventos de clique para os botões de ação
-                eventElement.querySelectorAll(".event-action-btn").forEach(btn => {
-                    btn.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        const action = btn.dataset.action;
-                        if (action === "delete") {
-                            this.confirmDeleteEvent(eventData.id, true, eventData.title, eventData.originalCategoryName);
-                        } else if (action === "toggle-done") {
-                            this.toggleTaskDone(eventData.id, eventData.originalCategoryName);
-                        }
-                    });
-                });
-                
-                // Adiciona o evento à célula
-                targetCell.appendChild(eventElement);
+            const targetCell = document.querySelector(`.schedule-cell[data-day="${dayAbbrev}"][data-time="${formattedHour}"]`);
+            if (!targetCell) return;
+            
+            // Cria o elemento do evento
+            const eventEl = document.createElement("div");
+            eventEl.classList.add("event");
+            
+            // Define atributos e classes com base no tipo de item
+            if (itemData.itemType === "tarefa") {
+                eventEl.classList.add("event-task");
+                if (itemData.done) eventEl.classList.add("event-done");
             } else {
-                console.warn("Célula não encontrada para a tarefa no cronograma:", eventData, `dayAbbrev: ${dayAbbrev}`);
+                // Define o tipo de visualização com base na categoria do evento
+                const displayType = mapEventCategoryToDisplayType(itemData.category);
+                eventEl.dataset.type = displayType;
+            }
+            
+            // Define atributos comuns
+            eventEl.dataset.id = itemData.id;
+            eventEl.dataset.itemType = itemData.itemType;
+            eventEl.dataset.fullData = JSON.stringify(itemData);
+            
+            // Cria o conteúdo do evento
+            const titleSpan = document.createElement("span");
+            titleSpan.classList.add("event-title");
+            titleSpan.textContent = itemData.title;
+            
+            const timeSpan = document.createElement("span");
+            timeSpan.classList.add("event-time");
+            if (itemData.time && itemData.time !== "-") {
+                timeSpan.textContent = `${itemData.time.substring(0, 5)}${itemData.endTime && itemData.endTime !== "-" ? ` - ${itemData.endTime.substring(0, 5)}` : ""}`;
+            }
+            
+            // Adiciona os elementos ao evento
+            eventEl.appendChild(titleSpan);
+            eventEl.appendChild(timeSpan);
+            
+            // Adiciona tooltip para observações se existirem
+            if (itemData.description && itemData.description.trim()) {
+                eventEl.classList.add("tooltip-container");
+                const tooltipText = document.createElement("span");
+                tooltipText.classList.add("tooltip-text");
+                tooltipText.textContent = "Observações: " + itemData.description;
+                eventEl.appendChild(tooltipText);
+            }
+            
+            // Adiciona botões de ação
+            const actionsDiv = document.createElement("div");
+            actionsDiv.classList.add("event-actions");
+            
+            // Botão de editar
+            const editBtn = document.createElement("button");
+            editBtn.classList.add("event-action-btn");
+            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                this.editItem(itemData);
+            });
+            
+            // Botão de excluir
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("event-action-btn");
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                this.deleteItem(itemData.id, itemData.itemType, itemData.originalCategoryName);
+            });
+            
+            // Adiciona botões ao container de ações
+            actionsDiv.appendChild(editBtn);
+            actionsDiv.appendChild(deleteBtn);
+            
+            // Adiciona botão de marcar como concluído apenas para tarefas
+            if (itemData.itemType === "tarefa") {
+                const doneBtn = document.createElement("button");
+                doneBtn.classList.add("event-action-btn");
+                doneBtn.innerHTML = itemData.done ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>';
+                doneBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    this.toggleTaskDone(itemData.id, itemData.originalCategoryName);
+                });
+                actionsDiv.appendChild(doneBtn);
+            }
+            
+            eventEl.appendChild(actionsDiv);
+            
+            // Adiciona evento de clique para editar
+            eventEl.addEventListener("click", () => {
+                this.editItem(itemData);
+            });
+            
+            // Adiciona o evento à célula
+            targetCell.appendChild(eventEl);
+        },
+        
+        // Abre o modal para editar um item
+        editItem(itemData) {
+            // Obtém o objeto do modal de eventos
+            const eventModalObj = window.eventModal;
+            if (eventModalObj) {
+                eventModalObj.open(itemData);
             }
         },
         
-        // Exibe confirmação para excluir um evento
-        confirmDeleteEvent(itemId, isTask, itemTitle, itemCategoryName) { 
-            const modal = document.getElementById("confirmModal");
-            const titleEl = document.getElementById("confirmModalTitle");
-            const messageEl = document.getElementById("confirmModalMessage");
+        // Exclui um item (tarefa ou evento)
+        deleteItem(itemId, itemType, taskCategoryName) {
+            // Prepara o modal de confirmação
+            const confirmModal = document.getElementById("confirmModal");
+            const confirmTitle = document.getElementById("confirmModalTitle");
+            const confirmMessage = document.getElementById("confirmModalMessage");
             const confirmBtn = document.getElementById("confirmModalConfirm");
             const cancelBtn = document.getElementById("confirmModalCancel");
             
             // Configura o modal de confirmação
-            titleEl.textContent = isTask ? "Excluir Tarefa do Cronograma" : "Excluir Evento";
-            messageEl.innerHTML = `Tem certeza que deseja excluir "<strong>${itemTitle}</strong>"? Esta ação não pode ser desfeita.`;
+            confirmTitle.textContent = "Confirmar Exclusão";
+            confirmMessage.textContent = `Tem certeza que deseja excluir este item?`;
             
-            modal.style.display = "block";
+            confirmModal.style.display = "block";
             
-            // Função para limpar os event listeners
-            const cleanUp = () => {
-                confirmBtn.removeEventListener("click", handleConfirmClick);
-                cancelBtn.removeEventListener("click", handleCancelClick);
-                modal.style.display = "none";
-            };
-
             // Função para confirmar a exclusão
-            const handleConfirmClick = () => {
-                if (isTask) {
-                    this.deleteTask(itemId, itemCategoryName);
-                } 
+            const handleConfirm = () => {
+                if (itemType === "tarefa") {
+                    try {
+                        let studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
+                        if (studyTasks[taskCategoryName]) {
+                            // Filtra a tarefa a ser excluída
+                            studyTasks[taskCategoryName] = studyTasks[taskCategoryName].filter(t => t.id !== itemId);
+                            
+                            // Remove a categoria se estiver vazia
+                            if (studyTasks[taskCategoryName].length === 0) {
+                                delete studyTasks[taskCategoryName];
+                            }
+                            
+                            // Salva alterações e dispara evento de atualização
+                            localStorage.setItem("studyTasks", JSON.stringify(studyTasks));
+                            window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
+                        }
+                    } catch (e) {
+                        console.error("Erro ao excluir tarefa:", e);
+                    }
+                } else if (itemType === "evento") {
+                    try {
+                        let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
+                        
+                        // Filtra o evento a ser excluído
+                        studySchedule = studySchedule.filter(e => e.id !== itemId);
+                        
+                        // Salva alterações e dispara evento de atualização
+                        localStorage.setItem("studySchedule", JSON.stringify(studySchedule));
+                        window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
+                    } catch (e) {
+                        console.error("Erro ao excluir evento:", e);
+                    }
+                }
+                
+                // Recarrega para refletir as mudanças
+                this.loadScheduleAndTasks();
                 cleanUp();
             };
             
             // Função para cancelar a exclusão
-            const handleCancelClick = () => {
+            const handleCancel = () => {
                 cleanUp();
             };
-
+            
+            // Função para limpar os event listeners
+            const cleanUp = () => {
+                confirmBtn.removeEventListener("click", handleConfirm);
+                cancelBtn.removeEventListener("click", handleCancel);
+                confirmModal.style.display = "none";
+            };
+            
             // Adiciona event listeners aos botões
-            confirmBtn.addEventListener("click", handleConfirmClick, { once: true });
-            cancelBtn.addEventListener("click", handleCancelClick, { once: true });
-        },
-        
-        // Exclui uma tarefa do localStorage
-        deleteTask(taskId, taskCategoryName) { 
-            try {
-                let currentTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-                if (currentTasks[taskCategoryName]) {
-                    const originalLength = currentTasks[taskCategoryName].length;
-                    currentTasks[taskCategoryName] = currentTasks[taskCategoryName].filter(t => t.id !== taskId);
-                    
-                    if (currentTasks[taskCategoryName].length < originalLength) {
-                        // Remove a categoria se ficar vazia
-                        if (currentTasks[taskCategoryName].length === 0) {
-                            delete currentTasks[taskCategoryName];
-                        }
-                        
-                        // Salva alterações e dispara evento de atualização
-                        localStorage.setItem("studyTasks", JSON.stringify(currentTasks));
-                        this.loadScheduleAndTasks(); 
-                        window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
-                    } else {
-                        console.warn("Tarefa não encontrada para exclusão no cronograma:", taskId, taskCategoryName);
-                    }
-                } else {
-                     console.warn("Categoria da tarefa não encontrada para exclusão:", taskCategoryName);
-                }
-            } catch (e) {
-                console.error("Erro ao excluir tarefa via cronograma:", e);
-            }
+            confirmBtn.addEventListener("click", handleConfirm, { once: true });
+            cancelBtn.addEventListener("click", handleCancel, { once: true });
         },
         
         // Alterna o estado de conclusão de uma tarefa
@@ -627,23 +701,31 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Fallback se originalCategoryKeyForSelect estiver ausente
                         this.elements.taskSubjectCron.value = mapTaskCategoryDisplayNameToSelectValue(itemData.originalCategoryName, this.elements.taskSubjectCron);
                     }
-                    if(this.elements.eventDate) this.elements.eventDate.value = itemData.date || "";
-                    if(this.elements.eventTime) this.elements.eventTime.value = itemData.time && itemData.time !== "-" ? itemData.time.substring(0,5) : "";
-                    if(this.elements.eventDuration) this.elements.eventDuration.value = itemData.duration || "30";
-                    if(this.elements.eventNotes) this.elements.eventNotes.value = itemData.description || ""; 
+                } else if (itemData.itemType === "evento") {
+                    // Preenche campos específicos de evento
+                    if(this.elements.cronEventCategory && itemData.category) {
+                        this.elements.cronEventCategory.value = itemData.category;
+                    }
                 }
+                
+                // Preenche campos comuns
+                if(this.elements.eventDate) this.elements.eventDate.value = itemData.date || "";
+                if(this.elements.eventTime) this.elements.eventTime.value = itemData.time && itemData.time !== "-" ? itemData.time.substring(0,5) : "";
+                if(this.elements.eventDuration) this.elements.eventDuration.value = itemData.duration || "30";
+                if(this.elements.eventNotes) this.elements.eventNotes.value = itemData.description || ""; 
             } else { 
                 // Modo de adição: configura valores padrão
                 if(this.elements.title) this.elements.title.textContent = "Adicionar Atividade";
                 if(this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Atividade";
                 if(this.elements.itemCreationType) {
-                    this.elements.itemCreationType.value = "tarefa"; // Padrão para novo item
+                    this.elements.itemCreationType.value = "evento"; // Padrão para novo item
                     this.elements.itemCreationType.disabled = false;
                 }
-                this.toggleFormFields("tarefa");
+                this.toggleFormFields("evento");
                 if (this.elements.eventDate) { 
                     this.elements.eventDate.value = new Date().toISOString().split("T")[0];
                 }
+                if(this.elements.cronEventCategory) this.elements.cronEventCategory.value = "aula"; // Categoria padrão
                 if(this.elements.taskSubjectCron) this.elements.taskSubjectCron.value = "geral_cronograma"; // Matéria padrão
             }
             
@@ -752,8 +834,54 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("studyTasks", JSON.stringify(studyTasksData));
                 window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
             } else if (creationType === "evento") {
-                // Funcionalidade de eventos ainda não implementada
-                alert("Funcionalidade de adicionar/editar eventos gerais ainda não implementada.");
+                // Processa evento (adição ou edição)
+                const eventCategoryValue = this.elements.cronEventCategory.value;
+                const eventCategoryName = getEventCategoryNameForCron(eventCategoryValue);
+                let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
+                
+                if (this.currentEditId) {
+                    // Modo de edição
+                    const eventIndex = studySchedule.findIndex(e => e.id === this.currentEditId);
+                    if (eventIndex === -1) {
+                        alert("Erro: Evento não encontrado para edição.");
+                        return;
+                    }
+                    
+                    // Atualiza os dados do evento
+                    studySchedule[eventIndex] = {
+                        ...studySchedule[eventIndex],
+                        title: title,
+                        date: itemDateISO,
+                        time: time,
+                        endTime: endTimeString,
+                        duration: duration,
+                        description: notes,
+                        category: eventCategoryValue,
+                        categoryName: eventCategoryName
+                    };
+                } else {
+                    // Modo de adição
+                    const eventId = `event-${Date.now()}`;
+                    const eventData = {
+                        id: eventId,
+                        title: title,
+                        itemType: "evento",
+                        date: itemDateISO,
+                        time: time,
+                        endTime: endTimeString,
+                        duration: duration,
+                        description: notes,
+                        category: eventCategoryValue,
+                        categoryName: eventCategoryName,
+                        subject: title // Para compatibilidade com a tela inicial
+                    };
+                    
+                    studySchedule.push(eventData);
+                }
+                
+                // Salva alterações e dispara evento de atualização
+                localStorage.setItem("studySchedule", JSON.stringify(studySchedule));
+                window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
             }
             
             // Fecha o modal após salvar
@@ -772,4 +900,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inicializa os componentes principais
     weekNav.init();
     eventModal.init();
+    
+    // Expõe o objeto eventModal globalmente para acesso de outras funções
+    window.eventModal = eventModal;
 });

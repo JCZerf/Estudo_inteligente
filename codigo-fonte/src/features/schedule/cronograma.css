@@ -508,6 +508,61 @@
   font-size: 16px;
 }
 
+/*
+ * Tooltip de observações
+ * Exibe as observações ao passar o mouse sobre eventos e tarefas
+ */
+.tooltip-container {
+  position: relative;
+  /* Removido display: inline-block para compatibilidade com elementos flex */
+}
+
+/* Estilo específico para eventos no cronograma */
+.event.tooltip-container {
+  overflow: visible !important;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 100; /* Aumentado para garantir que fique acima de outros elementos */
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  width: max-content;
+  max-width: 250px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border: 1px solid var(--border-color);
+  white-space: normal;
+  word-wrap: break-word;
+  pointer-events: none; /* Evita que o tooltip interfira com eventos de mouse */
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Seta do tooltip */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--card-bg) transparent transparent transparent;
+}
+
 /* 
  * Responsividade para tablets e celulares
  * Ajusta o layout para telas menores
