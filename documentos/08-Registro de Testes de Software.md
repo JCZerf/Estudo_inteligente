@@ -29,7 +29,8 @@ ___
 | Responsável pela execução do caso de Teste | José Carlos |
 
 ![fluxo-completo-de-criao](https://github.com/user-attachments/assets/da6b7d74-f305-4618-8ed9-f0f424deac6c)
-___ 
+
+___
 
 |Caso de Teste    | CT-04 - Testar modificações e remoção |
 |:---|:---|
