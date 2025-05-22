@@ -36,6 +36,8 @@ ___
 |:---|:---|
 | Resultados obtidos | Alterações persistidas e exclusão efetiva |
 | Responsável pela execução do caso de Teste | Sávio |
+
+![modificaes-e-remoção](https://github.com/user-attachments/assets/2545d8c7-e5df-49bc-bac9-7f2e987380c0)
 ___ 
 
 |Caso de Teste    | CT-05 - Validar associação entre tarefa e timer |
