@@ -1,35 +1,49 @@
-// RANKING JS - COM SUPORTE A TEMAS E HORAS DINÂMICAS
+/**
+ * Script JavaScript para a página de Ranking
+ * Gerencia a interação com os filtros e atualização dinâmica das horas de estudo
+ */
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Configura filtros
+    // Configura os botões de filtro do ranking
     const filterButtons = document.querySelectorAll(".filter-btn");
     filterButtons.forEach(button => {
         button.addEventListener("click", function () {
+            // Remove a classe 'active' de todos os botões
             filterButtons.forEach(btn => btn.classList.remove("active"));
+            // Adiciona a classe 'active' apenas ao botão clicado
             this.classList.add("active");
-            // Lógica de filtragem do ranking (se os dados fossem de API)
+            
+            // Comentário sobre funcionalidade futura:
+            // Aqui seria implementada a lógica para filtrar o ranking por período
             // loadRankingData(this.textContent.trim()); 
-            // Como os dados são estáticos exceto o do usuário, não há muito o que filtrar aqui ainda.
+            // Como os dados são estáticos exceto o do usuário, não há muito o que filtrar nesta versão
         });
     });
 
-    // Atualiza horas do usuário Joaquim Silva
+    // Atualiza as horas de estudo do usuário atual (Joaquim Silva)
     updateJoaquimSilvaHours();
 
-    // Configura eventos do tema
+    // Configura eventos relacionados ao tema (claro/escuro)
     document.addEventListener("themeChanged", updateRankingTheme);
-    updateRankingTheme(); // Atualiza tema inicial
+    updateRankingTheme(); // Aplica o tema atual ao carregar a página
 });
 
+/**
+ * Atualiza as horas de estudo do usuário Joaquim Silva
+ * Calcula o tempo total com base nas sessões de foco armazenadas no localStorage
+ */
 function updateJoaquimSilvaHours() {
+    // Encontra o elemento que exibe as horas do usuário
     const joaquimHoursElement = document.querySelector(".your-ranking .user-hours");
     if (!joaquimHoursElement) return;
 
     let totalMinutesFocused = 0;
     try {
+        // Recupera todas as sessões de foco do localStorage
         const focusSessions = JSON.parse(localStorage.getItem("focusSessions")) || [];
         focusSessions.forEach(session => {
-            if (session.durationMinutes) { // Considera todas as sessões de foco para o total
+            if (session.durationMinutes) { 
+                // Soma a duração de todas as sessões de foco
                 totalMinutesFocused += session.durationMinutes;
             }
         });
@@ -37,10 +51,11 @@ function updateJoaquimSilvaHours() {
         console.error("Erro ao carregar sessões de foco para o ranking:", e);
     }
 
+    // Converte minutos totais para horas e minutos
     const totalHoursFocused = Math.floor(totalMinutesFocused / 60);
     const remainingMinutes = totalMinutesFocused % 60;
     
-    // Formata para exibir horas e minutos, ou apenas horas se minutos for 0.
+    // Formata o texto para exibição
     let hoursDisplay = `${totalHoursFocused} hora(s)`;
     if (remainingMinutes > 0) {
         hoursDisplay += ` e ${remainingMinutes} min`;
@@ -48,8 +63,15 @@ function updateJoaquimSilvaHours() {
     joaquimHoursElement.textContent = `${hoursDisplay} estudadas`;
 }
 
+/**
+ * Atualiza o tema visual dos itens do ranking
+ * Aplica o tema atual (claro/escuro) aos elementos da lista
+ */
 function updateRankingTheme() {
+    // Obtém o tema atual do documento
     const theme = document.documentElement.getAttribute("data-theme") || "light";
+    
+    // Aplica o tema a todos os itens do ranking
     const rankingItems = document.querySelectorAll(".ranking-item");
     rankingItems.forEach(item => {
         item.dataset.theme = theme;
@@ -57,25 +79,38 @@ function updateRankingTheme() {
     // console.log(`Tema do ranking atualizado para: ${theme}`);
 }
 
-// As funções loadRankingData e renderRanking são mantidas caso o ranking se torne totalmente dinâmico no futuro.
-// Por ora, apenas as horas do usuário logado (Joaquim Silva) são dinâmicas.
+/**
+ * Função para carregar dados do ranking (preparada para implementação futura)
+ * Seria usada para buscar dados de uma API quando o ranking se tornar dinâmico
+ * @param {string} filter - Filtro a ser aplicado (Geral, Semanal, Mensal)
+ * @returns {Array} - Array vazio como simulação
+ */
 async function loadRankingData(filter = "Geral") {
-    // Simulação de requisição
+    // Simulação de requisição a uma API
     // console.log(`Carregando ranking: ${filter}`);
-    // Aqui você faria uma requisição real ao servidor
-    // const response = await fetch(/api/ranking?filter=${filter});
+    
+    // Código comentado para implementação futura:
+    // const response = await fetch(`/api/ranking?filter=${filter}`);
     // const data = await response.json();
     // renderRanking(data);
+    
     return []; // Retorno simulado
 }
 
+/**
+ * Renderiza os dados do ranking na interface
+ * Função preparada para quando o ranking se tornar totalmente dinâmico
+ * @param {Array} data - Array com dados dos usuários para o ranking
+ */
 function renderRanking(data) {
     const rankingList = document.querySelector(".ranking-list");
     if (!rankingList) return;
     rankingList.innerHTML = ""; // Limpa a lista atual
 
+    // Cria elementos para cada usuário no ranking
     data.forEach((user, index) => {
         const rankingItem = document.createElement("div");
+        // Adiciona classes especiais para os três primeiros colocados
         rankingItem.className = `ranking-item ${index < 3 ? "top" + (index + 1) : ""}`;
         rankingItem.innerHTML = `
             <div class="position">${index + 1}</div>
@@ -92,6 +127,7 @@ function renderRanking(data) {
         rankingList.appendChild(rankingItem);
     });
 
+    // Código comentado para implementação futura:
     // Adiciona o ranking do usuário Joaquim Silva manualmente se não vier da API
     // Esta parte seria removida se os dados viessem completos da API
     const joaquimData = {
@@ -113,6 +149,5 @@ function renderRanking(data) {
     // updateJoaquimSilvaHours(); // Chama para atualizar as horas do Joaquim
 }
 
-// Chamada inicial para carregar o ranking (se fosse dinâmico)
+// Chamada inicial para carregar o ranking (comentada, para implementação futura)
 // loadRankingData();
-

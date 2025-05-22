@@ -1,35 +1,55 @@
-/* RANKING.CSS - VERSÃO COM SUPORTE A TEMAS */
+/* 
+ * Estilos específicos para a página de Ranking
+ * Define a aparência visual da classificação de usuários por tempo de estudo
+ */
 
-/* Estrutura Principal */
+/* 
+ * Estrutura Principal
+ * Define o layout básico da página de ranking
+ */
 .main {
-  margin-left: 280px;
+  margin-left: 280px; /* Espaço para a sidebar */
   padding: 30px;
   min-height: 100vh;
 }
 
+/* 
+ * Container principal do ranking
+ * Define o estilo do card que contém toda a lista de classificação
+ */
 .ranking-container {
   background-color: var(--section-bg, #fff);
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
+  transition: all 0.3s ease; /* Transição suave para mudança de tema */
 }
 
-/* Cabeçalho */
+/* 
+ * Estilo do título do ranking
+ * Define a aparência do cabeçalho "Ranking de Estudos"
+ */
 .ranking-header h1 {
   color: var(--text-color, #2c3e50);
   margin: 0;
   font-size: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 10px; /* Espaçamento entre o ícone e o texto */
 }
 
+/* 
+ * Ícone do troféu no título
+ * Define a cor do ícone de troféu ao lado do título
+ */
 .ranking-header h1 i {
   color: var(--highlight-color, #4682B4);
 }
 
-/* Filtros */
+/* 
+ * Botões de filtro do ranking
+ * Estiliza os botões para filtrar por período (Geral, Semanal, Mensal)
+ */
 .filter-btn {
   padding: 8px 15px;
   background-color: var(--filter-bg, #f5f7fa);
@@ -41,17 +61,28 @@
   color: var(--text-color, #333);
 }
 
+/* 
+ * Estado ativo dos botões de filtro
+ * Define a aparência do botão de filtro selecionado
+ */
 .filter-btn.active {
   background-color: var(--highlight-color, #4682B4);
   color: white;
   border-color: var(--highlight-color, #4682B4);
 }
 
+/* 
+ * Estado hover dos botões de filtro
+ * Define a aparência ao passar o mouse sobre os botões de filtro
+ */
 .filter-btn:hover {
   background-color: var(--filter-hover, #e0e6ed);
 }
 
-/* Lista de Ranking */
+/* 
+ * Item individual do ranking
+ * Define o estilo de cada linha da classificação
+ */
 .ranking-item {
   display: flex;
   align-items: center;
@@ -63,32 +94,49 @@
   color: var(--text-color, #333);
 }
 
+/* 
+ * Efeito hover nos itens do ranking
+ * Adiciona animação de elevação ao passar o mouse sobre cada item
+ */
 .ranking-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transform: translateY(-2px); /* Eleva o item ligeiramente */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra mais pronunciada */
 }
 
-/* Item Top 1 - Destaque */
+/* 
+ * Destaque para o primeiro colocado
+ * Estiliza o item do usuário em primeiro lugar com cores douradas
+ */
 .ranking-item.top1 {
-  background-color: var(--top1-bg, #fff9e6);
-  border-left: 4px solid var(--gold-color, #ffd700);
+  background-color: var(--top1-bg, #fff9e6); /* Fundo amarelado */
+  border-left: 4px solid var(--gold-color, #ffd700); /* Borda dourada */
 }
 
+/* 
+ * Número da posição do primeiro colocado
+ * Define a cor dourada para o número 1
+ */
 .ranking-item.top1 .position {
   color: var(--gold-color, #ffd700);
   font-weight: bold;
 }
 
-/* Itens Top 2 e 3 */
+/* 
+ * Destaque para o segundo e terceiro colocados
+ * Adiciona bordas coloridas para prata e bronze
+ */
 .ranking-item.top2 {
-  border-left: 4px solid var(--silver-color, #c0c0c0);
+  border-left: 4px solid var(--silver-color, #c0c0c0); /* Borda prateada */
 }
 
 .ranking-item.top3 {
-  border-left: 4px solid var(--bronze-color, #cd7f32);
+  border-left: 4px solid var(--bronze-color, #cd7f32); /* Borda bronze */
 }
 
-/* Posição */
+/* 
+ * Número da posição no ranking
+ * Estiliza o número que indica a classificação de cada usuário
+ */
 .position {
   font-size: 1.2rem;
   font-weight: 600;
@@ -97,24 +145,37 @@
   color: var(--text-secondary, #555);
 }
 
-/* Informações do Usuário */
+/* 
+ * Contador de horas estudadas
+ * Define o estilo do texto que mostra as horas de estudo
+ */
 .user-hours {
   color: var(--text-secondary, #666);
   font-size: 0.9rem;
 }
 
-/* Seu Perfil (destaque) */
+/* 
+ * Destaque para o usuário atual
+ * Estiliza o item que mostra a posição do usuário logado
+ */
 .your-ranking {
-  margin-top: 40px;
-  background-color: var(--your-ranking-bg, #f0f7ff);
-  border-left: 4px solid var(--highlight-color, #4682B4);
+  margin-top: 40px; /* Espaçamento para separar do resto da lista */
+  background-color: var(--your-ranking-bg, #f0f7ff); /* Fundo azulado */
+  border-left: 4px solid var(--highlight-color, #4682B4); /* Borda azul */
 }
 
+/* 
+ * Número da posição do usuário atual
+ * Define a cor azul para o número da posição do usuário
+ */
 .your-ranking .position {
   color: var(--highlight-color, #4682B4);
 }
 
-/* Rodapé */
+/* 
+ * Rodapé da página
+ * Define o estilo do rodapé com informações de copyright
+ */
 footer {
   margin-top: 50px;
   text-align: center;
@@ -123,34 +184,43 @@ footer {
   padding: 20px 0;
 }
 
-/* Variáveis para tema claro */
+/* 
+ * Variáveis para o tema claro
+ * Define cores específicas para elementos no tema claro
+ */
 [data-theme="light"] {
-  --item-bg: #fff;
-  --top1-bg: #fff9e6;
-  --your-ranking-bg: #f0f7ff;
-  --filter-bg: #f5f7fa;
-  --filter-hover: #e0e6ed;
-  --gold-color: #ffd700;
-  --silver-color: #c0c0c0;
-  --bronze-color: #cd7f32;
+  --item-bg: #fff;              /* Fundo dos itens */
+  --top1-bg: #fff9e6;           /* Fundo do primeiro colocado */
+  --your-ranking-bg: #f0f7ff;   /* Fundo do seu ranking */
+  --filter-bg: #f5f7fa;         /* Fundo dos botões de filtro */
+  --filter-hover: #e0e6ed;      /* Hover dos botões de filtro */
+  --gold-color: #ffd700;        /* Cor dourada (1º lugar) */
+  --silver-color: #c0c0c0;      /* Cor prata (2º lugar) */
+  --bronze-color: #cd7f32;      /* Cor bronze (3º lugar) */
 }
 
-/* Variáveis para tema escuro */
+/* 
+ * Variáveis para o tema escuro
+ * Define cores específicas para elementos no tema escuro
+ */
 [data-theme="dark"] {
-  --item-bg: #2d2d2d;
-  --top1-bg: #332d00;
-  --your-ranking-bg: #1a2a3a;
-  --filter-bg: #3a3a3a;
-  --filter-hover: #4a4a4a;
-  --gold-color: #ffcc00;
-  --silver-color: #b8b8b8;
-  --bronze-color: #d18c56;
+  --item-bg: #2d2d2d;           /* Fundo dos itens */
+  --top1-bg: #332d00;           /* Fundo do primeiro colocado */
+  --your-ranking-bg: #1a2a3a;   /* Fundo do seu ranking */
+  --filter-bg: #3a3a3a;         /* Fundo dos botões de filtro */
+  --filter-hover: #4a4a4a;      /* Hover dos botões de filtro */
+  --gold-color: #ffcc00;        /* Cor dourada (1º lugar) */
+  --silver-color: #b8b8b8;      /* Cor prata (2º lugar) */
+  --bronze-color: #d18c56;      /* Cor bronze (3º lugar) */
 }
 
-/* Responsividade */
+/* 
+ * Responsividade para dispositivos móveis
+ * Ajusta o layout para telas menores
+ */
 @media (max-width: 768px) {
   .main {
-      margin-left: 0;
+      margin-left: 0; /* Remove a margem para a sidebar em telas pequenas */
       padding: 20px;
   }
   
@@ -171,26 +241,35 @@ footer {
   }
 }
 
-/* Adicione ou substitua estas regras no seu arquivo ranking.css */
-
+/* 
+ * Imagem de perfil dos usuários
+ * Define o estilo circular para as fotos de perfil
+ */
 .profile-pic {
   width: 50px; /* Tamanho fixo para desktop */
   height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: 50%; /* Formato circular */
+  object-fit: cover; /* Mantém a proporção da imagem */
   margin: 0 15px;
   flex-shrink: 0; /* Impede que a imagem diminua */
 }
 
+/* 
+ * Ícone de troféu para o primeiro colocado
+ * Define o estilo da imagem do troféu
+ */
 .trophy {
   width: 30px;
   height: 30px;
   margin-left: 15px;
   flex-shrink: 0;
-  object-fit: contain;
+  object-fit: contain; /* Mantém a proporção da imagem */
 }
 
-/* Ajustes para mobile */
+/* 
+ * Ajustes para dispositivos móveis
+ * Redimensiona elementos para telas menores
+ */
 @media (max-width: 768px) {
   .profile-pic {
       width: 40px;
@@ -203,7 +282,10 @@ footer {
   }
 }
 
-/* Garante que as imagens não estiquem */
+/* 
+ * Regra geral para imagens
+ * Garante que todas as imagens sejam responsivas
+ */
 img {
   max-width: 100%;
   height: auto;

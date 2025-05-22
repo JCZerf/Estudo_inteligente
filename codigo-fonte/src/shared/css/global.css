@@ -1,49 +1,74 @@
-/* Estilos global */
+/* 
+ * Estilos globais - Arquivo principal de estilos CSS
+ * Este arquivo contém todos os estilos base que são compartilhados entre todas as páginas do aplicativo
+ */
+
+/* Importação da fonte Poppins do Google Fonts em 3 pesos diferentes */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+/* 
+ * Variáveis CSS para o tema claro (padrão)
+ * Estas variáveis permitem fácil manutenção e consistência visual em todo o aplicativo
+ * Também facilitam a implementação do modo escuro
+ */
 :root {
-  --bg-color: #f5f5f5;
-  --text-color: #333;
-  --section-bg: #fff;
-  --highlight-color: #1871bb;
-  --sidebar-bg: #000;
-  --sidebar-text: white;
-  --sidebar-active: #333;
-  --text-secondary: #666;
-  --border-color: #ddd;
-  --font-size-base: 16px; /* Tamanho base para cálculo */
+  --bg-color: #f5f5f5;        /* Cor de fundo principal do aplicativo */
+  --text-color: #333;         /* Cor padrão para textos */
+  --section-bg: #fff;         /* Cor de fundo para seções e cards */
+  --highlight-color: #1871bb; /* Cor de destaque para elementos importantes e ações */
+  --sidebar-bg: #000;         /* Cor de fundo da barra lateral */
+  --sidebar-text: white;      /* Cor do texto na barra lateral */
+  --sidebar-active: #333;     /* Cor de fundo para item ativo na barra lateral */
+  --text-secondary: #666;     /* Cor para textos secundários e menos importantes */
+  --border-color: #ddd;       /* Cor padrão para bordas */
+  --font-size-base: 16px;     /* Tamanho base para cálculo de outros tamanhos de fonte */
 }
 
+/* 
+ * Variáveis CSS para o tema escuro
+ * Ativadas quando o atributo data-theme="dark" é aplicado ao elemento HTML
+ */
 [data-theme="dark"] {
-  --bg-color: #1a1a1a;
-  --text-color: #f0f0f0;
-  --section-bg: #2d2d2d;
-  --highlight-color: #4a9fe0;
-  --sidebar-active: #444;
-  --text-secondary: #aaa;
-  --border-color: #444;
+  --bg-color: #1a1a1a;        /* Cor de fundo escura para o modo noturno */
+  --text-color: #f0f0f0;      /* Cor de texto mais clara para contraste no modo escuro */
+  --section-bg: #2d2d2d;      /* Cor de fundo para seções no modo escuro */
+  --highlight-color: #4a9fe0; /* Cor de destaque ajustada para melhor visibilidade no modo escuro */
+  --sidebar-active: #444;     /* Cor de fundo para item ativo na barra lateral no modo escuro */
+  --text-secondary: #aaa;     /* Cor para textos secundários no modo escuro */
+  --border-color: #444;       /* Cor para bordas no modo escuro */
 }
 
 
-/* Reset e estilos base */
+/* 
+ * Reset CSS e estilos base
+ * Normaliza o comportamento entre navegadores e define comportamentos padrão
+ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Transições suaves para mudanças de tema e tamanho de fonte */
   transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
 }
 
+/* 
+ * Estilos para o elemento body
+ * Define a fonte, cores e altura mínima para todas as páginas
+ */
 body {
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
   background-color: var(--bg-color);
   min-height: 100vh;
-  font-size: var(--font-size-base); /* Aplica o tamanho base */
+  font-size: var(--font-size-base); /* Aplica o tamanho base de fonte */
 }
 
-/* Classes de Tamanho de Fonte */
+/* 
+ * Classes para controle de tamanho de fonte
+ * Permitem ajustar o tamanho da fonte em toda a aplicação através das configurações
+ */
 body.font-small {
-  font-size: calc(var(--font-size-base) * 0.85); /* Pequeno - 15% menor */
+  font-size: calc(var(--font-size-base) * 0.85); /* Pequeno - 15% menor que o padrão */
 }
 
 body.font-medium {
@@ -51,15 +76,21 @@ body.font-medium {
 }
 
 body.font-large {
-  font-size: calc(var(--font-size-base) * 1.15); /* Grande - 15% maior */
+  font-size: calc(var(--font-size-base) * 1.15); /* Grande - 15% maior que o padrão */
 }
 
-/* Ajustes para que H1, H2, etc., também escalem proporcionalmente se não usarem rem/em */
+/* 
+ * Ajustes para cabeçalhos
+ * Garante que os títulos tenham espaçamento adequado entre linhas
+ */
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
 }
 
-/* Sidebar */
+/* 
+ * Estilos da barra lateral (sidebar)
+ * Define aparência e comportamento do menu lateral presente em todas as páginas internas
+ */
 .sidebar {
   width: 220px;
   background-color: var(--sidebar-bg);
@@ -70,9 +101,10 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   top: 0;
   z-index: 1000;
-  overflow-y: auto;
+  overflow-y: auto; /* Permite rolagem quando o conteúdo é maior que a altura */
 }
 
+/* Logo dentro da barra lateral */
 .logo-sidebar {
   max-width: 180px;
   margin: 0 auto 30px;
@@ -80,6 +112,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 20px;
 }
 
+/* Navegação dentro da barra lateral */
 .sidebar nav {
   display: flex;
   flex-direction: column;
@@ -87,6 +120,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 15px;
 }
 
+/* Links de navegação na barra lateral */
 .sidebar nav a {
   display: flex;
   align-items: center;
@@ -94,42 +128,50 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
   padding: 12px 15px;
   border-radius: 6px;
-  /* font-size: 16px; Removido para herdar do body e escalar */
+  /* Tamanho de fonte removido para herdar do body e escalar conforme configurações */
 }
 
+/* Ícones nos links da barra lateral */
 .sidebar nav a i {
   margin-right: 10px;
   width: 20px;
   text-align: center;
 }
 
+/* Efeito hover nos links da barra lateral */
 .sidebar nav a:hover {
   background-color: var(--sidebar-active);
-  transform: translateX(5px);
+  transform: translateX(5px); /* Efeito de movimento ao passar o mouse */
 }
 
+/* Estilo para o link ativo na barra lateral */
 .sidebar nav a.active {
   background-color: var(--highlight-color);
   color: #ffffff;
   font-weight: 600;
   border-left: 4px solid var(--sidebar-text);
   transform: translateX(5px);
-  padding-left: 11px; /* Ajustado de 15px para compensar a borda de 4px */
+  padding-left: 11px; /* Ajustado para compensar a borda de 4px */
 }
 
-/* Main content */
+/* 
+ * Estilos para o conteúdo principal
+ * Define o layout básico para o conteúdo de todas as páginas
+ */
 .main {
-  margin-left: 220px;
+  margin-left: 220px; /* Espaço para a barra lateral */
   padding: 30px 40px;
   min-height: 100vh;
 }
 
+/* Cabeçalho da área de conteúdo */
 .header {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 30px;
 }
 
+/* Informações do usuário no cabeçalho */
 .user-info {
   background-color: var(--section-bg);
   padding: 10px 20px;
@@ -137,6 +179,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+/* Área de conteúdo principal */
 .content {
   background-color: var(--section-bg);
   padding: 30px;
@@ -144,15 +187,18 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+/* Rodapé das páginas */
 footer {
   margin-top: 40px;
   text-align: center;
   color: #666;
-  /* font-size: 14px; Removido para herdar */
+  /* Tamanho de fonte removido para herdar do body */
 }
 
-/* Tema escuro - já definido acima */
-
+/* 
+ * Ajustes específicos para o tema escuro
+ * Complementam as variáveis CSS definidas anteriormente
+ */
 [data-theme="dark"] .section h1,
 [data-theme="dark"] .section h3 {
   color: var(--highlight-color);
@@ -171,8 +217,12 @@ footer {
   color: #aaa;
 }
 
-/* Responsividade */
+/* 
+ * Responsividade
+ * Ajusta o layout para dispositivos móveis e telas menores
+ */
 @media (max-width: 768px) {
+  /* Barra lateral se torna horizontal no topo em telas pequenas */
   .sidebar {
     width: 100%;
     height: auto;
@@ -180,49 +230,60 @@ footer {
     padding: 15px;
   }
   
+  /* Conteúdo principal ocupa toda a largura */
   .main {
     margin-left: 0;
     padding: 20px;
     width: 100%;
   }
   
+  /* Navegação se torna horizontal */
   .sidebar nav {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
   }
   
+  /* Ajuste nos links de navegação */
   .sidebar nav a {
     padding: 10px 15px;
-    /* font-size: 14px; Removido para herdar */
+    /* Tamanho de fonte removido para herdar */
   }
   
+  /* Centraliza o cabeçalho */
   .header {
     justify-content: center;
   }
 }
 
-/* Estilo para o botão de tema */
+/* 
+ * Estilo para o botão de alternar tema (claro/escuro)
+ */
 #themeToggle {
   background: none;
   border: none;
   color: inherit;
   cursor: pointer;
-  font-size: 1.2em; /* Usar em para escalar com a fonte base */
+  font-size: 1.2em; /* Usa em para escalar com a fonte base */
   margin-left: 15px;
   padding: 5px;
   border-radius: 50%;
 }
 
+/* Efeito hover no botão de tema */
 #themeToggle:hover {
   background-color: rgba(128,128,128,0.1); /* Cor neutra para hover */
 }
 
+/* Efeito hover no botão de tema no modo escuro */
 [data-theme="dark"] #themeToggle:hover {
   background-color: rgba(255,255,255,0.1);
 }
 
-/* Estilos específicos para sections */
+/* 
+ * Estilos para seções de conteúdo
+ * Define a aparência padrão dos cards e seções em todas as páginas
+ */
 .section {
   margin-bottom: 30px;
   background-color: var(--section-bg);
@@ -231,30 +292,39 @@ footer {
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+/* Estilo para texto destacado */
 .highlight {
-  font-size: 1.5em; /* Usar em para escalar */
+  font-size: 1.5em; /* Usa em para escalar */
   font-weight: bold;
   color: var(--highlight-color);
 }
 
+/* Estilo para banners de destaque */
 .banner {
   background: black;
   color: white;
   padding: 15px;
   text-align: center;
-  font-size: 1.125em; /* Usar em para escalar */
+  font-size: 1.125em; /* Usa em para escalar */
   margin: 20px 0;
   border-radius: 8px;
-  animation: pulse 2s infinite;
+  animation: pulse 2s infinite; /* Aplica animação de pulsação */
 }
 
-/* Animações */
+/* 
+ * Definição de animações
+ * Animação de pulsação usada em banners e alertas
+ */
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.02); }
   100% { transform: scale(1); }
 }
 
+/* 
+ * Transições para elementos de tarefas
+ * Garante transições suaves ao mudar estados ou temas
+ */
 .task, .task * {
   transition: background-color 0.3s ease, 
              color 0.3s ease, 
@@ -262,21 +332,30 @@ footer {
              box-shadow 0.3s ease;
 }
 
+/* Transição para o botão de tema */
 #themeToggle {
   transition: transform 0.3s ease;
 }
 
+/* Classe para destacar o botão de tema quando ativo */
 .theme-toggle-active {
   transform:scale(1.1);
 }
 
+/* 
+ * Estilos para imagens
+ * Garante que imagens sejam responsivas e mantenham proporção
+ */
 img {
   max-width: 100%;
   height: auto;
-  object-fit: cover; /* Mantém proporção */
+  object-fit: cover; /* Mantém proporção da imagem */
 }
 
-/* Modal Styles - General */
+/* 
+ * Estilos para modais
+ * Define a aparência e comportamento dos modais usados em todo o aplicativo
+ */
 .modal {
   display: none; 
   position: fixed; 
@@ -286,9 +365,10 @@ img {
   width: 100%; 
   height: 100%; 
   overflow: auto; 
-  background-color: rgba(0,0,0,0.6); 
+  background-color: rgba(0,0,0,0.6); /* Fundo semi-transparente */
 }
 
+/* Conteúdo do modal */
 .modal-content {
   background-color: var(--section-bg);
   color: var(--text-color);
@@ -302,6 +382,7 @@ img {
   position: relative;
 }
 
+/* Botão de fechar modal */
 .close-modal {
   color: var(--text-secondary);
   float: right;
@@ -310,6 +391,7 @@ img {
   line-height: 1;
 }
 
+/* Efeito hover no botão de fechar */
 .close-modal:hover,
 .close-modal:focus {
   color: var(--highlight-color);
@@ -317,6 +399,7 @@ img {
   cursor: pointer;
 }
 
+/* Container para botões no modal */
 .modal-buttons {
     display: flex;
     justify-content: flex-end;
@@ -324,12 +407,18 @@ img {
     margin-top: 20px;
 }
 
-/* Ajustes para o modal do cronograma (eventModal) */
+/* 
+ * Ajustes específicos para o modal do cronograma
+ * Permite um tamanho maior para acomodar o formulário
+ */
 #eventModal .modal-content {
     max-width: 600px; /* Um pouco maior para o formulário do cronograma */
 }
 
-/* Adicionando estilos para inputs e selects dentro de modais e configurações */
+/* 
+ * Estilos para campos de formulário em modais e configurações
+ * Define aparência consistente para inputs, selects e textareas
+ */
 .modal .form-group input[type="text"],
 .modal .form-group input[type="date"],
 .modal .form-group input[type="time"],
@@ -344,9 +433,10 @@ img {
   border-radius: 4px;
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-size: 1em; /* Herda e escala */
+  font-size: 1em; /* Herda e escala com o tamanho base */
 }
 
+/* Estilos para labels em formulários */
 .modal .form-group label,
 .setting-group label {
   display: block;
@@ -354,8 +444,10 @@ img {
   font-weight: 600;
 }
 
+/* 
+ * Estilos para botões
+ * Garante que botões também escalem com o tamanho de fonte base
+ */
 .btn, button {
-    font-size: 1em; /* Herda e escala */
+    font-size: 1em; /* Herda e escala com o tamanho base */
 }
-
-

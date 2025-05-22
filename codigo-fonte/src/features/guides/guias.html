@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Metadados básicos da página -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guias | Estudo Inteligente</title>
+  
+  <!-- Folhas de estilo: global compartilhada e específica da página -->
   <link rel="stylesheet" href="../../shared/css/global.css">
   <link rel="stylesheet" href="guias.css">
+  
+  <!-- Biblioteca de ícones Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+  <!-- Barra lateral de navegação (Sidebar) -->
   <div class="sidebar">
+    <!-- Logo com link para a página inicial -->
     <a href="../dashboard/inicio.html">
       <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo-sidebar">
     </a>
+    
+    <!-- Menu de navegação principal -->
     <nav>
       <a href="../dashboard/inicio.html"><i class="fas fa-home"></i> Início</a>
       <a href="../pomodoro/sessao_de_foco.html"><i class="fas fa-clock"></i> Sessão de Foco</a>
@@ -25,25 +34,34 @@
     </nav>
   </div>
 
+  <!-- Conteúdo principal da página -->
   <div class="main">
+    <!-- Cabeçalho com informações do usuário e botão de tema -->
     <div class="header">
         <div class="user-info">
             <span>Usuário: Joaquim Silva</span>
+            <!-- Botão para alternar entre tema claro e escuro -->
             <button id="themeToggle" aria-label="Alternar tema">
               <i class="fas fa-moon"></i>
             </button>
           </div>
     </div>
 
+    <!-- Container principal de conteúdo -->
     <div class="content">
       <div class="guides-container">
+        <!-- Título da página -->
         <h1><i class="fas fa-book-open"></i> Guias de Estudo</h1>
         
+        <!-- Barra de pesquisa e filtros -->
         <div class="search-filter">
+          <!-- Campo de busca -->
           <div class="search-box">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Buscar guias...">
           </div>
+          
+          <!-- Botões de filtro por categoria -->
           <div class="filter-options">
             <button class="filter-btn active">Todos</button>
             <button class="filter-btn">Técnicas</button>
@@ -52,8 +70,9 @@
           </div>
         </div>
 
+        <!-- Grade de cards de guias de estudo -->
         <div class="guides-grid">
-          <!-- Guia 1 -->
+          <!-- Guia 1: Método Pomodoro -->
           <div class="guide-card">
             <div class="guide-icon" style="background-color: #ebf8ff;">
               <i class="fas fa-clock" style="color: #4299e1;"></i>
@@ -63,7 +82,7 @@
             <a href="https://napratica.org.br/pomodoro/" target="_blank" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
           </div>
 
-          <!-- Guia 2 -->
+          <!-- Guia 2: Técnica Feynman -->
           <div class="guide-card">
             <div class="guide-icon" style="background-color: #f0fff4;">
               <i class="fas fa-atom" style="color: #48bb78;"></i>
@@ -73,7 +92,7 @@
             <a href="https://napratica.org.br/aprenda-rapido-com-tecnica-feynman/" target="_blank" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
           </div>
 
-          <!-- Guia 3 -->
+          <!-- Guia 3: Mapas Mentais -->
           <div class="guide-card">
             <div class="guide-icon" style="background-color: #fff5f5;">
               <i class="fas fa-project-diagram" style="color: #f56565;"></i>
@@ -83,7 +102,7 @@
             <a href="https://clickup.com/pt-BR/blog/426166/exemplos-de-mapas-mentais-para-estudantes?utm_source=google&utm_medium=cpc&utm_campaign=gs_cpc_br_nnc_nb_trial_all-devices_troas_lp_x_all-departments_x_conglomerate_pt-nb&utm_content=&utm_term=e_modelo%20de%20mapa%20mental&utm_creative=710411373566_dynamic_rsa&utm_custom1=&utm_custom2=&utm_lptheme=&utm_lpmod=&gad_source=1&gad_campaignid=21603928236&gbraid=0AAAAACR5vIIb1R5tcksqd6OXfC5eJgcwB&gclid=Cj0KCQjwiqbBBhCAARIsAJSfZkY-9V7OT57JQ1F8wZ9jRmyM7K3keTir_FpwUzJH1XLSAKUXeKbPlPMaAvgIEALw_wcB" target="_blank" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
           </div>
 
-          <!-- Guia 4 -->
+          <!-- Guia 4: Flashcards -->
           <div class="guide-card">
             <div class="guide-icon" style="background-color: #fff6e6;">
               <i class="fas fa-cards" style="color: #ed8936;"></i>
@@ -93,7 +112,7 @@
             <a href="https://guiadoestudante.abril.com.br/estudo/o-que-sao-flashcards-e-como-usar-nos-estudos/" target="_blank" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
           </div>
 
-          <!-- Guia 5 -->
+          <!-- Guia 5: Curva do Esquecimento -->
           <div class="guide-card">
             <div class="guide-icon" style="background-color: #f0f9ff;">
               <i class="fas fa-brain" style="color: #3182ce;"></i>
@@ -103,7 +122,7 @@
             <a href="https://www.estrategiaconcursos.com.br/blog/metodos-de-revisao-aprenda-as-melhores-formas-de-revisar-as-materias-ja-estudadas/" target="_blank" class="btn btn-outline">Acessar Guia <i class="fas fa-chevron-right"></i></a>
           </div>
 
-          <!-- Guia 6 -->
+          <!-- Guia 6: Leitura Ativa -->
           <div class="guide-card">
             <div class="guide-icon" style="background-color: #f9f0ff;">
               <i class="fas fa-book" style="color: #9f7aea;"></i>
@@ -115,12 +134,14 @@
         </div>
       </div>
 
+      <!-- Rodapé da página -->
       <footer>
         <p>Estudo Inteligente - 2025</p>
       </footer>
     </div>
   </div>
 
+  <!-- Scripts JavaScript -->
   <script src="guias.js"></script>
   <script src="../../shared/js/menu.js"></script>
   <script src="../../shared/js/theme.js"></script>

@@ -1,30 +1,47 @@
+/* 
+ * Estilos para a página de Cadastro
+ * Define a aparência visual da tela de criação de conta do usuário
+ */
+
+/* 
+ * Variáveis CSS para cores e estilos consistentes
+ * Facilita a manutenção e garante consistência visual
+ */
 :root {
-  /* Cores */
-  --primary: #4361ee;
-  --primary-hover: #3a56d4;
-  --secondary: #f8f9fa;
-  --text: #2b2d42;
-  --text-light: #6c757d;
-  --border: #e9ecef;
-  --error: #ef233c;
-  --success: #4cc9f0;
-  --white: #ffffff;
-  --black: #000000;
-  --google: #db4437;
-  --facebook: #1877f2;
+  /* Cores principais do sistema */
+  --primary: #4361ee;         /* Cor principal para botões e elementos de destaque */
+  --primary-hover: #3a56d4;   /* Cor para estado hover de elementos principais */
+  --secondary: #f8f9fa;       /* Cor secundária para fundos e elementos menos importantes */
+  --text: #2b2d42;            /* Cor padrão para textos */
+  --text-light: #6c757d;      /* Cor para textos secundários e menos importantes */
+  --border: #e9ecef;          /* Cor para bordas de elementos */
+  --error: #ef233c;           /* Cor para mensagens de erro */
+  --success: #4cc9f0;         /* Cor para mensagens de sucesso */
+  --white: #ffffff;           /* Cor branca pura */
+  --black: #000000;           /* Cor preta pura */
+  --google: #db4437;          /* Cor oficial do Google para botão de login social */
+  --facebook: #1877f2;        /* Cor oficial do Facebook para botão de login social */
   
-  /* Espaçamentos */
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --transition: all 0.3s ease;
+  /* Espaçamentos e efeitos visuais */
+  --radius: 12px;             /* Raio padrão para bordas arredondadas */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra padrão para elementos elevados */
+  --transition: all 0.3s ease; /* Transição padrão para efeitos suaves */
 }
 
+/* 
+ * Reset CSS básico
+ * Normaliza o comportamento entre navegadores
+ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* 
+ * Estilos para o corpo da página
+ * Define o layout base e a tipografia
+ */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #f8f9fa;
@@ -36,6 +53,10 @@ body {
   padding: 20px;
 }
 
+/* 
+ * Imagem de fundo decorativa
+ * Cria o efeito visual de fundo para a tela de cadastro
+ */
 .background {
   position: fixed;
   top: 0;
@@ -47,6 +68,10 @@ body {
   opacity: 0.9;
 }
 
+/* 
+ * Container principal da tela de cadastro
+ * Define o card branco que contém o formulário e a área de logo
+ */
 .register-container {
   width: 100%;
   max-width: 900px;
@@ -59,7 +84,10 @@ body {
   margin: auto;
 }
 
-/* Lado Esquerdo */
+/* 
+ * Lado esquerdo do container de cadastro
+ * Área escura com o logo da aplicação
+ */
 .left-side {
   width: 45%;
   background: linear-gradient(135deg, #000000, #000000);
@@ -71,17 +99,29 @@ body {
   color: var(--white);
 }
 
+/* 
+ * Container para o logo
+ * Centraliza o logo na área esquerda com animação de entrada
+ */
 .logo-container {
   text-align: center;
-  animation: fadeIn 0.8s ease;
+  animation: fadeIn 0.8s ease; /* Animação de aparecimento suave */
 }
 
+/* 
+ * Imagem do logo
+ * Define tamanho e espaçamento
+ */
 .logo {
   max-width: 400px;
   height: auto;
   margin-bottom: 1rem;
 }
 
+/* 
+ * Texto do logo (se houver)
+ * Define estilo para texto que acompanha o logo
+ */
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
@@ -89,7 +129,10 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Lado Direito */
+/* 
+ * Lado direito do container de cadastro
+ * Área branca com o formulário de cadastro
+ */
 .right-side {
   width: 55%;
   padding: 2.5rem;
@@ -97,12 +140,20 @@ body {
   flex-direction: column;
 }
 
+/* 
+ * Cabeçalho do formulário
+ * Contém título e subtítulo da página de cadastro com animação
+ */
 .form-header {
   margin-bottom: 2rem;
   text-align: center;
-  animation: slideDown 0.6s ease;
+  animation: slideDown 0.6s ease; /* Animação de deslizamento para baixo */
 }
 
+/* 
+ * Título principal do formulário
+ * "Crie sua conta"
+ */
 .form-header h1 {
   font-size: 1.8rem;
   font-weight: 700;
@@ -110,22 +161,37 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* 
+ * Subtítulo do formulário
+ * "Comece sua jornada de aprendizagem"
+ */
 .form-header p {
   color: var(--text-light);
   font-size: 0.95rem;
 }
 
-/* Formulário */
+/* 
+ * Formulário de cadastro
+ * Layout flexível para ocupar o espaço disponível
+ */
 .register-form {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
+/* 
+ * Grupo de campos do formulário
+ * Agrupa label e input relacionados
+ */
 .form-group {
   margin-bottom: 1.25rem;
 }
 
+/* 
+ * Labels dos campos do formulário
+ * Define estilo para as etiquetas dos campos
+ */
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
@@ -134,12 +200,20 @@ body {
   color: var(--text);
 }
 
+/* 
+ * Container para inputs com ícones
+ * Permite posicionar ícones dentro dos campos
+ */
 .input-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* 
+ * Ícones dentro dos campos de input
+ * Posiciona os ícones à esquerda dos campos
+ */
 .input-container i {
   position: absolute;
   left: 15px;
@@ -147,6 +221,10 @@ body {
   font-size: 1rem;
 }
 
+/* 
+ * Campos de entrada (inputs)
+ * Define aparência e comportamento dos campos
+ */
 .input-container input {
   width: 100%;
   padding: 0.85rem 1rem 0.85rem 2.5rem;
@@ -157,16 +235,28 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado de foco dos campos
+ * Destaca visualmente o campo quando selecionado
+ */
 .input-container input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
 }
 
+/* 
+ * Container específico para o campo de senha
+ * Permite posicionar o botão de mostrar/ocultar senha
+ */
 .password-wrapper {
   position: relative;
 }
 
+/* 
+ * Botão para mostrar/ocultar senha
+ * Posicionado à direita do campo de senha
+ */
 .toggle-password {
   position: absolute;
   right: 15px;
@@ -178,10 +268,18 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado hover do botão de mostrar/ocultar senha
+ * Muda a cor ao passar o mouse
+ */
 .toggle-password:hover {
   color: var(--primary);
 }
 
+/* 
+ * Indicador de força da senha
+ * Container para a barra de progresso
+ */
 .password-strength {
   margin-top: 0.5rem;
   height: 4px;
@@ -190,6 +288,10 @@ body {
   overflow: hidden;
 }
 
+/* 
+ * Barra de progresso da força da senha
+ * Muda de largura e cor conforme a força da senha
+ */
 .strength-bar {
   height: 100%;
   width: 0;
@@ -197,6 +299,10 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Texto indicador da força da senha
+ * Exibe descrição textual da força (fraca, média, forte)
+ */
 .strength-text {
   display: block;
   font-size: 0.7rem;
@@ -205,7 +311,10 @@ body {
   margin-top: 0.2rem;
 }
 
-/* Botões */
+/* 
+ * Estilo base para botões
+ * Define aparência e comportamento padrão
+ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -222,18 +331,30 @@ body {
   overflow: hidden;
 }
 
+/* 
+ * Botão primário (azul)
+ * Usado para a ação principal "Criar Conta"
+ */
 .btn-primary {
   background-color: var(--primary);
   color: var(--white);
   margin-top: 1rem;
 }
 
+/* 
+ * Estado hover do botão primário
+ * Efeito visual ao passar o mouse
+ */
 .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
 }
 
+/* 
+ * Ícone de carregamento no botão
+ * Exibido durante o processamento do cadastro
+ */
 .btn .loading-icon {
   position: absolute;
   right: 1.5rem;
@@ -241,20 +362,35 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado de carregamento do botão
+ * Oculta o texto durante o carregamento
+ */
 .btn.loading .btn-text {
   opacity: 0;
 }
 
+/* 
+ * Exibe o ícone de carregamento
+ * Quando o botão está no estado loading
+ */
 .btn.loading .loading-icon {
   opacity: 1;
 }
 
-/* Social */
+/* 
+ * Seção de login social
+ * Opções alternativas de cadastro com Google e Facebook
+ */
 .social-login {
   margin-top: 2rem;
   text-align: center;
 }
 
+/* 
+ * Texto separador para opções sociais
+ * "Ou cadastre-se com" com linhas decorativas
+ */
 .social-login p {
   color: var(--text-light);
   font-size: 0.9rem;
@@ -262,6 +398,10 @@ body {
   position: relative;
 }
 
+/* 
+ * Linhas decorativas antes e depois do texto
+ * Cria o efeito visual de separador
+ */
 .social-login p::before,
 .social-login p::after {
   content: "";
@@ -272,20 +412,30 @@ body {
   background-color: var(--border);
 }
 
+/* Linha à esquerda do texto */
 .social-login p::before {
   left: 0;
 }
 
+/* Linha à direita do texto */
 .social-login p::after {
   right: 0;
 }
 
+/* 
+ * Container para botões de login social
+ * Layout flexível para os botões
+ */
 .social-buttons {
   display: flex;
   gap: 1rem;
   justify-content: center;
 }
 
+/* 
+ * Estilo base para botões sociais
+ * Aparência comum para Google e Facebook
+ */
 .social-btn {
   flex: 1;
   max-width: 150px;
@@ -304,30 +454,47 @@ body {
   gap: 0.5rem;
 }
 
+/* 
+ * Estado hover dos botões sociais
+ * Efeito de elevação ao passar o mouse
+ */
 .social-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
 
+/* 
+ * Botão específico do Google
+ * Usa a cor oficial do Google
+ */
 .social-btn.google {
   color: var(--google);
   border-color: rgba(219, 68, 55, 0.3);
 }
 
+/* Estado hover do botão do Google */
 .social-btn.google:hover {
   background-color: rgba(219, 68, 55, 0.05);
 }
 
+/* 
+ * Botão específico do Facebook
+ * Usa a cor oficial do Facebook
+ */
 .social-btn.facebook {
   color: var(--facebook);
   border-color: rgba(24, 119, 242, 0.3);
 }
 
+/* Estado hover do botão do Facebook */
 .social-btn.facebook:hover {
   background-color: rgba(24, 119, 242, 0.05);
 }
 
-/* Links */
+/* 
+ * Área de redirecionamento para login
+ * "Já tem uma conta? Faça login"
+ */
 .login-redirect {
   text-align: center;
   margin-top: 1.5rem;
@@ -335,6 +502,10 @@ body {
   color: var(--text-light);
 }
 
+/* 
+ * Link para a página de login
+ * Define aparência e comportamento do link
+ */
 .login-link {
   color: var(--primary);
   text-decoration: none;
@@ -342,11 +513,18 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado hover do link de login
+ * Adiciona sublinhado ao passar o mouse
+ */
 .login-link:hover {
   text-decoration: underline;
 }
 
-/* Footer */
+/* 
+ * Rodapé da página
+ * Contém informações de copyright e links úteis
+ */
 footer {
   text-align: center;
   padding: 1.5rem 0 0;
@@ -355,6 +533,10 @@ footer {
   color: var(--text-light);
 }
 
+/* 
+ * Links no rodapé
+ * Termos de uso e Política de privacidade
+ */
 .footer-links {
   margin-top: 0.5rem;
   display: flex;
@@ -362,17 +544,22 @@ footer {
   gap: 1.5rem;
 }
 
+/* Estilo dos links do rodapé */
 .footer-links a {
   color: var(--text-light);
   text-decoration: none;
   transition: var(--transition);
 }
 
+/* Estado hover dos links do rodapé */
 .footer-links a:hover {
   color: var(--primary);
 }
 
-/* Mensagens de erro */
+/* 
+ * Mensagem de erro
+ * Exibida durante validação do formulário
+ */
 .error-message {
   color: var(--error);
   font-size: 0.85rem;
@@ -380,30 +567,39 @@ footer {
   padding: 0.5rem;
   background-color: rgba(239, 35, 60, 0.05);
   border-radius: 4px;
-  display: none;
+  display: none; /* Inicialmente oculta */
 }
 
-/* Animações */
+/* 
+ * Definição de animações
+ * Animações usadas em elementos da página
+ */
+
+/* Animação de aparecimento suave */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Animação de deslizamento para baixo */
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsividade */
+/* 
+ * Responsividade para tablets
+ * Ajusta o layout para telas médias
+ */
 @media (max-width: 768px) {
   .register-container {
-    flex-direction: column;
+    flex-direction: column; /* Empilha as seções em telas menores */
     min-height: auto;
     max-width: 500px;
   }
   
   .left-side, .right-side {
-    width: 100%;
+    width: 100%; /* Ocupa toda a largura disponível */
   }
   
   .left-side {
@@ -415,13 +611,14 @@ footer {
   }
   
   .logo {
-    max-width: 100px;
+    max-width: 100px; /* Logo menor em telas pequenas */
   }
   
   .logo-text {
     font-size: 1.3rem;
   }
   
+  /* Botões sociais em coluna em telas menores */
   .social-buttons {
     flex-direction: column;
     align-items: center;
@@ -432,20 +629,24 @@ footer {
   }
 }
 
+/* 
+ * Responsividade para smartphones
+ * Ajusta o layout para telas muito pequenas
+ */
 @media (max-width: 480px) {
   body {
-    padding: 10px;
+    padding: 10px; /* Reduz o padding geral */
   }
   
   .right-side {
-    padding: 1.5rem;
+    padding: 1.5rem; /* Reduz o padding do formulário */
   }
   
   .form-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Título menor */
   }
   
   .input-container input {
-    padding: 0.75rem 1rem 0.75rem 2.2rem;
+    padding: 0.75rem 1rem 0.75rem 2.2rem; /* Campos menores */
   }
 }

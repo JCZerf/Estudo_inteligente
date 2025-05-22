@@ -1,14 +1,23 @@
+/**
+ * Script JavaScript para a página de Início (Dashboard)
+ * Gerencia a exibição de dados, carregamento de informações e interações da interface
+ */
+
 document.addEventListener("DOMContentLoaded", function() {
-    loadUserName(); // Carrega o nome do usuário
-    loadTarefasAgendadas();
-    loadTempoFocoHoje();
-    initProgressoSemanaChart();
-    loadTempoMedioEstudoSemana();
-    loadProximosEventos(); // Alterado de loadRecomendacoesRapidas para loadProximosEventos
-    document.getElementById("currentYear").textContent = new Date().getFullYear();
-    checkNotificationPermission();
+    loadUserName();           // Carrega o nome do usuário
+    loadTarefasAgendadas();   // Carrega as tarefas agendadas do usuário
+    loadTempoFocoHoje();      // Carrega o tempo de foco do dia atual
+    initProgressoSemanaChart(); // Inicializa o gráfico de progresso semanal
+    loadTempoMedioEstudoSemana(); // Calcula e exibe o tempo médio de estudo na semana
+    loadProximosEventos();    // Carrega os próximos eventos do calendário
+    document.getElementById("currentYear").textContent = new Date().getFullYear(); // Atualiza o ano no rodapé
+    checkNotificationPermission(); // Verifica permissão para notificações
 });
 
+/**
+ * Carrega e exibe o nome do usuário logado
+ * Recupera o nome do localStorage e atualiza o elemento na interface
+ */
 function loadUserName() {
     const userNameSpan = document.getElementById("userName");
     if (userNameSpan) {
@@ -19,6 +28,10 @@ function loadUserName() {
     }
 }
 
+/**
+ * Carrega e exibe as tarefas agendadas do usuário
+ * Filtra as tarefas não concluídas com prazo a partir de hoje
+ */
 function loadTarefasAgendadas() {
     const tarefasSection = document.getElementById("tarefasSection");
     if (!tarefasSection) return;
@@ -36,10 +49,12 @@ function loadTarefasAgendadas() {
     listaTarefasUl.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
 
     try {
+        // Recupera as tarefas do localStorage
         const studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
         let temTarefas = false;
-        const hoje = new Date().toISOString().split("T")[0];
+        const hoje = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
 
+        // Percorre todas as tarefas e filtra as não concluídas com prazo futuro
         Object.values(studyTasks).flat().forEach(task => {
             if (!task.done && task.due >= hoje) { 
                 const li = document.createElement("li");
@@ -49,6 +64,7 @@ function loadTarefasAgendadas() {
             }
         });
 
+        // Exibe mensagem se não houver tarefas
         if (!temTarefas) {
             listaTarefasUl.innerHTML = "<li>Nenhuma tarefa agendada.</li>";
         }
@@ -58,22 +74,29 @@ function loadTarefasAgendadas() {
     }
 }
 
+/**
+ * Carrega e exibe o tempo total de foco do dia atual
+ * Calcula a soma de todas as sessões de foco registradas hoje
+ */
 function loadTempoFocoHoje() {
     const tempoFocoHighlight = document.querySelector("section[aria-labelledby='tempo-foco-heading'] .highlight"); 
     if (!tempoFocoHighlight) return;
 
     let totalMinutosFocoHoje = 0;
-    const hoje = new Date().toISOString().split("T")[0];
+    const hoje = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
 
     try {
+        // Recupera as sessões de foco do localStorage
         const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || []; 
         
+        // Soma os minutos de todas as sessões de hoje
         focusSessionsData.forEach(session => {
             if (session.date === hoje && session.durationMinutes) {
                 totalMinutosFocoHoje += session.durationMinutes;
             }
         });
 
+        // Converte minutos para formato horas e minutos
         const horas = Math.floor(totalMinutosFocoHoje / 60);
         const minutos = totalMinutosFocoHoje % 60;
         tempoFocoHighlight.textContent = `${horas}h ${minutos}min`;
@@ -84,20 +107,28 @@ function loadTempoFocoHoje() {
     }
 }
 
+/**
+ * Inicializa o gráfico de progresso semanal usando Chart.js
+ * Exibe as horas de estudo para cada dia da semana atual
+ */
 function initProgressoSemanaChart() {
     const ctx = document.getElementById("graficoHoras");
     if (!ctx) return;
 
     const diasDaSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-    const horasEstudoSemana = Array(7).fill(0);
+    const horasEstudoSemana = Array(7).fill(0); // Inicializa com zeros
+    
+    // Calcula o primeiro dia da semana atual (domingo)
     const hoje = new Date();
     const primeiroDiaSemana = new Date(hoje);
     primeiroDiaSemana.setDate(hoje.getDate() - hoje.getDay()); 
     primeiroDiaSemana.setHours(0,0,0,0);
 
     try {
+        // Recupera as sessões de foco do localStorage
         const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || [];
 
+        // Calcula as horas de estudo para cada dia da semana
         for (let i = 0; i < 7; i++) {
             const diaAtualLoop = new Date(primeiroDiaSemana);
             diaAtualLoop.setDate(primeiroDiaSemana.getDate() + i);
@@ -109,9 +140,10 @@ function initProgressoSemanaChart() {
                     minutosNoDia += session.durationMinutes;
                 }
             });
-            horasEstudoSemana[i] = parseFloat((minutosNoDia / 60).toFixed(1));
+            horasEstudoSemana[i] = parseFloat((minutosNoDia / 60).toFixed(1)); // Converte para horas com 1 decimal
         }
 
+        // Cria o gráfico de barras com Chart.js
         new Chart(ctx, {
             type: "bar",
             data: {
@@ -119,7 +151,7 @@ function initProgressoSemanaChart() {
                 datasets: [{
                     label: "Horas de foco",
                     data: horasEstudoSemana,
-                    backgroundColor: "#4682B4",
+                    backgroundColor: "#4682B4", // Azul aço
                     borderRadius: 5
                 }]
             },
@@ -158,12 +190,19 @@ function initProgressoSemanaChart() {
     }
 }
 
+/**
+ * Calcula e exibe o tempo médio de estudo por dia na semana atual
+ * Considera apenas os dias em que houve estudo para calcular a média
+ */
 function loadTempoMedioEstudoSemana() {
     const tempoMedioHighlight = document.querySelector("section[aria-labelledby='tempo-medio-heading'] .highlight");
     if (!tempoMedioHighlight) return;
 
     try {
+        // Recupera as sessões de foco do localStorage
         const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || [];
+        
+        // Calcula o período da semana atual (domingo a sábado)
         const hoje = new Date();
         const primeiroDiaSemana = new Date(hoje);
         primeiroDiaSemana.setDate(hoje.getDate() - hoje.getDay());
@@ -174,19 +213,22 @@ function loadTempoMedioEstudoSemana() {
         ultimoDiaSemana.setHours(23, 59, 59, 999);
 
         let totalMinutosSemana = 0;
-        let diasComEstudo = new Set();
+        let diasComEstudo = new Set(); // Usa Set para contar dias únicos com estudo
 
+        // Soma os minutos de todas as sessões da semana atual
         focusSessionsData.forEach(session => {
             const sessionDate = new Date(session.date + "T00:00:00");
             if (sessionDate >= primeiroDiaSemana && sessionDate <= ultimoDiaSemana && session.durationMinutes) {
                 totalMinutosSemana += session.durationMinutes;
-                diasComEstudo.add(session.date);
+                diasComEstudo.add(session.date); // Adiciona a data ao Set
             }
         });
         
+        // Calcula a média (evita divisão por zero usando no mínimo 1 dia)
         const numeroDiasComEstudo = diasComEstudo.size > 0 ? diasComEstudo.size : 1; 
         const mediaMinutosPorDia = totalMinutosSemana / numeroDiasComEstudo;
 
+        // Converte para formato horas e minutos
         const horas = Math.floor(mediaMinutosPorDia / 60);
         const minutos = Math.round(mediaMinutosPorDia % 60); 
         tempoMedioHighlight.textContent = `${horas}h ${minutos}min / dia`;
@@ -197,6 +239,10 @@ function loadTempoMedioEstudoSemana() {
     }
 }
 
+/**
+ * Carrega e exibe os próximos eventos do calendário
+ * Filtra eventos dos próximos 7 dias e exibe os 4 mais próximos
+ */
 function loadProximosEventos() {
     const proximosEventosUl = document.getElementById("listaProximosEventos");
     if (!proximosEventosUl) return;
@@ -204,24 +250,31 @@ function loadProximosEventos() {
     proximosEventosUl.innerHTML = ""; // Limpa eventos antigos
 
     try {
+        // Recupera os eventos do calendário do localStorage
         const studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
+        
+        // Define o período de filtro (hoje até 7 dias à frente)
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
 
         const dataLimite = new Date(hoje);
         dataLimite.setDate(hoje.getDate() + 7); // Eventos nos próximos 7 dias
 
+        // Filtra eventos dentro do período desejado
         const eventosFiltrados = studySchedule.filter(evento => {
             if (!evento.date) return false;
             const dataEvento = new Date(evento.date + "T00:00:00"); // Normaliza para comparar datas
             return dataEvento >= hoje && dataEvento < dataLimite; // Inclui hoje, até o final do 7º dia
         });
 
-        eventosFiltrados.sort((a, b) => new Date(a.date) - new Date(b.date)); // Ordena por data mais próxima
+        // Ordena por data mais próxima
+        eventosFiltrados.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const eventosParaExibir = eventosFiltrados.slice(0, 4); // Limita a 4 eventos
+        // Limita a 4 eventos para exibição
+        const eventosParaExibir = eventosFiltrados.slice(0, 4);
 
         if (eventosParaExibir.length > 0) {
+            // Cria elementos de lista para cada evento
             eventosParaExibir.forEach(evento => {
                 const li = document.createElement("li");
                 const dataEventoFormatada = new Date(evento.date + "T00:00:00").toLocaleDateString("pt-BR", { day: '2-digit', month: '2-digit' });
@@ -233,6 +286,7 @@ function loadProximosEventos() {
                 proximosEventosUl.appendChild(li);
             });
         } else {
+            // Exibe mensagem se não houver eventos
             proximosEventosUl.innerHTML = "<li>Nenhum evento próximo nos próximos 7 dias.</li>";
         }
     } catch (e) {
@@ -241,6 +295,10 @@ function loadProximosEventos() {
     }
 }
 
+/**
+ * Verifica e solicita permissão para enviar notificações
+ * Importante para alertas de sessões de foco e lembretes de tarefas
+ */
 function checkNotificationPermission() {
     if ("Notification" in window && Notification.permission !== "denied") {
         Notification.requestPermission().then(permission => {
@@ -249,22 +307,32 @@ function checkNotificationPermission() {
     }
 }
 
-// Listener para storage events, para atualizar dinamicamente se dados mudarem em outra aba
+/**
+ * Listener para eventos de alteração no localStorage
+ * Atualiza a interface quando dados são modificados em outras abas
+ */
 window.addEventListener('storage', function(event) {
     console.log("Storage event detectado em inicio.js: ", event.key); // Debug
+    
+    // Atualiza as tarefas quando a lista de tarefas é modificada
     if (event.key === 'studyTasks') {
         loadTarefasAgendadas();
     }
+    
+    // Atualiza informações de tempo de foco quando as sessões são modificadas
     if (event.key === 'focusSessions') {
         loadTempoFocoHoje();
         initProgressoSemanaChart(); // Recalcula o gráfico
         loadTempoMedioEstudoSemana();
     }
+    
+    // Atualiza os próximos eventos quando o calendário é modificado
     if (event.key === 'studySchedule') {
         loadProximosEventos();
     }
+    
+    // Atualiza o nome do usuário quando ele é modificado
     if (event.key === 'loggedInUserName') {
         loadUserName();
     }
 });
-

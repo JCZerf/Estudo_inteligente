@@ -1,24 +1,41 @@
+/* 
+ * Estilos para a página de Login
+ * Define a aparência visual da tela de autenticação do usuário
+ */
+
+/* 
+ * Variáveis CSS para cores e estilos consistentes
+ * Facilita a manutenção e garante consistência visual
+ */
 :root {
-  --primary: #4361ee;
-  --primary-hover: #3a56d4;
-  --secondary: #f8f9fa;
-  --text: #2b2d42;
-  --text-light: #6c757d;
-  --border: #e9ecef;
-  --error: #ef233c;
-  --white: #ffffff;
-  --black: #000000;
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --transition: all 0.3s ease;
+  --primary: #4361ee;         /* Cor principal para botões e elementos de destaque */
+  --primary-hover: #3a56d4;   /* Cor para estado hover de elementos principais */
+  --secondary: #f8f9fa;       /* Cor secundária para fundos e elementos menos importantes */
+  --text: #2b2d42;            /* Cor padrão para textos */
+  --text-light: #6c757d;      /* Cor para textos secundários e menos importantes */
+  --border: #e9ecef;          /* Cor para bordas de elementos */
+  --error: #ef233c;           /* Cor para mensagens de erro */
+  --white: #ffffff;           /* Cor branca pura */
+  --black: #000000;           /* Cor preta pura */
+  --radius: 12px;             /* Raio padrão para bordas arredondadas */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra padrão para elementos elevados */
+  --transition: all 0.3s ease; /* Transição padrão para efeitos suaves */
 }
 
+/* 
+ * Reset CSS básico
+ * Normaliza o comportamento entre navegadores
+ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* 
+ * Estilos para o corpo da página
+ * Define o layout base e a tipografia
+ */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #f8f9fa;
@@ -30,6 +47,10 @@ body {
   padding: 20px;
 }
 
+/* 
+ * Imagem de fundo decorativa
+ * Cria o efeito visual de fundo para a tela de login
+ */
 .background {
   position: fixed;
   top: 0;
@@ -41,6 +62,10 @@ body {
   opacity: 0.9;
 }
 
+/* 
+ * Container principal da tela de login
+ * Define o card branco que contém o formulário e a área de logo
+ */
 .login-container {
   width: 100%;
   max-width: 800px;
@@ -53,6 +78,10 @@ body {
   margin: auto;
 }
 
+/* 
+ * Lado esquerdo do container de login
+ * Área escura com o logo da aplicação
+ */
 .left-side {
   width: 45%;
   background: linear-gradient(135deg, #000000, #000000);
@@ -64,22 +93,38 @@ body {
   color: var(--white);
 }
 
+/* 
+ * Container para o logo
+ * Centraliza o logo na área esquerda
+ */
 .logo-container {
   text-align: center;
 }
 
+/* 
+ * Imagem do logo
+ * Define tamanho e espaçamento
+ */
 .logo {
   max-width: 300px;
   height: auto;
   margin-bottom: 1rem;
 }
 
+/* 
+ * Texto do logo (se houver)
+ * Define estilo para texto que acompanha o logo
+ */
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
   margin-top: 1rem;
 }
 
+/* 
+ * Lado direito do container de login
+ * Área branca com o formulário de login
+ */
 .right-side {
   width: 55%;
   padding: 2rem;
@@ -88,11 +133,19 @@ body {
   justify-content: center;
 }
 
+/* 
+ * Cabeçalho do formulário
+ * Contém título e subtítulo da página de login
+ */
 .form-header {
   margin-bottom: 2rem;
   text-align: center;
 }
 
+/* 
+ * Título principal do formulário
+ * "Bem-vindo de volta"
+ */
 .form-header h1 {
   font-size: 1.8rem;
   font-weight: 700;
@@ -100,15 +153,27 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* 
+ * Subtítulo do formulário
+ * "Faça login para continuar"
+ */
 .form-header p {
   color: var(--text-light);
   font-size: 0.95rem;
 }
 
+/* 
+ * Grupo de campos do formulário
+ * Agrupa label e input relacionados
+ */
 .form-group {
   margin-bottom: 1.25rem;
 }
 
+/* 
+ * Labels dos campos do formulário
+ * Define estilo para as etiquetas dos campos
+ */
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
@@ -117,12 +182,20 @@ body {
   color: var(--text);
 }
 
+/* 
+ * Container para inputs com ícones
+ * Permite posicionar ícones dentro dos campos
+ */
 .input-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* 
+ * Ícones dentro dos campos de input
+ * Posiciona os ícones à esquerda dos campos
+ */
 .input-container i {
   position: absolute;
   left: 15px;
@@ -130,6 +203,10 @@ body {
   font-size: 1rem;
 }
 
+/* 
+ * Campos de entrada (inputs)
+ * Define aparência e comportamento dos campos
+ */
 .input-container input {
   width: 100%;
   padding: 0.85rem 1rem 0.85rem 2.5rem;
@@ -140,16 +217,28 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado de foco dos campos
+ * Destaca visualmente o campo quando selecionado
+ */
 .input-container input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
 }
 
+/* 
+ * Container específico para o campo de senha
+ * Permite posicionar o botão de mostrar/ocultar senha
+ */
 .password-wrapper {
   position: relative;
 }
 
+/* 
+ * Botão para mostrar/ocultar senha
+ * Posicionado à direita do campo de senha
+ */
 .toggle-password {
   position: absolute;
   right: 15px;
@@ -161,10 +250,18 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado hover do botão de mostrar/ocultar senha
+ * Muda a cor ao passar o mouse
+ */
 .toggle-password:hover {
   color: var(--primary);
 }
 
+/* 
+ * Área de opções adicionais do formulário
+ * Contém "Lembrar de mim" e "Esqueceu a senha"
+ */
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -172,6 +269,10 @@ body {
   margin: 1rem 0;
 }
 
+/* 
+ * Opção "Lembrar de mim"
+ * Estiliza o checkbox e seu label
+ */
 .remember-me {
   display: flex;
   align-items: center;
@@ -180,6 +281,10 @@ body {
   color: var(--text-light);
 }
 
+/* 
+ * Link "Esqueceu a senha"
+ * Define aparência e comportamento do link
+ */
 .forgot-password {
   font-size: 0.875rem;
   color: var(--primary);
@@ -187,10 +292,18 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado hover do link "Esqueceu a senha"
+ * Adiciona sublinhado ao passar o mouse
+ */
 .forgot-password:hover {
   text-decoration: underline;
 }
 
+/* 
+ * Estilo base para botões
+ * Define aparência e comportamento padrão
+ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -207,18 +320,30 @@ body {
   overflow: hidden;
 }
 
+/* 
+ * Botão primário (azul)
+ * Usado para a ação principal "Entrar"
+ */
 .btn-primary {
   background-color: var(--primary);
   color: var(--white);
   margin-top: 1rem;
 }
 
+/* 
+ * Estado hover do botão primário
+ * Efeito visual ao passar o mouse
+ */
 .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
 }
 
+/* 
+ * Ícone de carregamento no botão
+ * Exibido durante o processamento do login
+ */
 .btn .loading-icon {
   position: absolute;
   right: 1.5rem;
@@ -226,14 +351,26 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado de carregamento do botão
+ * Oculta o texto durante o carregamento
+ */
 .btn.loading .btn-text {
   opacity: 0;
 }
 
+/* 
+ * Exibe o ícone de carregamento
+ * Quando o botão está no estado loading
+ */
 .btn.loading .loading-icon {
   opacity: 1;
 }
 
+/* 
+ * Área de redirecionamento para cadastro
+ * "Não tem uma conta? Crie uma conta"
+ */
 .register-redirect {
   text-align: center;
   margin-top: 1.5rem;
@@ -241,6 +378,10 @@ body {
   color: var(--text-light);
 }
 
+/* 
+ * Link para a página de cadastro
+ * Define aparência e comportamento do link
+ */
 .register-link {
   color: var(--primary);
   text-decoration: none;
@@ -248,10 +389,18 @@ body {
   transition: var(--transition);
 }
 
+/* 
+ * Estado hover do link de cadastro
+ * Adiciona sublinhado ao passar o mouse
+ */
 .register-link:hover {
   text-decoration: underline;
 }
 
+/* 
+ * Mensagem de erro
+ * Exibida durante validação do formulário
+ */
 .error-message {
   color: var(--error);
   font-size: 0.85rem;
@@ -259,9 +408,13 @@ body {
   padding: 0.5rem;
   background-color: rgba(239, 35, 60, 0.05);
   border-radius: 4px;
-  display: none;
+  display: none; /* Inicialmente oculta */
 }
 
+/* 
+ * Rodapé da página
+ * Contém informações de copyright
+ */
 footer {
   text-align: center;
   padding: 1.5rem 0 0;
@@ -270,14 +423,18 @@ footer {
   color: var(--text-light);
 }
 
+/* 
+ * Responsividade para tablets
+ * Ajusta o layout para telas médias
+ */
 @media (max-width: 768px) {
   .login-container {
-    flex-direction: column;
+    flex-direction: column; /* Empilha as seções em telas menores */
     min-height: auto;
   }
   
   .left-side, .right-side {
-    width: 100%;
+    width: 100%; /* Ocupa toda a largura disponível */
   }
   
   .left-side {
@@ -289,24 +446,28 @@ footer {
   }
   
   .logo {
-    max-width: 100px;
+    max-width: 100px; /* Logo menor em telas pequenas */
   }
 }
 
+/* 
+ * Responsividade para smartphones
+ * Ajusta o layout para telas muito pequenas
+ */
 @media (max-width: 480px) {
   body {
-    padding: 10px;
+    padding: 10px; /* Reduz o padding geral */
   }
   
   .right-side {
-    padding: 1.5rem;
+    padding: 1.5rem; /* Reduz o padding do formulário */
   }
   
   .form-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Título menor */
   }
   
   .input-container input {
-    padding: 0.75rem 1rem 0.75rem 2.2rem;
+    padding: 0.75rem 1rem 0.75rem 2.2rem; /* Campos menores */
   }
 }

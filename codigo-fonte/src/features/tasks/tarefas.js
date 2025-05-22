@@ -1,7 +1,16 @@
-// tarefas.js
-let tasks = {}; // Initialize, will be populated by loadTasksFromStorage on DOMContentLoaded
-let currentEditTaskId = null; // To track the ID of the task being edited
+/**
+ * Gerenciador de Tarefas - Estudo Inteligente
+ * 
+ * Este script implementa todas as funcionalidades da página de tarefas,
+ * incluindo criação, edição, exclusão, filtragem, ordenação e categorização
+ * de tarefas por matérias.
+ */
 
+// Variáveis globais para armazenar o estado da aplicação
+let tasks = {}; // Objeto que armazena todas as tarefas organizadas por matéria
+let currentEditTaskId = null; // Rastreia o ID da tarefa em edição
+
+// Referências aos elementos DOM principais
 const taskList = document.getElementById("taskList");
 const taskForm = document.getElementById("taskForm");
 const newTaskButton = document.getElementById("newTaskButton");
@@ -14,13 +23,20 @@ const importInput = document.getElementById("importInput");
 const taskModalTitle = document.getElementById("taskModalTitle");
 const saveTaskButton = document.getElementById("saveTaskButton");
 
-// Function to load tasks from localStorage and update the global 'tasks' variable
+/**
+ * Carrega as tarefas do localStorage para a variável global tasks
+ * Chamada durante a inicialização da página
+ */
 function loadTasksFromStorage() {
     console.log("tarefas.js: Loading tasks from storage"); // Debug
     tasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
 }
 
-// Mapeia valores do select para nomes de matérias
+/**
+ * Converte códigos de matérias para nomes de exibição
+ * @param {string} value - Código da matéria (ex: "math")
+ * @returns {string} Nome de exibição da matéria (ex: "Matemática")
+ */
 function getSubjectName(value) {
     const subjects = {
         "math": "Matemática",
@@ -43,7 +59,11 @@ function getSubjectName(value) {
     return subjects[value] || value;
 }
 
-// Mapeia nomes de matérias para valores do select (inverso de getSubjectName)
+/**
+ * Converte nomes de matérias para códigos (inverso de getSubjectName)
+ * @param {string} name - Nome da matéria (ex: "Matemática")
+ * @returns {string} Código da matéria (ex: "math")
+ */
 function getSubjectValue(name) {
     const subjectMap = {
         "Matemática": "math",
@@ -61,31 +81,37 @@ function getSubjectValue(name) {
         "Artes": "art",
         "Educação Física": "physical_education"
     };
-    // Se não encontrar no mapa, verifica se é uma matéria personalizada (não listada)
+    // Se não encontrar no mapa, considera como matéria personalizada
     if (!subjectMap[name]) {
-        // Verifica se existe uma option com esse nome (improvável para personalizadas)
-        // A lógica para "Outra" e customSubject deve ser tratada separadamente ao popular o form
+        // A lógica para "Outra" e customSubject é tratada separadamente ao popular o form
         return "other"; // Default para 'Outra' se não mapeado diretamente
     }
     return subjectMap[name] || "other";
 }
 
-
-// Renderiza todas as tarefas com filtros
+/**
+ * Renderiza todas as tarefas na interface com filtros aplicados
+ * Agrupa tarefas por matéria e aplica filtros de busca e status
+ */
 function renderTasks() {
     if (!taskList) return;
     taskList.innerHTML = "";
     
+    // Obtém termos de busca e filtros ativos
     const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
     const filterValue = filterSelect ? filterSelect.value : "all";
     const today = new Date().toISOString().split("T")[0];
     
+    // Processa cada matéria e suas tarefas
     Object.entries(tasks).forEach(([subject, taskItems]) => {
+        // Filtra tarefas com base na busca e filtro selecionado
         const filteredTasks = taskItems.filter(task => {
+            // Verifica se a tarefa corresponde ao termo de busca
             const matchesSearch = task.title.toLowerCase().includes(searchTerm) || 
                                 (task.description && task.description.toLowerCase().includes(searchTerm)) ||
                                 (task.due && task.due.toLowerCase().includes(searchTerm));
             
+            // Verifica se a tarefa corresponde ao filtro de status
             let matchesFilter = true;
             if (filterValue === "all") {
                 matchesFilter = true;
@@ -99,6 +125,7 @@ function renderTasks() {
             return matchesSearch && matchesFilter;
         });
         
+        // Cria o elemento de categoria se houver tarefas filtradas
         if (filteredTasks.length > 0) {
             const categoryDiv = createCategoryElement(subject);
             filteredTasks.forEach(task => {
@@ -109,14 +136,21 @@ function renderTasks() {
         }
     });
     
+    // Atualiza o contador de tarefas e inicializa a funcionalidade de arrastar e soltar
     updateTaskCount();
     initSortable();
 }
 
+/**
+ * Cria um elemento DOM para uma categoria/matéria
+ * @param {string} subject - Nome da matéria
+ * @returns {HTMLElement} Elemento DOM da categoria
+ */
 function createCategoryElement(subject) {
     const categoryDiv = document.createElement("div");
     categoryDiv.className = "task-category";
     
+    // Cria o título da categoria com ícone de edição para matérias personalizadas
     const categoryTitle = document.createElement("h3");
     categoryTitle.innerHTML = `
         <span>${subject}</span>
@@ -125,6 +159,7 @@ function createCategoryElement(subject) {
     `; // Não permite editar "Estudos Agendados" ou matérias padrão
     categoryTitle.style.setProperty("--subject-color", getSubjectColor(subject));
     
+    // Adiciona funcionalidade de edição para matérias personalizadas
     if (subject.toLowerCase() !== "estudos agendados" && !Object.values(getSubjectName("")).includes(subject)) {
         const editIcon = categoryTitle.querySelector(".subject-edit");
         if(editIcon) {
@@ -142,6 +177,12 @@ function createCategoryElement(subject) {
     return categoryDiv;
 }
 
+/**
+ * Cria um elemento DOM para uma tarefa individual
+ * @param {Object} task - Objeto da tarefa
+ * @param {string} subject - Nome da matéria à qual a tarefa pertence
+ * @returns {HTMLElement} Elemento DOM da tarefa
+ */
 function createTaskElement(task, subject) {
     const taskDiv = document.createElement("div");
     taskDiv.className = `task ${task.done ? "task-done" : ""} ${isTaskExpired(task.due) && !task.done ? "task-expired" : ""}`;
@@ -152,6 +193,7 @@ function createTaskElement(task, subject) {
     // Adiciona evento de clique para abrir o modal de edição
     taskDiv.addEventListener("click", () => openEditTaskModal(task.id, subject));
 
+    // Cria a parte esquerda do item de tarefa (checkbox, título, etc.)
     const leftDiv = document.createElement("div");
     leftDiv.className = "task-left";
     leftDiv.innerHTML = `
@@ -162,6 +204,7 @@ function createTaskElement(task, subject) {
         <span>${task.title}</span>
     `;
 
+    // Cria a parte direita do item de tarefa (data, botões de ação)
     const actionsDiv = document.createElement("div");
     actionsDiv.className = "task-actions";
     actionsDiv.innerHTML = `
@@ -174,6 +217,7 @@ function createTaskElement(task, subject) {
         </button>
     `;
 
+    // Adiciona event listeners para as ações
     leftDiv.querySelector(".task-checkbox").addEventListener("click", (e) => {
         e.stopPropagation(); // Impede que o clique no checkbox abra o modal
         toggleTaskDone(task.id, subject);
@@ -192,6 +236,10 @@ function createTaskElement(task, subject) {
     return taskDiv;
 }
 
+/**
+ * Abre o modal para criar uma nova tarefa
+ * Reseta o formulário e configura os valores padrão
+ */
 function openNewTaskModal() {
     currentEditTaskId = null;
     if (taskModalTitle) taskModalTitle.textContent = "Nova Tarefa";
@@ -203,6 +251,12 @@ function openNewTaskModal() {
     if (taskModal) taskModal.style.display = "block";
 }
 
+/**
+ * Abre o modal para editar uma tarefa existente
+ * Preenche o formulário com os dados da tarefa selecionada
+ * @param {string} taskId - ID da tarefa a ser editada
+ * @param {string} subjectName - Nome da matéria da tarefa
+ */
 function openEditTaskModal(taskId, subjectName) {
     const task = tasks[subjectName]?.find(t => t.id === taskId);
     if (!task) {
@@ -213,9 +267,11 @@ function openEditTaskModal(taskId, subjectName) {
     if (taskModalTitle) taskModalTitle.textContent = "Editar Tarefa";
     if (saveTaskButton) saveTaskButton.textContent = "Salvar Alterações";
 
+    // Preenche os campos do formulário com os dados da tarefa
     document.getElementById("editTaskId").value = taskId;
     document.getElementById("taskTitle").value = task.title;
     
+    // Configura o campo de matéria, lidando com matérias personalizadas
     const subjectSelect = document.getElementById("taskSubject");
     const customSubjectInput = document.getElementById("customSubject");
     const subjectValue = getSubjectValue(subjectName); // Tenta mapear o nome da matéria para o valor do select
@@ -230,20 +286,32 @@ function openEditTaskModal(taskId, subjectName) {
         customSubjectInput.value = subjectName;
     }
     
+    // Preenche os demais campos
     document.getElementById("taskDueDate").value = task.due || "";
     document.querySelector(`input[name="priority"][value="${task.priority || 'medium'}"]`).checked = true;
     document.getElementById("taskDescription").value = task.description || "";
 
+    // Exibe o modal
     if (taskModal) taskModal.style.display = "block";
 }
 
-
+/**
+ * Define uma tarefa para iniciar uma sessão de foco
+ * Salva a tarefa no localStorage e redireciona para a página de sessão de foco
+ * @param {Object} task - Objeto da tarefa
+ * @param {string} subject - Nome da matéria da tarefa
+ */
 function setFocusTask(task, subject) {
     const focusTask = { ...task, subject: subject };
     localStorage.setItem("focusTask", JSON.stringify(focusTask));
     window.location.href = "../pomodoro/sessao_de_foco.html";
 }
 
+/**
+ * Verifica se uma tarefa está com o prazo vencido
+ * @param {string} dueDate - Data de vencimento no formato YYYY-MM-DD
+ * @returns {boolean} Verdadeiro se a tarefa estiver vencida
+ */
 function isTaskExpired(dueDate) {
     if (!dueDate || isNaN(Date.parse(dueDate))) return false;
     const today = new Date();
@@ -252,6 +320,11 @@ function isTaskExpired(dueDate) {
     return taskDueDate < today;
 }
 
+/**
+ * Obtém a cor associada a uma matéria, adaptando-se ao tema atual
+ * @param {string} subject - Nome da matéria
+ * @returns {string} Código de cor hexadecimal
+ */
 function getSubjectColor(subject) {
     const theme = document.documentElement.getAttribute("data-theme") || "light";
     const colors = {
@@ -275,6 +348,11 @@ function getSubjectColor(subject) {
     return colors[subject] || "#4682B4";
 }
 
+/**
+ * Alterna o estado de conclusão de uma tarefa
+ * @param {string} taskId - ID da tarefa
+ * @param {string} taskSubject - Nome da matéria da tarefa
+ */
 function toggleTaskDone(taskId, taskSubject) {
     if (tasks[taskSubject]) {
         const task = tasks[taskSubject].find(t => t.id === taskId);
@@ -287,8 +365,13 @@ function toggleTaskDone(taskId, taskSubject) {
     renderTasks(); 
 }
 
+/**
+ * Processa o envio do formulário de tarefa (nova ou edição)
+ * @param {Event} event - Evento de submit do formulário
+ */
 function handleTaskFormSubmit(event) {
     event.preventDefault();
+    // Coleta os dados do formulário
     const title = document.getElementById("taskTitle").value.trim();
     const subjectValue = document.getElementById("taskSubject").value;
     const customSubjectInput = document.getElementById("customSubject");
@@ -297,6 +380,7 @@ function handleTaskFormSubmit(event) {
     const description = document.getElementById("taskDescription").value.trim();
     const editingId = document.getElementById("editTaskId").value;
 
+    // Determina o nome da matéria (padrão ou personalizada)
     let subjectName;
     if (subjectValue === "other" && customSubjectInput.value.trim()) {
         subjectName = customSubjectInput.value.trim();
@@ -304,14 +388,15 @@ function handleTaskFormSubmit(event) {
         subjectName = getSubjectName(subjectValue);
     }
 
+    // Validação básica
     if (!title) {
         alert("O título da tarefa é obrigatório.");
         return;
     }
 
-    if (editingId) { // Editing existing task
+    if (editingId) { // Editando tarefa existente
         let originalSubjectName = null;
-        // Find the original subject name of the task being edited
+        // Encontra a matéria original da tarefa sendo editada
         for (const subj in tasks) {
             if (tasks[subj].find(t => t.id === editingId)) {
                 originalSubjectName = subj;
@@ -330,8 +415,9 @@ function handleTaskFormSubmit(event) {
             return;
         }
 
+        // Cria objeto atualizado preservando propriedades existentes
         const updatedTask = {
-            ...tasks[originalSubjectName][taskIndex], // Preserve existing properties like 'id', 'done'
+            ...tasks[originalSubjectName][taskIndex], // Preserva propriedades como 'id', 'done'
             title: title,
             due: dueDate || null,
             description: description,
@@ -340,24 +426,24 @@ function handleTaskFormSubmit(event) {
         };
 
         if (originalSubjectName !== subjectName) {
-            // Remove from old subject category
+            // Remove da categoria antiga
             tasks[originalSubjectName].splice(taskIndex, 1);
             if (tasks[originalSubjectName].length === 0) {
                 delete tasks[originalSubjectName];
             }
-            // Add to new subject category
+            // Adiciona à nova categoria
             if (!tasks[subjectName]) {
                 tasks[subjectName] = [];
             }
             tasks[subjectName].push(updatedTask);
             showToast("Tarefa atualizada e movida para " + subjectName + "!");
         } else {
-            // Update in the same subject category
+            // Atualiza na mesma categoria
             tasks[originalSubjectName][taskIndex] = updatedTask;
             showToast("Tarefa atualizada com sucesso!");
         }
 
-    } else { // Adding new task
+    } else { // Adicionando nova tarefa
         const newId = `task-${Date.now()}`;
         const newTask = {
             id: newId,
@@ -368,6 +454,7 @@ function handleTaskFormSubmit(event) {
             done: false
         };
         
+        // Cria a categoria se não existir
         if (!tasks[subjectName]) {
             tasks[subjectName] = [];
         }
@@ -375,23 +462,31 @@ function handleTaskFormSubmit(event) {
         showToast("Nova tarefa adicionada!");
     }
     
+    // Salva as alterações e atualiza a interface
     saveTasks();
     renderTasks(); 
     if (taskModal) taskModal.style.display = "none";
     taskForm.reset();
-    document.getElementById("editTaskId").value = ""; // Clear edit ID
+    document.getElementById("editTaskId").value = ""; // Limpa ID de edição
     customSubjectInput.value = "";
     customSubjectInput.classList.add("hidden");
 }
 
-
+/**
+ * Salva as tarefas no localStorage e atualiza a interface
+ * Dispara evento para notificar outras partes da aplicação
+ */
 function saveTasks() {
     localStorage.setItem("studyTasks", JSON.stringify(tasks));
     updateTaskCount();
-    // Disparar evento para notificar outras partes da aplicação (ex: cronograma)
+    // Dispara evento para notificar outras partes da aplicação (ex: cronograma)
     window.dispatchEvent(new CustomEvent('studyItemsChanged', { detail: { storageKey: 'studyTasks' } }));
 }
 
+/**
+ * Atualiza o contador de tarefas na interface
+ * Calcula o total de tarefas, concluídas e pendentes
+ */
 function updateTaskCount() {
     const allTaskItems = Object.values(tasks).flat();
     const completedTasks = allTaskItems.filter(task => task.done).length;
@@ -402,29 +497,30 @@ function updateTaskCount() {
     }
 }
 
+/**
+ * Inicializa a funcionalidade de arrastar e soltar para reordenar tarefas
+ * Usa a biblioteca Sortable.js para permitir reorganização por drag-and-drop
+ */
 function initSortable() {
     if (typeof Sortable !== "undefined" && taskList) {
-        // Destruir instâncias Sortable existentes para evitar duplicatas ou comportamento inesperado
+        // Tenta destruir instâncias Sortable existentes para evitar duplicatas
         const sortableInstances = Sortable.get(taskList);
         if (sortableInstances) {
-            // Sortable.get pode retornar uma instância ou undefined. Não há um método destroyAll.
-            // Se for uma instância única, podemos tentar destruí-la.
-            // Esta parte é complexa pois Sortable não tem um método fácil para gerenciar múltiplas instâncias em filhos.
-            // A melhor abordagem é inicializar Sortable nos elementos filhos (categorias) se necessário.
-            // Por ora, a inicialização no taskList (pai) pode ser suficiente se a estrutura for simples.
+            // Esta parte é complexa pois Sortable não tem um método fácil para gerenciar múltiplas instâncias
+            // A melhor abordagem é inicializar Sortable nos elementos filhos (categorias) se necessário
         }
+        
+        // Inicializa Sortable para o container principal (categorias)
         new Sortable(taskList, {
             group: 'shared-categories',
             animation: 150,
-            // handle: ".task-handle", // Comentado para permitir arrastar a categoria inteira se desejado
             ghostClass: "sortable-ghost",
             onEnd: function (evt) {
                 // Lógica para salvar a nova ordem das categorias (se aplicável)
-                // Esta parte requer mais detalhes sobre como a ordem das categorias é armazenada e gerenciada
             }
         });
 
-        // Habilitar sortable para tarefas dentro de cada categoria
+        // Inicializa Sortable para cada categoria (tarefas dentro de categorias)
         document.querySelectorAll('.task-category').forEach(categoryEl => {
             new Sortable(categoryEl, {
                 group: 'shared-tasks',
@@ -432,31 +528,37 @@ function initSortable() {
                 handle: '.task-handle',
                 ghostClass: 'sortable-ghost-task',
                 onEnd: function(evt) {
+                    // Obtém informações sobre a tarefa movida
                     const taskId = evt.item.dataset.taskId;
                     const oldSubject = evt.from.querySelector('h3 span').textContent;
                     const newSubject = evt.to.querySelector('h3 span').textContent;
                     const newIndex = evt.newDraggableIndex;
 
-                    // Encontrar a tarefa
+                    // Encontra a tarefa a ser movida
                     const taskToMove = tasks[oldSubject]?.find(t => t.id === taskId);
                     if (!taskToMove) return;
 
-                    // Remover da lista antiga
+                    // Remove da lista antiga
                     tasks[oldSubject] = tasks[oldSubject].filter(t => t.id !== taskId);
                     if (tasks[oldSubject].length === 0) delete tasks[oldSubject];
 
-                    // Adicionar à nova lista na nova posição
+                    // Adiciona à nova lista na nova posição
                     if (!tasks[newSubject]) tasks[newSubject] = [];
                     tasks[newSubject].splice(newIndex, 0, taskToMove);
                     
+                    // Salva as alterações e atualiza a interface
                     saveTasks();
-                    renderTasks(); // Re-render para garantir consistência, especialmente se a categoria mudou
+                    renderTasks(); // Re-renderiza para garantir consistência
                 }
             });
         });
     }
 }
 
+/**
+ * Exporta todas as tarefas para um arquivo JSON
+ * Cria um arquivo para download com as tarefas atuais
+ */
 function exportTasks() {
     const data = JSON.stringify(tasks, null, 2);
     const blob = new Blob([data], { type: "application/json" });
@@ -470,6 +572,10 @@ function exportTasks() {
     URL.revokeObjectURL(url);
 }
 
+/**
+ * Importa tarefas de um arquivo JSON
+ * @param {Event} event - Evento de mudança do input de arquivo
+ */
 function importTasks(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -494,12 +600,20 @@ function importTasks(event) {
         }
     };
     reader.readAsText(file);
-    if (event.target) event.target.value = null;
+    if (event.target) event.target.value = null; // Limpa o input para permitir reimportação
 }
 
+/**
+ * Exibe um modal de confirmação para exclusão de tarefa
+ * @param {string} taskId - ID da tarefa a ser excluída
+ * @param {string} subject - Nome da matéria da tarefa
+ * @param {string} taskTitle - Título da tarefa
+ */
 function showDeleteConfirmation(taskId, subject, taskTitle) {
     const modalId = "confirmDeleteModal";
     let modal = document.getElementById(modalId);
+    
+    // Cria o modal se não existir
     if (!modal) {
         modal = document.createElement("div");
         modal.className = "modal"; 
@@ -518,16 +632,21 @@ function showDeleteConfirmation(taskId, subject, taskTitle) {
             </div>
         `;
         document.body.appendChild(modal);
+        
+        // Adiciona event listeners para fechar o modal
         modal.querySelector(`.close-modal[data-close-id="${modalId}"]`).addEventListener("click", () => modal.style.display = "none");
         modal.querySelector(`.btn-secondary[data-close-id="${modalId}"]`).addEventListener("click", () => modal.style.display = "none");
         window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
     }
+    
+    // Atualiza o conteúdo do modal com o nome da tarefa
     const deleteTaskNameEl = modal.querySelector("#deleteTaskName");
     if(deleteTaskNameEl) deleteTaskNameEl.textContent = taskTitle;
     
+    // Configura o botão de confirmação
     const confirmDeleteBtnEl = modal.querySelector("#confirmDeleteBtn");
     if(confirmDeleteBtnEl) {
-        // Remove previous listener to avoid multiple deletions
+        // Remove listener anterior para evitar múltiplas exclusões
         const newConfirmBtn = confirmDeleteBtnEl.cloneNode(true);
         confirmDeleteBtnEl.parentNode.replaceChild(newConfirmBtn, confirmDeleteBtnEl);
         newConfirmBtn.addEventListener('click', () => {
@@ -535,12 +654,21 @@ function showDeleteConfirmation(taskId, subject, taskTitle) {
             modal.style.display = "none";
         });
     }
+    
+    // Exibe o modal
     modal.style.display = "block";
 }
 
+/**
+ * Exclui uma tarefa específica
+ * @param {string} taskId - ID da tarefa a ser excluída
+ * @param {string} subject - Nome da matéria da tarefa
+ */
 function deleteTask(taskId, subject) {
     if (tasks[subject]) {
+        // Remove a tarefa da lista
         tasks[subject] = tasks[subject].filter(task => task.id !== taskId);
+        // Remove a categoria se ficar vazia
         if (tasks[subject].length === 0) {
             delete tasks[subject];
         }
@@ -550,9 +678,14 @@ function deleteTask(taskId, subject) {
     }
 }
 
+/**
+ * Renomeia uma categoria/matéria
+ * @param {string} oldName - Nome atual da matéria
+ * @param {string} newName - Novo nome para a matéria
+ */
 function renameSubject(oldName, newName) {
     if (tasks[oldName] && oldName !== newName) {
-        if (tasks[newName]) { // If newName category already exists, merge tasks
+        if (tasks[newName]) { // Se a nova categoria já existir, mescla as tarefas
             tasks[newName] = tasks[newName].concat(tasks[oldName]);
         } else {
             tasks[newName] = tasks[oldName];
@@ -568,23 +701,37 @@ function renameSubject(oldName, newName) {
     }
 }
 
+/**
+ * Exibe uma notificação toast temporária
+ * @param {string} message - Mensagem a ser exibida
+ */
 function showToast(message) {
     const toastId = "toastNotification";
     let toast = document.getElementById(toastId);
+    
+    // Cria o elemento toast se não existir
     if (!toast) {
         toast = document.createElement("div");
         toast.id = toastId;
         toast.className = "toast";
         document.body.appendChild(toast);
     }
+    
+    // Define o conteúdo e exibe o toast
     toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
     toast.classList.add("show");
+    
+    // Remove o toast após um tempo
     setTimeout(() => {
         toast.classList.remove("show");
         setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 300);
     }, 3000);
 }
 
+/**
+ * Configura a funcionalidade de edição de matéria personalizada
+ * Mostra/oculta o campo de matéria personalizada conforme seleção
+ */
 function setupSubjectEditing() {
     const subjectSelect = document.getElementById("taskSubject");
     const customSubjectInput = document.getElementById("customSubject");
@@ -597,60 +744,66 @@ function setupSubjectEditing() {
             } else {
                 customSubjectInput.classList.add("hidden");
                 customSubjectInput.required = false;
-                customSubjectInput.value = ""; // Clear custom input when a standard subject is chosen
+                customSubjectInput.value = ""; // Limpa o input quando uma matéria padrão é escolhida
             }
         });
     }
 }
 
-function setupEventListeners() {
-    setupSubjectEditing();
+/**
+ * Inicializa a página quando o DOM estiver carregado
+ * Configura event listeners e carrega dados iniciais
+ */
+document.addEventListener("DOMContentLoaded", function() {
+    // Carrega as tarefas do localStorage
+    loadTasksFromStorage();
     
-    if (newTaskButton) newTaskButton.addEventListener("click", openNewTaskModal);
-    if (closeModalButton) closeModalButton.addEventListener("click", () => { 
-        if (taskModal) taskModal.style.display = "none"; 
-        if (taskForm) taskForm.reset(); 
-        document.getElementById("editTaskId").value = ""; 
-    });
-    window.addEventListener("click", (e) => { 
-        if (e.target === taskModal) { 
-            if (taskModal) taskModal.style.display = "none"; 
-            if (taskForm) taskForm.reset(); 
-            document.getElementById("editTaskId").value = ""; 
-        }
-    });
-
+    // Configura event listeners para os controles principais
+    if (newTaskButton) {
+        newTaskButton.addEventListener("click", openNewTaskModal);
+    }
+    
+    if (closeModalButton) {
+        closeModalButton.addEventListener("click", function() {
+            if (taskModal) taskModal.style.display = "none";
+        });
+    }
+    
     if (taskForm) {
         taskForm.addEventListener("submit", handleTaskFormSubmit);
     }
-
-    if (searchInput) searchInput.addEventListener("input", renderTasks);
-    if (filterSelect) filterSelect.addEventListener("change", renderTasks);
-    if (exportBtn) exportBtn.addEventListener("click", exportTasks);
-    if (importInput) importInput.addEventListener("change", importTasks);
-
-    // Listener for storage changes from other tabs/windows
-    window.addEventListener('storage', function(event) {
-        if (event.key === 'studyTasks') {
-            console.log("Storage event detected in tarefas.js for studyTasks, reloading tasks.");
-            loadTasksFromStorage(); // Reload tasks from storage
-            renderTasks(); // Re-render the UI
+    
+    if (searchInput) {
+        searchInput.addEventListener("input", renderTasks);
+    }
+    
+    if (filterSelect) {
+        filterSelect.addEventListener("change", renderTasks);
+    }
+    
+    if (exportBtn) {
+        exportBtn.addEventListener("click", exportTasks);
+    }
+    
+    if (importInput) {
+        importInput.addEventListener("change", importTasks);
+    }
+    
+    // Configura o comportamento de matéria personalizada
+    setupSubjectEditing();
+    
+    // Fecha o modal ao clicar fora dele
+    window.addEventListener("click", function(event) {
+        if (event.target === taskModal) {
+            taskModal.style.display = "none";
         }
     });
-    // Listener for custom event from cronograma.js or other internal changes
-    window.addEventListener('studyItemsChanged', (event) => {
-        if (event.detail && event.detail.storageKey === 'studyTasks') {
-            console.log("tarefas.js: studyItemsChanged event detected for studyTasks, reloading tasks.");
-            loadTasksFromStorage();
-            renderTasks();
-        }
-    });
-}
-
-// Initial setup
-document.addEventListener("DOMContentLoaded", () => {
-    loadTasksFromStorage();
+    
+    // Renderiza as tarefas iniciais
     renderTasks();
-    setupEventListeners();
+    
+    // Configura o evento para atualizar quando o tema mudar
+    document.addEventListener("themeChanged", function() {
+        renderTasks(); // Re-renderiza para atualizar cores baseadas no tema
+    });
 });
-

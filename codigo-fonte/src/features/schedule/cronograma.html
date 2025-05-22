@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Metadados básicos da página -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cronograma | Estudo Inteligente</title>
+  
+  <!-- Folhas de estilo: global compartilhada e específica da página -->
   <link rel="stylesheet" href="../../shared/css/global.css" />
   <link rel="stylesheet" href="cronograma.css" />
+  
+  <!-- Biblioteca de ícones Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script> <!-- Adicionado SortableJS -->
+  
+  <!-- Biblioteca SortableJS para arrastar e soltar elementos -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </head>
 <body>
+  <!-- Barra lateral de navegação (Sidebar) -->
   <div class="sidebar">
+    <!-- Logo com link para a página inicial -->
     <a href="../dashboard/inicio.html">
       <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo-sidebar" />
     </a>
+    
+    <!-- Menu de navegação principal -->
     <nav>
       <a href="../dashboard/inicio.html"><i class="fas fa-home"></i> Início</a>
       <a href="../pomodoro/sessao_de_foco.html"><i class="fas fa-clock"></i> Sessão de Foco</a>
@@ -26,23 +37,31 @@
     </nav>
   </div>
 
+  <!-- Conteúdo principal da página -->
   <div class="main">
+    <!-- Cabeçalho com informações do usuário e botão de tema -->
     <div class="header">
       <div class="user-info">
         <span>Usuário: Joaquim Silva</span>
+        <!-- Botão para alternar entre tema claro e escuro -->
         <button id="themeToggle" aria-label="Alternar tema">
           <i class="fas fa-moon"></i>
         </button>
       </div>
     </div>
 
+    <!-- Container principal de conteúdo -->
     <div class="content">
+      <!-- Cabeçalho do cronograma com título e ações -->
       <div class="schedule-header">
         <h1>Cronograma de Estudos</h1>
         <div class="schedule-actions">
+          <!-- Botão para adicionar nova atividade -->
           <button class="btn btn-primary" id="addEvent">
             <i class="fas fa-plus"></i> Adicionar Atividade
           </button>
+          
+          <!-- Navegação entre semanas -->
           <div class="week-navigation">
             <button class="btn btn-icon" id="prevWeek"><i class="fas fa-chevron-left"></i></button>
             <span id="currentWeek">Semana 12-18 Março 2025</span>
@@ -51,8 +70,10 @@
         </div>
       </div>
 
+      <!-- Container da tabela do cronograma -->
       <div class="schedule-container">
         <div class="schedule-table">
+          <!-- Cabeçalho da tabela com dias da semana -->
           <div class="row header-row">
             <div class="cell time-cell">Horário</div>
             <div class="cell day-cell">Segunda</div>
@@ -67,31 +88,44 @@
         </div>
       </div>
       
+      <!-- Rodapé do cronograma com legenda e botão de impressão -->
       <div class="schedule-footer">
+        <!-- Legenda para os tipos de atividades -->
         <div class="legend">
           <span class="legend-item"><i class="fas fa-book legend-study"></i> Estudo</span>
           <span class="legend-item"><i class="fas fa-dumbbell legend-exercise"></i> Exercício</span>
           <span class="legend-item"><i class="fas fa-utensils legend-meal"></i> Refeição</span>
           <span class="legend-item"><i class="fas fa-tasks legend-task"></i> Tarefa</span>
         </div>
+        
+        <!-- Botão para imprimir o cronograma -->
         <button class="btn btn-secondary" id="printSchedule">
           <i class="fas fa-print"></i> Imprimir Cronograma
         </button>
       </div>
 
+      <!-- Rodapé da página -->
       <footer>
         <p>Estudo Inteligente - 2025</p>
       </footer>
     </div>
   </div>
 
-  <!-- Modal para Adicionar/Editar Evento/Tarefa -->
+  <!-- Modal para Adicionar/Editar Evento ou Tarefa -->
   <div class="modal" id="eventModal">
     <div class="modal-content">
+      <!-- Botão para fechar o modal -->
       <span class="close-modal">&times;</span>
-      <h2 id="eventModalTitle">Adicionar Atividade</h2> <!-- Título dinâmico -->
+      
+      <!-- Título dinâmico do modal (muda conforme adicionar ou editar) -->
+      <h2 id="eventModalTitle">Adicionar Atividade</h2>
+      
+      <!-- Formulário para criar ou editar atividades -->
       <form id="eventForm">
-        <input type="hidden" id="eventIdField" name="eventIdField"> <!-- Para ID do item em edição -->
+        <!-- Campo oculto para armazenar ID do item em edição -->
+        <input type="hidden" id="eventIdField" name="eventIdField">
+        
+        <!-- Seleção do tipo de item (evento ou tarefa) -->
         <div class="form-group">
           <label for="itemCreationType">Criar como:</label>
           <select id="itemCreationType" name="itemCreationType" required>
@@ -99,10 +133,14 @@
             <option value="tarefa">Tarefa (Para fazer)</option>
           </select>
         </div>
+        
+        <!-- Título da atividade -->
         <div class="form-group">
           <label for="eventTitle">Título:</label>
           <input type="text" id="eventTitle" name="eventTitle" required>
         </div>
+        
+        <!-- Categoria do evento (visível apenas para eventos) -->
         <div class="form-group" id="cronEventCategoryGroup">
           <label for="cronEventCategory">Categoria do Evento:</label>
           <select id="cronEventCategory" name="cronEventCategory">
@@ -117,6 +155,8 @@
             <option value="outro_evento">Outro Evento</option>
           </select>
         </div>
+        
+        <!-- Matéria da tarefa (visível apenas para tarefas) -->
         <div class="form-group hidden" id="taskSubjectCronGroup">
           <label for="taskSubjectCron">Matéria da Tarefa:</label>
           <select id="taskSubjectCron" name="taskSubjectCron">
@@ -138,32 +178,45 @@
             <option value="other_task_cron">Outra Tarefa (Cronograma)</option>
           </select>
         </div>
+        
+        <!-- Data da atividade -->
         <div class="form-group">
           <label for="eventDate">Data:</label>
           <input type="date" id="eventDate" name="eventDate" required>
         </div>
+        
+        <!-- Horário de início da atividade -->
         <div class="form-group">
           <label for="eventTime">Horário:</label>
           <input type="time" id="eventTime" required>
         </div>
+        
+        <!-- Duração da atividade em minutos -->
         <div class="form-group">
           <label for="eventDuration">Duração (minutos):</label>
           <input type="number" id="eventDuration" min="15" max="240" value="90" step="15" required>
         </div>
+        
+        <!-- Observações adicionais -->
         <div class="form-group">
           <label for="eventNotes">Observações:</label>
           <textarea id="eventNotes" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" id="saveActivityButton">Salvar Atividade</button> <!-- Botão com ID -->
+        
+        <!-- Botão para salvar a atividade -->
+        <button type="submit" class="btn btn-primary" id="saveActivityButton">Salvar Atividade</button>
       </form>
     </div>
   </div>
 
-  <!-- Modal de Confirmação (Genérico) -->
+  <!-- Modal de Confirmação para ações importantes -->
   <div class="modal" id="confirmModal">
     <div class="modal-content" style="max-width: 400px;">
+      <!-- Título e mensagem dinâmicos -->
       <h3 id="confirmModalTitle">Confirmar ação</h3>
       <p id="confirmModalMessage">Tem certeza?</p>
+      
+      <!-- Botões de confirmação e cancelamento -->
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" id="confirmModalCancel">Cancelar</button>
         <button class="btn btn-primary" id="confirmModalConfirm">Confirmar</button>
@@ -171,6 +224,7 @@
     </div>
   </div>
 
+  <!-- Scripts JavaScript -->
   <script src="cronograma.js"></script>
   <script src="../../shared/js/menu.js"></script>
   <script src="../../shared/js/theme.js"></script>

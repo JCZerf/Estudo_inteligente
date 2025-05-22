@@ -1,51 +1,81 @@
-/* GUIAS.CSS - COM SUPORTE A TEMAS */
+/* 
+ * Estilos específicos para a página de Guias de Estudo
+ * Define a aparência visual dos elementos da página de guias e recursos educacionais
+ */
 
+/* 
+ * Container principal da página de guias
+ * Define o layout e aparência do container que envolve todo o conteúdo
+ */
 .guides-container {
   background-color: var(--section-bg, #fff);
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
+  transition: all 0.3s ease; /* Transição suave para mudança de tema */
 }
 
+/* 
+ * Título principal da página
+ * Estiliza o cabeçalho "Guias de Estudo" com ícone
+ */
 .guides-container h1 {
   color: var(--text-color, #2c3e50);
   margin-bottom: 25px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 10px; /* Espaçamento entre o ícone e o texto */
 }
 
+/* 
+ * Ícone do título principal
+ * Define a cor do ícone de livro ao lado do título
+ */
 .guides-container h1 i {
   color: var(--highlight-color, #4682B4);
 }
 
-/* Barra de busca e filtros */
+/* 
+ * Área de busca e filtros
+ * Container flexível para a barra de pesquisa e botões de filtro
+ */
 .search-filter {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
   gap: 15px;
 }
 
+/* 
+ * Campo de busca
+ * Estiliza o container do campo de pesquisa com ícone
+ */
 .search-box {
   display: flex;
   align-items: center;
   background-color: var(--search-bg, #f8f9fa);
   border-radius: 30px;
   padding: 10px 15px;
-  flex-grow: 1;
+  flex-grow: 1; /* Permite que o campo cresça para preencher espaço */
   max-width: 400px;
   border: 1px solid var(--border-color, #eee);
 }
 
+/* 
+ * Ícone de lupa no campo de busca
+ * Estiliza o ícone de pesquisa dentro do campo
+ */
 .search-box i {
   color: var(--text-secondary, #6c757d);
   margin-right: 10px;
 }
 
+/* 
+ * Input do campo de busca
+ * Remove bordas e define aparência do campo de texto
+ */
 .search-box input {
   border: none;
   background: transparent;
@@ -55,12 +85,20 @@
   color: var(--text-color, #333);
 }
 
+/* 
+ * Container dos botões de filtro
+ * Organiza os botões de filtro por categoria
+ */
 .filter-options {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
 }
 
+/* 
+ * Botões de filtro
+ * Estiliza os botões de filtro por categoria (Todos, Técnicas, etc.)
+ */
 .filter-btn {
   padding: 8px 15px;
   background-color: var(--filter-bg, #f5f7fa);
@@ -72,19 +110,30 @@
   color: var(--text-color, #333);
 }
 
+/* 
+ * Estados ativo e hover dos botões de filtro
+ * Define aparência quando o botão está selecionado ou com mouse sobre
+ */
 .filter-btn.active, .filter-btn:hover {
   background-color: var(--highlight-color, #4682B4);
   color: white;
   border-color: var(--highlight-color, #4682B4);
 }
 
-/* Grid de guias */
+/* 
+ * Grid de cards de guias
+ * Define o layout responsivo para os cards de guias de estudo
+ */
 .guides-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Layout responsivo */
   gap: 25px;
 }
 
+/* 
+ * Card individual de guia
+ * Estiliza cada card que representa um guia de estudo
+ */
 .guide-card {
   background-color: var(--card-bg, #fff);
   border-radius: 10px;
@@ -94,11 +143,19 @@
   border: 1px solid var(--border-color, #eee);
 }
 
+/* 
+ * Efeito hover no card
+ * Adiciona animação de elevação ao passar o mouse sobre o card
+ */
 .guide-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transform: translateY(-5px); /* Eleva o card ligeiramente */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Sombra mais pronunciada */
 }
 
+/* 
+ * Ícone do card de guia
+ * Define o container colorido para o ícone de cada guia
+ */
 .guide-icon {
   width: 50px;
   height: 50px;
@@ -109,16 +166,28 @@
   margin-bottom: 15px;
 }
 
+/* 
+ * Tamanho do ícone dentro do container
+ * Define o tamanho do ícone Font Awesome
+ */
 .guide-icon i {
   font-size: 1.2rem;
 }
 
+/* 
+ * Título do card de guia
+ * Estiliza o título de cada guia de estudo
+ */
 .guide-card h3 {
   color: var(--text-color, #2c3e50);
   margin-bottom: 10px;
   font-size: 1.1rem;
 }
 
+/* 
+ * Descrição do card de guia
+ * Estiliza o texto descritivo de cada guia
+ */
 .guide-card p {
   color: var(--text-secondary, #666);
   font-size: 0.95rem;
@@ -126,6 +195,10 @@
   line-height: 1.5;
 }
 
+/* 
+ * Botão de acesso ao guia
+ * Estiliza o botão "Acessar Guia" com borda
+ */
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -139,40 +212,57 @@
   text-decoration: none;
 }
 
+/* 
+ * Estado hover do botão de acesso
+ * Inverte as cores ao passar o mouse sobre o botão
+ */
 .btn-outline:hover {
   background-color: var(--highlight-color, #4682B4);
   color: white;
 }
 
-/* Variáveis para tema claro */
+/* 
+ * Variáveis específicas para o tema claro
+ * Define cores específicas para elementos no tema claro
+ */
 [data-theme="light"] {
-  --search-bg: #f8f9fa;
-  --filter-bg: #f5f7fa;
-  --card-bg: #fff;
+  --search-bg: #f8f9fa;    /* Fundo do campo de busca */
+  --filter-bg: #f5f7fa;    /* Fundo dos botões de filtro */
+  --card-bg: #fff;         /* Fundo dos cards */
 }
 
-/* Variáveis para tema escuro */
+/* 
+ * Variáveis específicas para o tema escuro
+ * Define cores específicas para elementos no tema escuro
+ */
 [data-theme="dark"] {
-  --search-bg: #2d2d2d;
-  --filter-bg: #3a3a3a;
-  --card-bg: #2d2d2d;
+  --search-bg: #2d2d2d;    /* Fundo do campo de busca */
+  --filter-bg: #3a3a3a;    /* Fundo dos botões de filtro */
+  --card-bg: #2d2d2d;      /* Fundo dos cards */
 }
 
-/* Responsividade */
+/* 
+ * Responsividade para dispositivos móveis
+ * Ajusta o layout para telas menores
+ */
 @media (max-width: 768px) {
+  /* Reorganiza a barra de busca e filtros em coluna */
   .search-filter {
       flex-direction: column;
       align-items: stretch;
   }
   
+  /* Campo de busca ocupa toda a largura */
   .search-box {
       max-width: 100%;
   }
   
+  /* Cards em coluna única */
   .guides-grid {
       grid-template-columns: 1fr;
   }
   
+  /* Reduz o padding dos cards */
   .guide-card {
       padding: 15px;
   }
