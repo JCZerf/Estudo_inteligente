@@ -22,7 +22,7 @@ ___
 
 <img src="https://github.com/user-attachments/assets/46b31411-59da-41be-aeec-0d2d0a4f7c9a" width="800"/>
 
-
+___
 |Caso de Teste    | CT-03 - Validar fluxo completo de criação |
 |:---|:---|
 | Resultados obtidos | Tarefa visível imediatamente após cadastro |
