@@ -105,7 +105,7 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>Validar associação entre tarefa e timer</td>
   <td><ol><li>Selecionar tarefa</li><li>Iniciar cronômetro</li><li>Finalizar sessão</li></ol></td>
   <td>Tarefa vinculada ao tempo registrado</td>
-  <td>José Carlos</td>
+  <td>Juliano</td>
  </tr>
 </table>
 
