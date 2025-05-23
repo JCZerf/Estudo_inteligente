@@ -185,7 +185,7 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>Testar alternância visual</td>
   <td><ol><li>Acessar Configurações</li><li>Alternar temas</li></ol></td>
   <td>Mudança imediata de cores</td>
-  <td>José Carlos</td>
+  <td>Juliano</td>
  </tr>
 </table>
 
