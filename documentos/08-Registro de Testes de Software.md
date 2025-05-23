@@ -67,7 +67,9 @@ ___
 |Caso de Teste    | CT-09 - Testar alternância visual |
 |:---|:---|
 | Resultados obtidos | Mudança imediata de cores |
-| Responsável pela execução do caso de Teste | José Carlos |
+| Responsável pela execução do caso de Teste | Juliano |
+
+[Assista ao vídeo de teste](Ranking _ Estudo Inteligente - Google Chrome 2025-05-23 09-51-03.mp4)
 ___ 
 
 |Caso de Teste    | CT- 10 - Testar ajuste de texto |
