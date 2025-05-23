@@ -69,7 +69,7 @@ ___
 | Resultados obtidos | Mudança imediata de cores |
 | Responsável pela execução do caso de Teste | Juliano |
 
-[Assista ao vídeo de teste](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/raw/main/documentos/Ranking%20_%20Estudo%20Inteligente%20-%20Google%20Chrome%202025-05-23%2009-51-03.mp4)
+https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/raw/main/documentos/Ranking%20_%20Estudo%20Inteligente%20-%20Google%20Chrome%202025-05-23%2009-51-03.mp4
 ___ 
 
 |Caso de Teste    | CT- 10 - Testar ajuste de texto |
