@@ -67,6 +67,14 @@ Permite ao usuário adicionar, organizar, marcar como concluídas e excluir tare
 
 Tela de Ranking
 
+Cores: #000000, #FFFFFF;
+
+Background: #808080;
+
+Font-family: Arial e sans-serif;
+
+Fonte-size: 12px, 18px.
+
 Exibe a classificação dos usuários com base na quantidade de horas estudadas, promovendo gamificação e incentivo ao progresso contínuo.
 
 ![ranking](https://github.com/user-attachments/assets/0e18419c-5485-493a-b578-db3994ce1da1)
