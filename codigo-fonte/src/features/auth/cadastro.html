@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Metadados básicos da página -->
+  <!-- Metadados básicos da página--> 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estudo Inteligente - Criar Conta</title>
   
   <!-- Folha de estilo específica para a página de cadastro -->
   <link rel="stylesheet" href="cadastro.css">
-  
+
   <!-- Importação da fonte Inter do Google Fonts para tipografia consistente -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- Biblioteca Font Awesome para ícones utilizados nos campos do formulário -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -27,7 +27,7 @@
         <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo">
       </div>
     </header>
-    
+     
     <!-- Lado direito - contém o formulário de cadastro -->
     <main class="right-side">
       <!-- Cabeçalho do formulário com mensagem de boas-vindas -->
@@ -46,6 +46,15 @@
             <input type="text" id="name" placeholder="Seu nome completo" required>
           </div>
         </div>
+
+        <!-- Campo de nome do usuário -->
+        <div class="form-group username-group">
+          <label for="username">Nome de Usuário</label>
+          <div class="input-container username-input">
+            <i class="fas fa-user-tag"></i>
+            <input type="text" id="username" placeholder="Seu nome de usuário" required>
+          </div>
+        </div>
         
         <!-- Campo de email -->
         <div class="form-group">
@@ -54,6 +63,7 @@
             <i class="fas fa-envelope"></i>
             <input type="email" id="email" placeholder="seu@email.com" required>
           </div>
+          <div id="email-error" class="error-message" style="display: none;"></div>
         </div>
         
         <!-- Campo de senha com indicador de força e botão para mostrar/ocultar -->
@@ -87,7 +97,7 @@
         
         <!-- Área para exibir mensagens de erro durante a validação -->
         <div id="error-message" class="error-message" role="alert"></div>
-        
+
         <!-- Botão de submissão com estado de carregamento -->
         <button type="submit" class="btn btn-primary">
           <span class="btn-text">Criar Conta</span>
