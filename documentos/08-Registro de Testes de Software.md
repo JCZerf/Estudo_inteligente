@@ -43,7 +43,9 @@ ___
 |Caso de Teste    | CT-05 - Validar associação entre tarefa e timer |
 |:---|:---|
 | Resultados obtidos | Tarefa vinculada ao tempo registrado |
-| Responsável pela execução do caso de Teste | José Carlos |
+| Responsável pela execução do caso de Teste | Juliano |
+
+https://github.com/user-attachments/assets/47219bcc-2495-482f-98f8-e7b0c201ad79
 ___ 
 
 |Caso de Teste    | CT-06 - Testar precisão temporal |
