@@ -28,17 +28,7 @@
       <img src="../../shared/assets/img/logoestudobranco.png" alt="" class="logo-sidebar" /> <!-- Alt vazio pois o link já tem label -->
     </a>
     
-    <!-- Menu de navegação principal -->
-    <nav aria-label="Navegação principal do painel">
-      <a href="./inicio.html" class="active" aria-current="page"><i class="fas fa-home" aria-hidden="true"></i> Início</a>
-      <a href="../pomodoro/sessao_de_foco.html"><i class="fas fa-clock" aria-hidden="true"></i> Sessão de Foco</a>
-      <a href="../schedule/cronograma.html"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Cronograma</a>
-      <a href="../tasks/tarefas.html"><i class="fas fa-tasks" aria-hidden="true"></i> Tarefas</a>
-      <a href="../ranking/ranking.html"><i class="fas fa-chart-line" aria-hidden="true"></i> Ranking</a>
-      <a href="../settings/configuracoes.html"><i class="fas fa-cog" aria-hidden="true"></i> Configurações</a>
-      <a href="../guides/guias.html"><i class="fas fa-book" aria-hidden="true"></i> Guias</a>
-      <a href="../../landing/index.html"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair</a>
-    </nav>
+        <!-- Menu de navegação principal (Carregado dinamicamente por menu.js) -->
   </aside>
 
   <!-- Conteúdo principal da página -->
@@ -55,40 +45,17 @@
       </div>
     </header>
 
+
+
     <!-- Container principal de conteúdo -->
     <div class="content">
       <h1>Resumo do Dia</h1>
 
       <!-- Seção de tarefas agendadas -->
       <section class="section" id="tarefasSection" aria-labelledby="tarefas-heading">
-        <h2 id="tarefas-heading" class="sr-only">Suas Tarefas</h2>
-        <!-- Estado de carregamento (skeleton) -->
-        <div class="skeleton-loading" aria-live="polite" aria-busy="true">
-            <p>Carregando tarefas...</p>
-        </div>
+        <h2 id="tarefas-heading">Suas Tarefas para Hoje</h2>
         <!-- Conteúdo das tarefas será carregado dinamicamente via JavaScript -->
-      </section>
-
-      <!-- Seção de tempo gasto em foco hoje -->
-      <section class="section" aria-labelledby="tempo-foco-heading">
-        <h3 id="tempo-foco-heading">Tempo Gasto em Sessão de Foco (Hoje)</h3>
-        <p class="highlight">2h 30min</p>
-      </section>
-
-      <!-- Banner motivacional -->
-      <div class="banner" role="status" aria-live="polite">Mantenha o bom trabalho!</div>
-
-      <!-- Seção de gráfico de progresso semanal -->
-      <section class="section" aria-labelledby="progresso-semana-heading">
-        <h3 id="progresso-semana-heading">Progresso da semana</h3>
-        <!-- Canvas para o gráfico Chart.js -->
-        <canvas id="graficoHoras" height="200" role="img" aria-label="Gráfico de progresso de horas estudadas na semana"></canvas>
-      </section>
-
-      <!-- Seção de tempo médio de estudo na semana -->
-      <section class="section" aria-labelledby="tempo-medio-heading">
-        <h3 id="tempo-medio-heading">Tempo médio de estudo (semana)</h3>
-        <p class="highlight">1h 15min</p>
+        <ul id="listaTarefasAgendadasInicio"><li>Carregando...</li></ul> 
       </section>
 
       <!-- Seção de próximos eventos do calendário -->
@@ -96,8 +63,49 @@
         <h3 id="proximos-eventos-heading">Próximos Eventos</h3>
         <ul id="listaProximosEventos">
           <!-- Eventos serão inseridos dinamicamente via JavaScript -->
+          <li>Carregando...</li>
         </ul>
       </section>
+
+          <!-- Banner motivacional (Movido de volta para cá) -->
+    <div id="motivationalBanner" class="banner" role="status" aria-live="polite">Carregando frase...</div>
+
+      <!-- Seção de gráfico de progresso semanal -->
+      <section class="section" aria-labelledby="progresso-semana-heading">
+        <h3 id="progresso-semana-heading">Progresso da semana (Horas de Foco)</h3>
+        <!-- Canvas para o gráfico Chart.js -->
+        <canvas id="graficoHoras" height="200" role="img" aria-label="Gráfico de progresso de horas de foco na semana"></canvas>
+      </section>
+
+      <!-- Grid para Resumos Rápidos (Minimalista) -->
+      <div class="summary-minimal-grid">
+        <!-- Seção de tempo gasto em foco hoje -->
+        <div class="summary-minimal-item" aria-labelledby="tempo-foco-heading">
+          <i class="fas fa-stopwatch icon"></i>
+          <div>
+            <span class="value" id="focusTimeToday">--:--</span>
+            <span class="label" id="tempo-foco-heading">Foco Hoje</span>
+          </div>
+        </div>
+
+        <!-- Seção de tarefas concluídas -->
+        <div class="summary-minimal-item" aria-labelledby="tarefas-concluidas-heading">
+          <i class="fas fa-check-circle icon"></i>
+          <div>
+            <span class="value" id="completedTasksCounter">0</span>
+            <span class="label" id="tarefas-concluidas-heading">Tarefas Concluídas</span>
+          </div>
+        </div>
+
+        <!-- Seção de pontos de estudo -->
+        <div class="summary-minimal-item" aria-labelledby="pontos-estudo-heading">
+          <i class="fas fa-star icon"></i>
+          <div>
+            <span class="value" id="totalPointsDisplay">0</span>
+            <span class="label" id="pontos-estudo-heading">Pontos Totais</span>
+          </div>
+        </div>
+      </div>
 
       <!-- Rodapé da página -->
       <footer>
@@ -117,3 +125,4 @@
   </script>
 </body>
 </html>
+

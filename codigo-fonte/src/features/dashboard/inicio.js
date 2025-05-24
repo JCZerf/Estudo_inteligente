@@ -36,10 +36,16 @@ const motivationalPhrases = [
  * Carrega e exibe uma frase motivacional aleatória no banner
  */
 function loadMotivationalPhrase() {
-    const banner = document.querySelector(".banner");
+    console.log("Tentando carregar frase motivacional..."); // Log para depuração
+    const banner = document.getElementById("motivationalBanner");
     if (banner) {
+        console.log("Elemento #motivationalBanner encontrado."); // Log para depuração
         const randomIndex = Math.floor(Math.random() * motivationalPhrases.length);
         banner.textContent = motivationalPhrases[randomIndex];
+        banner.style.display = "block"; // Garante que está visível
+        console.log("Frase carregada:", banner.textContent); // Log para depuração
+    } else {
+        console.error("Elemento #motivationalBanner NÃO encontrado!"); // Log de erro
     }
 }
 
@@ -52,17 +58,29 @@ document.addEventListener("DOMContentLoaded", function() {
     loadUserName();           // Carrega o nome do usuário
     loadTarefasAgendadas();   // Carrega as tarefas agendadas do usuário
     loadTempoFocoHoje();      // Carrega o tempo de foco do dia atual
+    loadCompletedTasksCounter(); // Carrega o contador de tarefas concluídas
+    loadTotalPointsDisplay(); // Carrega a exibição de pontos totais
     initProgressoSemanaChart(); // Inicializa o gráfico de progresso semanal
-    loadTempoMedioEstudoSemana(); // Calcula e exibe o tempo médio de estudo na semana
     loadProximosEventos();    // Carrega os próximos eventos do calendário
-    loadMotivationalPhrase(); // Carrega a frase motivacional
+    // loadMotivationalPhrase(); // Chamada movida para o final
     document.getElementById("currentYear").textContent = new Date().getFullYear(); // Atualiza o ano no rodapé
     checkNotificationPermission(); // Verifica permissão para notificações
+
+    // Listeners para atualizar os contadores dinamicamente
+    window.addEventListener("completedTasksChanged", (event) => {
+        updateCompletedTasksCounter(event.detail.count);
+    });
+    window.addEventListener("userPointsChanged", (event) => {
+        updateTotalPointsDisplay(event.detail.newTotalPoints);
+    });
+
+    // Chama a frase motivacional após um pequeno atraso para garantir que o DOM esteja pronto
+    // e outras manipulações possam ter ocorrido.
+    setTimeout(loadMotivationalPhrase, 100); 
 });
 
 /**
  * Carrega e exibe o nome do usuário logado
- * Recupera o nome do localStorage e atualiza o elemento na interface
  */
 function loadUserName() {
     const userNameSpan = document.getElementById("userName");
@@ -76,7 +94,6 @@ function loadUserName() {
 
 /**
  * Carrega e exibe as tarefas agendadas do usuário
- * Filtra as tarefas não concluídas com prazo a partir de hoje e ordena por data e prioridade
  */
 function loadTarefasAgendadas() {
     const tarefasSection = document.getElementById("tarefasSection");
@@ -84,13 +101,18 @@ function loadTarefasAgendadas() {
 
     const loadingDiv = tarefasSection.querySelector(".skeleton-loading");
     
-    if (loadingDiv || !document.getElementById("listaTarefasAgendadasInicio")) {
-        if (loadingDiv) loadingDiv.remove();
-        tarefasSection.innerHTML = "<h3>Tarefas Agendadas</h3><ul id=\"listaTarefasAgendadasInicio\"></ul>";
+    // Garante que o título e a lista UL existam antes de preencher
+    if (!document.getElementById("listaTarefasAgendadasInicio")) {
+         if (loadingDiv) loadingDiv.remove(); // Remove skeleton se existir
+         // Recria a estrutura básica se não existir
+         tarefasSection.innerHTML = 	'<h2 id="tarefas-heading">Suas Tarefas para Hoje</h2><ul id="listaTarefasAgendadasInicio"><li>Carregando...</li></ul>';
+    } else if (loadingDiv) {
+        loadingDiv.remove(); // Remove skeleton se a lista já existe
     }
+    
     const listaTarefasUl = document.getElementById("listaTarefasAgendadasInicio");
     if (!listaTarefasUl) return;
-    listaTarefasUl.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
+    listaTarefasUl.innerHTML = 	''; // Limpa a lista antes de adicionar novos itens
 
     try {
         const studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
@@ -98,7 +120,7 @@ function loadTarefasAgendadas() {
         const hoje = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
         const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
 
-        // Filtra tarefas relevantes
+        // Filtra tarefas relevantes (não concluídas e com prazo hoje ou futuro)
         Object.values(studyTasks).flat().forEach(task => {
             if (!task.done && task.due && task.due >= hoje) { 
                 tarefasFiltradas.push(task);
@@ -112,19 +134,18 @@ function loadTarefasAgendadas() {
             if (dateA < dateB) return -1;
             if (dateA > dateB) return 1;
 
-            // Se as datas forem iguais, ordena por prioridade (maior primeiro)
             const priorityA = priorityOrder[a.priority || 'medium'] || 0;
             const priorityB = priorityOrder[b.priority || 'medium'] || 0;
             return priorityB - priorityA; // Descendente
         });
 
-        // Renderiza as tarefas ordenadas
-        if (tarefasFiltradas.length > 0) {
-            tarefasFiltradas.forEach(task => {
+        // Renderiza as tarefas ordenadas (limita a 5 para não poluir)
+        const tarefasParaExibir = tarefasFiltradas.slice(0, 5);
+        if (tarefasParaExibir.length > 0) {
+            tarefasParaExibir.forEach(task => {
                 const li = document.createElement("li");
                 const priority = task.priority || 'medium';
                 const priorityText = priority === 'high' ? 'Alta' : priority === 'medium' ? 'Média' : 'Baixa';
-                // Adiciona título, bolinha de prioridade (à direita) e prazo
                 li.innerHTML = `
                     <span class="task-title-inline">${task.title}</span> 
                     <span class="priority-dot priority-${priority}" title="Prioridade: ${priorityText}"></span>
@@ -133,7 +154,7 @@ function loadTarefasAgendadas() {
                 listaTarefasUl.appendChild(li);
             });
         } else {
-            listaTarefasUl.innerHTML = "<li>Nenhuma tarefa agendada encontrada.</li>";
+            listaTarefasUl.innerHTML = "<li>Nenhuma tarefa pendente para hoje ou futuro.</li>";
         }
 
     } catch (e) {
@@ -144,27 +165,22 @@ function loadTarefasAgendadas() {
 
 /**
  * Carrega e exibe o tempo total de foco do dia atual
- * Calcula a soma de todas as sessões de foco registradas hoje
  */
 function loadTempoFocoHoje() {
-    const tempoFocoHighlight = document.querySelector("section[aria-labelledby='tempo-foco-heading'] .highlight"); 
+    const tempoFocoHighlight = document.getElementById("focusTimeToday"); 
     if (!tempoFocoHighlight) return;
 
     let totalMinutosFocoHoje = 0;
-    const hoje = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const hoje = new Date().toISOString().split("T")[0];
 
     try {
-        // Recupera as sessões de foco do localStorage
         const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || []; 
-        
-        // Soma os minutos de todas as sessões de hoje
         focusSessionsData.forEach(session => {
             if (session.date === hoje && session.durationMinutes) {
                 totalMinutosFocoHoje += session.durationMinutes;
             }
         });
 
-        // Converte minutos para formato horas e minutos
         const horas = Math.floor(totalMinutosFocoHoje / 60);
         const minutos = totalMinutosFocoHoje % 60;
         tempoFocoHighlight.textContent = `${horas}h ${minutos}min`;
@@ -176,27 +192,60 @@ function loadTempoFocoHoje() {
 }
 
 /**
+ * Carrega e exibe o contador de tarefas concluídas.
+ */
+function loadCompletedTasksCounter() {
+    const count = parseInt(localStorage.getItem("completedTasksCount")) || 0;
+    updateCompletedTasksCounter(count);
+}
+
+/**
+ * Atualiza o elemento do contador de tarefas concluídas na interface.
+ * @param {number} count - O número de tarefas concluídas.
+ */
+function updateCompletedTasksCounter(count) {
+    const counterElement = document.getElementById("completedTasksCounter");
+    if (counterElement) {
+        counterElement.textContent = count;
+    }
+}
+
+/**
+ * Carrega e exibe o total de pontos de estudo.
+ */
+function loadTotalPointsDisplay() {
+    const points = parseInt(localStorage.getItem("userTotalPoints")) || 0;
+    updateTotalPointsDisplay(points);
+}
+
+/**
+ * Atualiza o elemento de exibição de pontos totais na interface.
+ * @param {number} points - O total de pontos.
+ */
+function updateTotalPointsDisplay(points) {
+    const pointsElement = document.getElementById("totalPointsDisplay");
+    if (pointsElement) {
+        pointsElement.textContent = points;
+    }
+}
+
+/**
  * Inicializa o gráfico de progresso semanal usando Chart.js
- * Exibe as horas de estudo para cada dia da semana atual
  */
 function initProgressoSemanaChart() {
     const ctx = document.getElementById("graficoHoras");
     if (!ctx) return;
 
     const diasDaSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-    const horasEstudoSemana = Array(7).fill(0); // Inicializa com zeros
+    const horasEstudoSemana = Array(7).fill(0);
     
-    // Calcula o primeiro dia da semana atual (domingo)
     const hoje = new Date();
     const primeiroDiaSemana = new Date(hoje);
     primeiroDiaSemana.setDate(hoje.getDate() - hoje.getDay()); 
     primeiroDiaSemana.setHours(0,0,0,0);
 
     try {
-        // Recupera as sessões de foco do localStorage
         const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || [];
-
-        // Calcula as horas de estudo para cada dia da semana
         for (let i = 0; i < 7; i++) {
             const diaAtualLoop = new Date(primeiroDiaSemana);
             diaAtualLoop.setDate(primeiroDiaSemana.getDate() + i);
@@ -208,10 +257,9 @@ function initProgressoSemanaChart() {
                     minutosNoDia += session.durationMinutes;
                 }
             });
-            horasEstudoSemana[i] = parseFloat((minutosNoDia / 60).toFixed(1)); // Converte para horas com 1 decimal
+            horasEstudoSemana[i] = parseFloat((minutosNoDia / 60).toFixed(1));
         }
 
-        // Cria o gráfico de barras com Chart.js
         new Chart(ctx, {
             type: "bar",
             data: {
@@ -219,7 +267,7 @@ function initProgressoSemanaChart() {
                 datasets: [{
                     label: "Horas de foco",
                     data: horasEstudoSemana,
-                    backgroundColor: "#4682B4", // Azul aço
+                    backgroundColor: "#4682B4",
                     borderRadius: 5
                 }]
             },
@@ -240,7 +288,7 @@ function initProgressoSemanaChart() {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { stepSize: 0.5 },
+                        ticks: { stepSize: 1 }, // Ajuste para step 1
                         grid: { display: false }
                     },
                     x: {
@@ -259,177 +307,75 @@ function initProgressoSemanaChart() {
 }
 
 /**
- * Calcula e exibe o tempo médio de estudo por dia na semana atual
- * Considera apenas os dias em que houve estudo para calcular a média
- */
-function loadTempoMedioEstudoSemana() {
-    const tempoMedioHighlight = document.querySelector("section[aria-labelledby='tempo-medio-heading'] .highlight");
-    if (!tempoMedioHighlight) return;
-
-    try {
-        // Recupera as sessões de foco do localStorage
-        const focusSessionsData = JSON.parse(localStorage.getItem("focusSessions")) || [];
-        
-        // Calcula o período da semana atual (domingo a sábado)
-        const hoje = new Date();
-        const primeiroDiaSemana = new Date(hoje);
-        primeiroDiaSemana.setDate(hoje.getDate() - hoje.getDay());
-        primeiroDiaSemana.setHours(0, 0, 0, 0);
-
-        const ultimoDiaSemana = new Date(primeiroDiaSemana);
-        ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6);
-        ultimoDiaSemana.setHours(23, 59, 59, 999);
-
-        let totalMinutosSemana = 0;
-        let diasComEstudo = new Set(); // Usa Set para contar dias únicos com estudo
-
-        // Soma os minutos de todas as sessões da semana atual
-        focusSessionsData.forEach(session => {
-            const sessionDate = new Date(session.date + "T00:00:00");
-            if (sessionDate >= primeiroDiaSemana && sessionDate <= ultimoDiaSemana && session.durationMinutes) {
-                totalMinutosSemana += session.durationMinutes;
-                diasComEstudo.add(session.date); // Adiciona a data ao Set
-            }
-        });
-        
-        // Calcula a média (evita divisão por zero usando no mínimo 1 dia)
-        const numeroDiasComEstudo = diasComEstudo.size > 0 ? diasComEstudo.size : 1; 
-        const mediaMinutosPorDia = totalMinutosSemana / numeroDiasComEstudo;
-
-        // Converte para formato horas e minutos
-        const horas = Math.floor(mediaMinutosPorDia / 60);
-        const minutos = Math.round(mediaMinutosPorDia % 60); 
-        tempoMedioHighlight.textContent = `${horas}h ${minutos}min / dia`;
-
-    } catch (e) {
-        console.error("Erro ao carregar tempo médio de estudo:", e);
-        tempoMedioHighlight.textContent = "Erro";
-    }
-}
-
-/**
  * Carrega e exibe os próximos eventos do calendário
- * Filtra eventos da semana atual (Domingo a Sábado) e exibe os 5 mais próximos
  */
 function loadProximosEventos() {
     const proximosEventosUl = document.getElementById("listaProximosEventos");
     if (!proximosEventosUl) return;
-
-    proximosEventosUl.innerHTML = ""; // Limpa eventos antigos
+    proximosEventosUl.innerHTML = "";
 
     try {
-        // Recupera os eventos do calendário do localStorage
         const studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-        
-        // Define o período de filtro (Semana Atual: Domingo a Sábado)
         const hoje = new Date();
-        const diaDaSemanaHoje = hoje.getDay(); // 0 = Domingo, 6 = Sábado
-        
+        const diaDaSemanaHoje = hoje.getDay();
         const primeiroDiaSemana = new Date(hoje);
         primeiroDiaSemana.setDate(hoje.getDate() - diaDaSemanaHoje);
         primeiroDiaSemana.setHours(0, 0, 0, 0);
-
         const ultimoDiaSemana = new Date(primeiroDiaSemana);
         ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6);
         ultimoDiaSemana.setHours(23, 59, 59, 999);
-
-        // Filtra eventos dentro da semana atual e que ainda não passaram (ou são de hoje)
-        const hojeInicioDia = new Date(); // Para comparar eventos futuros no mesmo dia
+        const hojeInicioDia = new Date();
         hojeInicioDia.setHours(0, 0, 0, 0);
 
         const eventosFiltrados = studySchedule.filter(evento => {
             if (!evento.date) return false;
-            const dataEvento = new Date(evento.date + "T00:00:00"); // Normaliza para comparar datas
-            // Verifica se está na semana atual E se é de hoje ou futuro
+            const dataEvento = new Date(evento.date + "T00:00:00");
             return dataEvento >= primeiroDiaSemana && dataEvento <= ultimoDiaSemana && dataEvento >= hojeInicioDia;
         });
 
-        // Ordena por data e hora mais próxima (se hora existir)
         eventosFiltrados.sort((a, b) => {
             const dataHoraA = new Date(`${a.date}T${a.time || '00:00'}`);
             const dataHoraB = new Date(`${b.date}T${b.time || '00:00'}`);
             return dataHoraA - dataHoraB;
         });
 
-        // Limita a 5 eventos para exibição
         const eventosParaExibir = eventosFiltrados.slice(0, 5);
-
         if (eventosParaExibir.length > 0) {
-            // Cria elementos de lista para cada evento
             eventosParaExibir.forEach(evento => {
                 const li = document.createElement("li");
-                // Formata a data para DD/MM
                 const dataEventoFormatada = new Date(evento.date + "T00:00:00").toLocaleDateString("pt-BR", { day: '2-digit', month: '2-digit', timeZone: 'UTC' });
-                // Monta o texto: Título (Data Hora)
                 let textoEvento = `${evento.subject} (${dataEventoFormatada}`;
-                // Adiciona a hora se existir e não for "-"
                 if (evento.time && evento.time !== "-") {
                     textoEvento += ` ${evento.time.substring(0,5)}`;
                 }
-                textoEvento += `)`; // Fecha parênteses
+                textoEvento += `)`;
                 li.textContent = textoEvento;
                 proximosEventosUl.appendChild(li);
             });
         } else {
-            // Exibe mensagem se não houver eventos na semana atual
-            proximosEventosUl.innerHTML = "<li>Nenhum evento próximo nesta semana.</li>";
+            proximosEventosUl.innerHTML = "<li>Nenhum evento próximo encontrado para esta semana.</li>";
         }
     } catch (e) {
         console.error("Erro ao carregar próximos eventos:", e);
-        proximosEventosUl.innerHTML = "<li>Erro ao carregar eventos.</li>";
+        if (proximosEventosUl) proximosEventosUl.innerHTML = "<li>Erro ao carregar eventos.</li>";
     }
 }
 
 /**
- * Verifica e solicita permissão para enviar notificações
- * Importante para alertas de sessões de foco e lembretes de tarefas
+ * Verifica e solicita permissão para notificações
  */
 function checkNotificationPermission() {
-    if ("Notification" in window && Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-            console.log("Permissão para notificações:", permission);
+    if (!("Notification" in window)) {
+        console.log("Este navegador não suporta notificações desktop.");
+    } else if (Notification.permission === "granted") {
+        console.log("Permissão para notificações já concedida.");
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+            if (permission === "granted") {
+                console.log("Permissão para notificações concedida.");
+                // new Notification("Notificações ativadas!"); // Opcional: notificar que ativou
+            }
         });
     }
 }
 
-/**
- * Listener para eventos de alteração no localStorage
- * Atualiza a interface quando dados são modificados em outras abas
- */
-window.addEventListener('storage', function(event) {
-    console.log("Storage event detectado em inicio.js: ", event.key); // Debug
-    
-    // Atualiza as tarefas quando a lista de tarefas é modificada
-    if (event.key === 'studyTasks') {
-        loadTarefasAgendadas();
-    }
-    
-    // Atualiza informações de tempo de foco quando as sessões são modificadas
-    if (event.key === 'focusSessions') {
-        loadTempoFocoHoje();
-        initProgressoSemanaChart(); // Recalcula o gráfico
-        loadTempoMedioEstudoSemana();
-    }
-    
-    // Atualiza os próximos eventos quando o calendário é modificado
-    if (event.key === 'studySchedule') {
-        loadProximosEventos();
-    }
-    
-    // Atualiza o nome do usuário quando ele é modificado
-    if (event.key === 'loggedInUserName') {
-        loadUserName();
-    }
-});
-
-/**
- * Listener para o evento 'pageshow'
- * Garante que a frase motivacional seja atualizada ao navegar de volta para a página de início
- */
-window.addEventListener('pageshow', function(event) {
-    // Verifica se a página está sendo exibida a partir do cache de navegação (bfcache)
-    // ou se é uma navegação normal. Em ambos os casos, atualiza a frase.
-    if (event.persisted || performance.navigation.type === performance.navigation.TYPE_NAVIGATE) {
-        loadMotivationalPhrase();
-    }
-});

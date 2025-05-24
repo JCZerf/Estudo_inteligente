@@ -1,293 +1,403 @@
-/* 
- * Estilos específicos para a página de Ranking
- * Define a aparência visual da classificação de usuários por tempo de estudo
- */
-
-/* 
- * Estrutura Principal
- * Define o layout básico da página de ranking
- */
-.main {
-  margin-left: 280px; /* Espaço para a sidebar */
-  padding: 30px;
-  min-height: 100vh;
-}
-
-/* 
- * Container principal do ranking
- * Define o estilo do card que contém toda a lista de classificação
- */
+/* Estilos gerais do ranking */
 .ranking-container {
-  background-color: var(--section-bg, #fff);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: all 0.3s ease; /* Transição suave para mudança de tema */
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
 }
 
-/* 
- * Estilo do título do ranking
- * Define a aparência do cabeçalho "Ranking de Estudos"
- */
-.ranking-header h1 {
-  color: var(--text-color, #2c3e50);
-  margin: 0;
-  font-size: 1.5rem;
+.ranking-container h1 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+#rankingTitle {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.1em;
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+/* Filtros centralizados */
+.filter-buttons {
   display: flex;
-  align-items: center;
-  gap: 10px; /* Espaçamento entre o ícone e o texto */
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
 }
 
-/* 
- * Ícone do troféu no título
- * Define a cor do ícone de troféu ao lado do título
- */
-.ranking-header h1 i {
-  color: var(--highlight-color, #4682B4);
-}
-
-/* 
- * Botões de filtro do ranking
- * Estiliza os botões para filtrar por período (Geral, Semanal, Mensal)
- */
 .filter-btn {
-  padding: 8px 15px;
-  background-color: var(--filter-bg, #f5f7fa);
-  border: 1px solid var(--border-color, #ddd);
-  border-radius: 30px;
+  padding: 8px 18px;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--secondary-color);
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: all 0.3s;
-  color: var(--text-color, #333);
+  font-weight: 500;
 }
 
-/* 
- * Estado ativo dos botões de filtro
- * Define a aparência do botão de filtro selecionado
- */
-.filter-btn.active {
-  background-color: var(--highlight-color, #4682B4);
-  color: white;
-  border-color: var(--highlight-color, #4682B4);
-}
-
-/* 
- * Estado hover dos botões de filtro
- * Define a aparência ao passar o mouse sobre os botões de filtro
- */
 .filter-btn:hover {
-  background-color: var(--filter-hover, #e0e6ed);
+  background-color: var(--hover-bg);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
-/* 
- * Item individual do ranking
- * Define o estilo de cada linha da classificação
- */
-.ranking-item {
+.filter-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Lista de ranking */
+#rankingList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranking-group-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-top: 25px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* Cards de ranking */
+.ranking-card {
   display: flex;
   align-items: center;
-  background-color: var(--item-bg, #fff);
-  padding: 15px 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  transition: all 0.3s;
-  color: var(--text-color, #333);
+  padding: 12px 15px;
+  background-color: var(--card-bg-alt, var(--card-bg));
+  border-radius: 8px;
+  box-shadow: var(--card-shadow-light);
+  transition: all 0.3s ease;
+  border-left: 5px solid transparent;
+  position: relative;
 }
 
-/* 
- * Efeito hover nos itens do ranking
- * Adiciona animação de elevação ao passar o mouse sobre cada item
- */
-.ranking-item:hover {
-  transform: translateY(-2px); /* Eleva o item ligeiramente */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra mais pronunciada */
+.ranking-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
 }
 
-/* 
- * Destaque para o primeiro colocado
- * Estiliza o item do usuário em primeiro lugar com cores douradas
- */
-.ranking-item.top1 {
-  background-color: var(--top1-bg, #fff9e6); /* Fundo amarelado */
-  border-left: 4px solid var(--gold-color, #ffd700); /* Borda dourada */
+/* Top 3 com animações */
+@keyframes goldGlow {
+  0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
 }
 
-/* 
- * Número da posição do primeiro colocado
- * Define a cor dourada para o número 1
- */
-.ranking-item.top1 .position {
-  color: var(--gold-color, #ffd700);
-  font-weight: bold;
+@keyframes silverGlow {
+  0% { box-shadow: 0 0 5px rgba(192, 192, 192, 0.5); }
+  50% { box-shadow: 0 0 15px rgba(192, 192, 192, 0.7); }
+  100% { box-shadow: 0 0 5px rgba(192, 192, 192, 0.5); }
 }
 
-/* 
- * Destaque para o segundo e terceiro colocados
- * Adiciona bordas coloridas para prata e bronze
- */
-.ranking-item.top2 {
-  border-left: 4px solid var(--silver-color, #c0c0c0); /* Borda prateada */
+@keyframes bronzeGlow {
+  0% { box-shadow: 0 0 5px rgba(205, 127, 50, 0.5); }
+  50% { box-shadow: 0 0 12px rgba(205, 127, 50, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(205, 127, 50, 0.5); }
 }
 
-.ranking-item.top3 {
-  border-left: 4px solid var(--bronze-color, #cd7f32); /* Borda bronze */
+.ranking-card.top1 {
+  animation: goldGlow 2s infinite;
+  border-left-color: #ffd700;
+  background: linear-gradient(90deg, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0.05) 100%);
 }
 
-/* 
- * Número da posição no ranking
- * Estiliza o número que indica a classificação de cada usuário
- */
+.ranking-card.top2 {
+  animation: silverGlow 2s infinite;
+  border-left-color: #c0c0c0;
+  background: linear-gradient(90deg, rgba(192,192,192,0.1) 0%, rgba(192,192,192,0.05) 100%);
+}
+
+.ranking-card.top3 {
+  animation: bronzeGlow 2s infinite;
+  border-left-color: #cd7f32;
+  background: linear-gradient(90deg, rgba(205,127,50,0.1) 0%, rgba(205,127,50,0.05) 100%);
+}
+
+/* Destaque para o usuário atual */
+.ranking-card.your-ranking {
+  background-color: var(--highlight-bg);
+  border: 1px solid var(--primary-color);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(var(--primary-color-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0); }
+}
+
+/* Elementos do card */
 .position {
-  font-size: 1.2rem;
+  font-size: 1.1em;
   font-weight: 600;
-  width: 40px;
+  color: var(--secondary-color);
+  width: 45px;
   text-align: center;
-  color: var(--text-secondary, #555);
-}
-
-/* 
- * Contador de horas estudadas
- * Define o estilo do texto que mostra as horas de estudo
- */
-.user-hours {
-  color: var(--text-secondary, #666);
-  font-size: 0.9rem;
-}
-
-/* 
- * Destaque para o usuário atual
- * Estiliza o item que mostra a posição do usuário logado
- */
-.your-ranking {
-  margin-top: 40px; /* Espaçamento para separar do resto da lista */
-  background-color: var(--your-ranking-bg, #f0f7ff); /* Fundo azulado */
-  border-left: 4px solid var(--highlight-color, #4682B4); /* Borda azul */
-}
-
-/* 
- * Número da posição do usuário atual
- * Define a cor azul para o número da posição do usuário
- */
-.your-ranking .position {
-  color: var(--highlight-color, #4682B4);
-}
-
-/* 
- * Rodapé da página
- * Define o estilo do rodapé com informações de copyright
- */
-footer {
-  margin-top: 50px;
-  text-align: center;
-  color: var(--text-secondary, #666);
-  font-size: 0.9rem;
-  padding: 20px 0;
-}
-
-/* 
- * Variáveis para o tema claro
- * Define cores específicas para elementos no tema claro
- */
-[data-theme="light"] {
-  --item-bg: #fff;              /* Fundo dos itens */
-  --top1-bg: #fff9e6;           /* Fundo do primeiro colocado */
-  --your-ranking-bg: #f0f7ff;   /* Fundo do seu ranking */
-  --filter-bg: #f5f7fa;         /* Fundo dos botões de filtro */
-  --filter-hover: #e0e6ed;      /* Hover dos botões de filtro */
-  --gold-color: #ffd700;        /* Cor dourada (1º lugar) */
-  --silver-color: #c0c0c0;      /* Cor prata (2º lugar) */
-  --bronze-color: #cd7f32;      /* Cor bronze (3º lugar) */
-}
-
-/* 
- * Variáveis para o tema escuro
- * Define cores específicas para elementos no tema escuro
- */
-[data-theme="dark"] {
-  --item-bg: #2d2d2d;           /* Fundo dos itens */
-  --top1-bg: #332d00;           /* Fundo do primeiro colocado */
-  --your-ranking-bg: #1a2a3a;   /* Fundo do seu ranking */
-  --filter-bg: #3a3a3a;         /* Fundo dos botões de filtro */
-  --filter-hover: #4a4a4a;      /* Hover dos botões de filtro */
-  --gold-color: #ffcc00;        /* Cor dourada (1º lugar) */
-  --silver-color: #b8b8b8;      /* Cor prata (2º lugar) */
-  --bronze-color: #d18c56;      /* Cor bronze (3º lugar) */
-}
-
-/* 
- * Responsividade para dispositivos móveis
- * Ajusta o layout para telas menores
- */
-@media (max-width: 768px) {
-  .main {
-      margin-left: 0; /* Remove a margem para a sidebar em telas pequenas */
-      padding: 20px;
-  }
-  
-  .ranking-item {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 15px;
-  }
-  
-  .profile-pic {
-      margin: 0 0 10px 0;
-      width: 60px;
-      height: 60px;
-  }
-  
-  .ranking-filters {
-      justify-content: center;
-  }
-}
-
-/* 
- * Imagem de perfil dos usuários
- * Define o estilo circular para as fotos de perfil
- */
-.profile-pic {
-  width: 50px; /* Tamanho fixo para desktop */
-  height: 50px;
-  border-radius: 50%; /* Formato circular */
-  object-fit: cover; /* Mantém a proporção da imagem */
-  margin: 0 15px;
-  flex-shrink: 0; /* Impede que a imagem diminua */
-}
-
-/* 
- * Ícone de troféu para o primeiro colocado
- * Define o estilo da imagem do troféu
- */
-.trophy {
-  width: 30px;
-  height: 30px;
-  margin-left: 15px;
   flex-shrink: 0;
-  object-fit: contain; /* Mantém a proporção da imagem */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
-/* 
- * Ajustes para dispositivos móveis
- * Redimensiona elementos para telas menores
- */
-@media (max-width: 768px) {
-  .profile-pic {
-      width: 40px;
-      height: 40px;
-      margin: 0 10px 0 0;
-  }
-  
-  .ranking-item {
-      align-items: center !important; /* Garante alinhamento central */
-  }
+.fa-medal {
+  font-size: 1em;
+}
+.medal-gold { color: #ffd700; }
+.medal-silver { color: #c0c0c0; }
+.medal-bronze { color: #cd7f32; }
+
+.profile-avatar-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 12px;
+  flex-shrink: 0;
+  background-color: var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 
- * Regra geral para imagens
- * Garante que todas as imagens sejam responsivas
- */
-img {
-  max-width: 100%;
-  height: auto;
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.you-indicator {
+  color: var(--primary-color);
+  font-weight: normal;
+  font-size: 0.8em;
+}
+
+.user-score {
+  font-size: 0.85em;
+  color: var(--secondary-color);
+  line-height: 1.3;
+}
+
+/* Estatísticas */
+.ranking-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background-color: var(--card-bg-alt);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow-light);
+}
+
+.stat-card i {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.stat-value {
+  font-weight: 600;
+  color: var(--primary-color);
   display: block;
+  font-size: 1.2em;
+}
+
+.stat-label {
+  font-size: 0.8em;
+  color: var(--secondary-color);
+}
+
+/* Mensagem de progressão */
+.ranking-message {
+  text-align: center;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  border-radius: 8px;
+  font-size: 0.9em;
+}
+
+.ranking-message strong {
+  color: var(--primary-color);
+}
+
+/* Conquistas */
+#achievementsSection {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border-color);
+}
+
+#achievementsSection h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--primary-color);
+}
+
+#achievementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 20px;
+}
+
+.achievement-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: var(--card-bg-alt);
+  box-shadow: var(--card-shadow-light);
+  cursor: help;
+  position: relative;
+  transition: transform 0.2s ease-in-out;
+}
+
+.achievement-item:hover {
+  transform: translateY(-3px);
+}
+
+.achievement-item .icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+  transition: color 0.3s;
+}
+
+.achievement-item .title {
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+.achievement-item.locked {
+  opacity: 0.6;
+  filter: grayscale(80%);
+}
+
+.achievement-item.locked .icon {
+  color: var(--secondary-color);
+}
+
+.achievement-item.locked .title {
+  color: var(--secondary-color);
+}
+
+.achievement-item.unlocked::after {
+  content: "✓";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.achievement-item::after {
+  content: attr(data-description);
+  position: absolute;
+  bottom: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 10;
+}
+
+.achievement-item:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .ranking-card {
+    padding: 10px;
+  }
+  .position {
+    width: 40px;
+    font-size: 1em;
+  }
+  .profile-avatar-container {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+  }
+  .user-name {
+    font-size: 0.9em;
+  }
+  .user-score {
+    font-size: 0.8em;
+  }
+  #achievementsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 15px;
+  }
+  .achievement-item .icon {
+    font-size: 2rem;
+  }
+  .ranking-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .filter-btn {
+    width: 100%;
+  }
 }

@@ -294,7 +294,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // Atualiza o texto de exibição da semana atual
         updateWeekDisplay() {
-            // Calcula o início da semana (segunda-feira)
             const startOfWeek = new Date(this.currentDate);
             const dayOfWeek = startOfWeek.getDay();
             startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
@@ -353,14 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             
                             // Prepara dados para exibição
                             const taskDisplayData = {
-                                id: task.id,
-                                title: task.title,
-                                date: task.due,
-                                time: task.time || "-",
-                                endTime: task.endTime || "-",
-                                duration: task.duration || "30",
-                                description: task.description || "",
-                                done: task.done || false,
+                                ...task, // Inclui todos os dados da tarefa original
                                 itemType: "tarefa",
                                 originalCategoryName: categoryName,
                                 originalCategoryKeyForSelect: taskOriginalCategorySelectValue
@@ -390,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Adiciona um item (tarefa ou evento) à grade do cronograma
         addItemToGrid(itemData) {
             // Mapeia a data ISO para o dia da semana
-            const itemDate = new Date(itemData.date + "T00:00:00");
+            const itemDate = new Date(itemData.date || itemData.due + "T00:00:00"); // Usa 'due' para tarefas
             const dayOfWeek = itemDate.getDay(); // 0 = Domingo, 1 = Segunda, ...
             const dayAbbrev = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][dayOfWeek];
             
@@ -408,23 +400,19 @@ document.addEventListener("DOMContentLoaded", function () {
             eventEl.classList.add("event");
             
             // Define atributos e classes com base no tipo de item
-            let borderClass = '';
             if (itemData.itemType === "tarefa") {
                 eventEl.classList.add("event-task");
                 if (itemData.done) eventEl.classList.add("event-done");
-                // Define classe específica para a borda de prioridade
+                // Define classe específica para a borda e cor de prioridade
                 const priority = itemData.priority || 'medium'; // Assume 'medium' se não definida
-                borderClass = `priority-border-${priority}`;
+                eventEl.classList.add(`priority-border-${priority}`); // Adiciona classe da borda
+                eventEl.classList.add(`priority-${priority}`); // Adiciona classe da cor (para CSS depender)
             } else {
                 // Define classe para a borda padrão de evento (azul)
-                borderClass = 'event-border-default';
+                eventEl.classList.add('event-border-default');
                 // Define o tipo de visualização com base na categoria do evento (para background)
                 const displayType = mapEventCategoryToDisplayType(itemData.category);
                 eventEl.dataset.type = displayType;
-            }
-            // Adiciona a classe da borda ao elemento
-            if (borderClass) {
-                eventEl.classList.add(borderClass);
             }
             
             // Define atributos comuns
@@ -663,8 +651,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
             
-            // Configura campos iniciais
-            this.toggleFormFields(this.elements.itemCreationType ? this.elements.itemCreationType.value : "evento");
+            // Configura campos iniciais - Chamado no open() agora
+            // this.toggleFormFields(this.elements.itemCreationType ? this.elements.itemCreationType.value : "evento");
         },
         
         // Alterna a visibilidade dos campos conforme o tipo de item
@@ -703,7 +691,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     this.elements.itemCreationType.value = itemData.itemType; 
                     this.elements.itemCreationType.disabled = true; // Não permite mudar o tipo durante edição
                 }
-                this.toggleFormFields(itemData.itemType);
+                this.toggleFormFields(itemData.itemType); // Garante que os campos corretos sejam exibidos para edição
 
                 if (itemData.itemType === "tarefa") {
                     // Preenche campos específicos de tarefa
@@ -727,24 +715,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 
                 // Preenche campos comuns
-                if(this.elements.eventDate) this.elements.eventDate.value = itemData.date || "";
+                if(this.elements.eventDate) this.elements.eventDate.value = itemData.date || itemData.due || ""; // Usa due para tarefas
                 if(this.elements.eventTime) this.elements.eventTime.value = itemData.time && itemData.time !== "-" ? itemData.time.substring(0,5) : "";
-                if(this.elements.eventDuration) this.elements.eventDuration.value = itemData.duration || "30";
+                // if(this.elements.eventDuration) this.elements.eventDuration.value = itemData.duration || "30"; // Removido
                 if(this.elements.eventNotes) this.elements.eventNotes.value = itemData.description || ""; 
             } else { 
                 // Modo de adição: configura valores padrão
                 if(this.elements.title) this.elements.title.textContent = "Adicionar Atividade";
                 if(this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Atividade";
                 if(this.elements.itemCreationType) {
-                    this.elements.itemCreationType.value = "evento"; // Padrão para novo item
+                    this.elements.itemCreationType.value = "tarefa"; // CORREÇÃO: Define Tarefa como padrão
                     this.elements.itemCreationType.disabled = false;
                 }
-                this.toggleFormFields("evento");
+                this.toggleFormFields("tarefa"); // CORREÇÃO: Garante que os campos de tarefa sejam exibidos por padrão
                 if (this.elements.eventDate) { 
                     this.elements.eventDate.value = new Date().toISOString().split("T")[0];
                 }
-                if(this.elements.cronEventCategory) this.elements.cronEventCategory.value = "aula"; // Categoria padrão
-                if(this.elements.taskSubjectCron) this.elements.taskSubjectCron.value = "geral_cronograma"; // Matéria padrão
+                if(this.elements.cronEventCategory) this.elements.cronEventCategory.value = "aula"; // Categoria padrão para evento (se mudar)
+                if(this.elements.taskSubjectCron) this.elements.taskSubjectCron.value = "geral_cronograma"; // Matéria padrão para tarefa
+                // Define prioridade média como padrão para novas tarefas
+                const mediumPriorityInput = document.querySelector('input[name="priorityCron"][value="medium"]');
+                if (mediumPriorityInput) mediumPriorityInput.checked = true;
             }
             
             // Exibe o modal
@@ -876,13 +867,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         time: time,
                         endTime: endTimeString, // Atualizado
                         // duration: duration, // Removido
-                        description: notes,
                         category: eventCategoryValue,
-                        categoryName: eventCategoryName
+                        description: notes
                     };
                 } else {
                     // Modo de adição (sem duration e endTime)
-                    const eventId = `event-${Date.now()}`;
+                    const eventId = `event-cron-${Date.now()}`;
                     const eventData = {
                         id: eventId,
                         title: title,
@@ -891,12 +881,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         time: time,
                         endTime: endTimeString, // Atualizado
                         // duration: duration, // Removido
-                        description: notes,
                         category: eventCategoryValue,
-                        categoryName: eventCategoryName,
-                        subject: title // Para compatibilidade com a tela inicial
+                        description: notes
                     };
-                    
                     studySchedule.push(eventData);
                 }
                 
@@ -905,23 +892,67 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
             }
             
-            // Fecha o modal após salvar
+            // Fecha o modal e recarrega a grade
             this.close();
+            weekNav.loadScheduleAndTasks();
         }
     };
 
-    // Inicializa o botão de impressão
-    const printBtn = document.getElementById("printSchedule");
-    if (printBtn) {
-        printBtn.addEventListener("click", function() {
-            window.print();
-        });
-    }
-
-    // Inicializa os componentes principais
+    // Inicializa a navegação da semana e o modal
     weekNav.init();
     eventModal.init();
     
-    // Expõe o objeto eventModal globalmente para acesso de outras funções
+    // Expõe o objeto do modal globalmente para edição via clique no evento
     window.eventModal = eventModal;
+    
+    // Adiciona funcionalidade de impressão
+    const printButton = document.getElementById("printSchedule");
+    if (printButton) {
+        printButton.addEventListener("click", () => {
+            window.print();
+        });
+    }
 });
+
+// Estilos de impressão (opcional, mas recomendado)
+const printStyles = `
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .schedule-container, .schedule-container * {
+    visibility: visible;
+  }
+  .schedule-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .sidebar, .main > .header, .schedule-header, .schedule-footer, footer, .modal {
+      display: none !important;
+  }
+  .main {
+      margin-left: 0 !important;
+      padding: 0 !important;
+  }
+  .schedule-table {
+      min-width: auto !important;
+  }
+  .event {
+      box-shadow: none !important;
+      border-width: 2px !important; /* Torna a borda mais visível na impressão */
+  }
+}
+`;
+
+// Adiciona estilos de impressão à página
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = printStyles;
+document.head.appendChild(styleSheet);
+

@@ -20,6 +20,11 @@
   --border-color: #eaeef2;       /* Cor das bordas */
   --modal-bg: #fff;              /* Cor de fundo dos modais */
   --week-nav-bg: #f5f7fa;        /* Cor de fundo da navegação de semanas */
+
+  /* Cores de Prioridade */
+  --priority-high-color: #dc3545; /* Vermelho */
+  --priority-medium-color: #ffc107; /* Amarelo */
+  --priority-low-color: #28a745;  /* Verde */
 }
 
 /* 
@@ -39,6 +44,11 @@
   --border-color: #444;          /* Bordas mais escuras */
   --modal-bg: #3a3a3a;           /* Fundo dos modais no tema escuro */
   --week-nav-bg: #2a2a2a;        /* Fundo da navegação de semanas no tema escuro */
+
+  /* Cores de Prioridade (podem precisar de ajuste para tema escuro se necessário) */
+  --priority-high-color: #e57373; /* Vermelho mais claro */
+  --priority-medium-color: #ffd54f; /* Amarelo mais claro */
+  --priority-low-color: #81c784;  /* Verde mais claro */
 }
 
 /* 
@@ -195,6 +205,7 @@
   margin: 2px 0;
   overflow: hidden;
   text-overflow: ellipsis;       /* Trunca texto que excede o tamanho */
+  border-left: 4px solid transparent; /* Borda padrão transparente */
 }
 
 /* 
@@ -229,37 +240,54 @@
  * Tipos de eventos - Estudo
  * Estiliza eventos da categoria estudo com cor azul
  */
-[data-type="study"] {
+.event[data-type="study"] {
   background-color: rgba(66, 153, 225, 0.1);
-  border-left: 3px solid #4299e1;
+  /* A borda azul padrão é aplicada por .event-border-default */
 }
 
 /* 
  * Tipos de eventos - Exercício
  * Estiliza eventos da categoria exercício com cor verde
  */
-[data-type="exercise"] {
+.event[data-type="exercise"] {
   background-color: rgba(72, 187, 120, 0.1);
-  border-left: 3px solid #48bb78;
+  border-left-color: #48bb78; /* Verde */
 }
 
 /* 
  * Tipos de eventos - Refeição
  * Estiliza eventos da categoria refeição com cor vermelha
  */
-[data-type="meal"] {
+.event[data-type="meal"] {
   background-color: rgba(245, 101, 101, 0.1);
-  border-left: 3px solid #f56565;
+  border-left-color: #f56565; /* Vermelho */
 }
 
 /* 
- * Tipos de eventos - Tarefa
- * Estiliza eventos da categoria tarefa com cor roxa
+ * Tipos de eventos - Tarefa (Fundo roxo)
+ * A borda será definida pelas classes de prioridade
  */
-.event-task {
+.event.event-task {
   background-color: rgba(155, 89, 182, 0.1) !important;
-  border-left: 3px solid #9b59b6;
 }
+
+/* Estilo para a borda padrão de EVENTOS (azul) */
+.event.event-border-default {
+  border-left-color: var(--primary-color) !important; /* Usa variável para tema claro/escuro */
+}
+
+/* Bordas de prioridade para TAREFAS */
+/* Usam variáveis para cores e !important para garantir prioridade */
+.event.event-task.priority-border-high {
+  border-left-color: var(--priority-high-color) !important;
+}
+.event.event-task.priority-border-medium {
+  border-left-color: var(--priority-medium-color) !important;
+}
+.event.event-task.priority-border-low {
+  border-left-color: var(--priority-low-color) !important;
+}
+
 
 /* 
  * Ações do evento
@@ -418,6 +446,11 @@
  */
 .form-group {
   margin-bottom: 15px;
+}
+
+/* Classe auxiliar para ocultar elementos */
+.hidden {
+    display: none !important;
 }
 
 /* 
@@ -619,22 +652,6 @@
   }
 }
 
-
-/* Estilos para borda de prioridade nas tarefas do cronograma */
-.event-task.priority-high {
-  border-left-color: #e53e3e !important; /* Vermelho */
-}
-
-.event-task.priority-medium {
-  border-left-color: #f6ad55 !important; /* Laranja */
-}
-
-.event-task.priority-low {
-  border-left-color: #48bb78 !important; /* Verde */
-}
-
-
-
 /* Estilos para opções de prioridade dentro do modal do cronograma */
 .modal .priority-options {
   display: flex;
@@ -669,38 +686,7 @@
 }
 
 /* Cores dos indicadores - usando as cores padrão */
-.modal .priority-options .priority-high { background-color: #dc3545; } /* Vermelho */
-.modal .priority-options .priority-medium { background-color: #ffc107; } /* Amarelo */
-.modal .priority-options .priority-low { background-color: #28a745; } /* Verde */
-
-
-
-/* Estilo para a borda padrão de eventos (azul) */
-.event.event-border-default {
-  border-left: 4px solid #4682B4; /* Azul aço - Cor primária do tema claro */
-}
-
-/* Ajuste para tema escuro - Borda padrão de eventos */
-[data-theme="dark"] .event.event-border-default {
-  border-left-color: #5a9fd4; /* Azul mais claro para tema escuro */
-}
-
-/* Remove a borda padrão de .event-task para não conflitar */
-.event-task {
-  /* background-color: rgba(155, 89, 182, 0.1) !important; */ /* Mantém o fundo roxo */
-  border-left: none; /* Remove a borda roxa padrão */
-}
-
-/* Garante que as bordas de prioridade específicas funcionem */
-.event.priority-border-high {
-  border-left: 4px solid #dc3545 !important; /* Vermelho */
-}
-
-.event.priority-border-medium {
-  border-left: 4px solid #ffc107 !important; /* Amarelo */
-}
-
-.event.priority-border-low {
-  border-left: 4px solid #28a745 !important; /* Verde */
-}
+.modal .priority-options .priority-high { background-color: var(--priority-high-color); }
+.modal .priority-options .priority-medium { background-color: var(--priority-medium-color); }
+.modal .priority-options .priority-low { background-color: var(--priority-low-color); }
 

@@ -18,6 +18,8 @@
   --task-active-bg: #e6f2ff;     /* Cor de fundo das tarefas ativas */
   --time-invested-bg: #f9f9f9;   /* Cor de fundo do indicador de tempo */
   --border-color: #eee;          /* Cor das bordas */
+  --progress-bar-bg: #e9ecef;    /* Cor de fundo da barra de progresso */
+  --progress-bar-fill: var(--primary-color); /* Cor de preenchimento da barra */
 }
 
 /* 
@@ -35,6 +37,8 @@
   --task-active-bg: #2a3a4a;     /* Fundo das tarefas ativas no tema escuro */
   --time-invested-bg: #3a3a3a;   /* Fundo do indicador de tempo no tema escuro */
   --border-color: #444;          /* Bordas mais escuras */
+  --progress-bar-bg: #444;       /* Fundo da barra de progresso no tema escuro */
+  --progress-bar-fill: var(--primary-color); /* Mantém a cor primária para preenchimento */
 }
 
 /* 
@@ -103,7 +107,7 @@
  */
 .focus-container {
   display: grid;
-  grid-template-columns: 250px 1fr;  /* Coluna lateral para tarefas e coluna principal para o timer */
+  grid-template-columns: 300px 1fr;  /* Coluna lateral para tarefas e coluna principal para o timer */
   gap: 30px;
   margin-top: 20px;
 }
@@ -123,7 +127,7 @@
  */
 .task-list {
   margin: 15px 0;
-  max-height: 300px;
+  max-height: 250px; /* Ajuste de altura */
   overflow-y: auto;  /* Adiciona scroll vertical quando necessário */
 }
 
@@ -159,22 +163,18 @@
   border-color: var(--primary-color);
 }
 
-/* 
- * Indicador de tempo investido
- * Exibe o tempo total gasto nas tarefas
- */
-.time-invested {
-  margin-top: 20px;
-  padding: 10px;
-  background: var(--time-invested-bg);
-  border-radius: 8px;
-  color: var(--text-color);
+/* Estado desabilitado do botão de tarefa */
+.btn-task:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--task-active-bg); /* Mantém visual de selecionado */
 }
 
-/* Destaque para o valor numérico do tempo investido */
-.time-invested span {
-  font-weight: 600;
-  color: var(--primary-color);
+/* 
+ * Indicador de tempo investido (REMOVIDO - Não relevante para o novo fluxo)
+ */
+.time-invested {
+  display: none; /* Oculta o indicador de tempo investido */
 }
 
 /* 
@@ -390,25 +390,57 @@
 /* Lista de tarefas selecionadas */
 .selected-tasks-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column; /* Empilha as tarefas verticalmente */
+  gap: 10px; /* Espaçamento entre tarefas */
 }
 
 /* Item de tarefa selecionada */
 .selected-task {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  background: var(--primary-color);
-  color: white;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  justify-content: space-between; /* Espaça título, barra e ícone */
+  padding: 10px 12px;
+  background: var(--card-bg); /* Fundo do card */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* Título da tarefa selecionada */
+.selected-task .task-title {
+  flex-grow: 1; /* Permite que o título ocupe espaço */
+  margin-right: 10px; /* Espaço antes da barra */
+  color: var(--text-color);
+}
+
+/* Barra de progresso container */
+.selected-task .task-progress-bar {
+  width: 100px; /* Largura fixa para a barra */
+  height: 8px;
+  background-color: var(--progress-bar-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 10px; /* Espaçamento lateral */
+}
+
+/* Preenchimento da barra de progresso */
+.selected-task .progress {
+  height: 100%;
+  width: 0%; /* Começa em 0% */
+  background-color: var(--progress-bar-fill);
+  border-radius: 4px;
+  transition: width 0.5s ease-in-out; /* Animação suave */
 }
 
 /* Ícone de remover tarefa */
-.selected-task i {
-  margin-left: 5px;
+.selected-task .remove-task-icon {
   cursor: pointer;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
+
+.selected-task .remove-task-icon:hover {
+  color: var(--primary-color);
 }
 
 /* 
@@ -467,12 +499,14 @@
  * Responsividade para tablets
  * Ajusta o layout para telas médias
  */
-@media (max-width: 768px) {
+@media (max-width: 992px) { /* Ajuste do breakpoint */
   /* Muda para layout de coluna única */
   .focus-container {
     grid-template-columns: 1fr;
   }
-  
+}
+
+@media (max-width: 768px) {
   /* Empilha os botões de controle */
   .timer-controls {
     flex-direction: column;
@@ -506,4 +540,10 @@
   #clock-circle {
     font-size: 2.5rem;
   }
+  
+  /* Ajusta barra de progresso para telas menores */
+  .selected-task .task-progress-bar {
+    width: 80px;
+  }
 }
+
