@@ -1,17 +1,31 @@
+/* 
+ * Estilos para a Landing Page do Estudo Inteligente
+ * Este arquivo contém todos os estilos específicos para a página de entrada do aplicativo,
+ * incluindo layout responsivo, animações, cores e componentes visuais.
+ */
+
+/* 
+ * Variáveis CSS
+ * Define as cores e valores principais usados em toda a página
+ * Facilita a manutenção e alteração do esquema de cores
+ */
 :root {
-  --cor-primaria: #1871bb;
-  --cor-secundaria: #4da3ff;
-  --cor-destaque: #ffcc00;
-  --cor-texto: #f8f9fa;
-  --cor-texto-secundario: #b0b0b0;
-  --cor-fundo: #121212;
-  --cor-fundo-claro: #1e1e1e;
-  --cor-borda: #2a2a2a;
-  --cor-sucesso: #28a745;
-  --sombra: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --cor-primaria: #1871bb;      /* Azul principal da marca */
+  --cor-secundaria: #4da3ff;    /* Azul mais claro para gradientes e destaques */
+  --cor-destaque: #ffcc00;      /* Amarelo para elementos que precisam chamar atenção */
+  --cor-texto: #f8f9fa;         /* Cor clara para texto sobre fundo escuro */
+  --cor-texto-secundario: #b0b0b0; /* Cor para textos menos importantes */
+  --cor-fundo: #121212;         /* Cor de fundo principal (modo escuro) */
+  --cor-fundo-claro: #1e1e1e;   /* Cor de fundo para elementos sobre o fundo principal */
+  --cor-borda: #2a2a2a;         /* Cor para bordas e separadores */
+  --cor-sucesso: #28a745;       /* Verde para indicadores de sucesso */
+  --sombra: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra padrão para elementos */
 }
 
-/* Reset e Base */
+/* 
+ * Reset e Estilos Base
+ * Normaliza os estilos entre navegadores e define configurações básicas
+ */
 * {
   margin: 0;
   padding: 0;
@@ -20,16 +34,16 @@
 
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(to bottom, #242424, #181717);
+  background: linear-gradient(to bottom, #242424, #181717); /* Gradiente de fundo */
   color: var(--cor-texto);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Previne rolagem horizontal */
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  max-width: 1200px; /* Largura máxima do conteúdo */
+  margin: 0 auto;    /* Centraliza o conteúdo */
+  padding: 0 20px;   /* Espaçamento lateral */
 }
 
 h1, h2, h3, h4 {
@@ -47,14 +61,18 @@ img {
   height: auto;
 }
 
-/* Header */
+/* 
+ * Cabeçalho
+ * Estiliza a barra de navegação superior
+ * Inclui logo, links de navegação e botão CTA
+ */
 header {
   background-color: #000000;
   padding: 15px 0;
   border-bottom: 2px solid var(--cor-primaria);
-  position: sticky;
+  position: sticky; /* Mantém o cabeçalho visível ao rolar */
   top: 0;
-  z-index: 100;
+  z-index: 100;     /* Garante que fique acima de outros elementos */
 }
 
 header .container {
@@ -66,14 +84,19 @@ header .container {
 .logo-img {
   height: 100px;
   width: auto;
-  transition: transform 0.3s, filter 0.3s;
+  transition: transform 0.3s, filter 0.3s; /* Animação ao passar o mouse */
 }
 
 .logo:hover .logo-img {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+  transform: scale(1.05); /* Aumenta ligeiramente o tamanho */
+  filter: brightness(1.1); /* Aumenta o brilho */
 }
 
+/* 
+ * Links de navegação
+ * Estiliza os links no cabeçalho
+ * Inclui efeito de linha inferior ao passar o mouse
+ */
 nav a {
   color: white;
   margin-left: 25px;
@@ -90,17 +113,21 @@ nav a:not(.nav-cta):after {
   bottom: -5px;
   left: 0;
   background-color: var(--cor-secundaria);
-  transition: width 0.3s;
+  transition: width 0.3s; /* Animação da linha inferior */
 }
 
 nav a:hover:not(.nav-cta):after {
-  width: 100%;
+  width: 100%; /* Expande a linha ao passar o mouse */
 }
 
 nav a:hover {
   color: var(--cor-secundaria);
 }
 
+/* 
+ * Botão CTA no cabeçalho
+ * Estiliza o botão de chamada para ação no menu
+ */
 .nav-cta {
   background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
   padding: 10px 25px;
@@ -110,11 +137,15 @@ nav a:hover {
 }
 
 .nav-cta:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Efeito de elevação */
   box-shadow: 0 5px 15px rgba(77, 163, 255, 0.4);
 }
 
-/* Hero Section */
+/* 
+ * Seção Hero
+ * Estiliza a seção principal da landing page
+ * Contém título, subtítulo, formulário e imagem
+ */
 .hero {
   padding: 100px 0;
 }
@@ -135,29 +166,25 @@ nav a:hover {
 }
 
 .hero-image {
-    max-width: 400px; /* Largura máxima */
-    margin: 0 auto; /* Centraliza a imagem */
-  }
-  
-  .hero-image img {
-    width: 100%; /* Faz a imagem responder ao container */
-    height: auto; /* Mantém a proporção */
-    border-radius: 15px; /* Borda arredondada */
-  }
-  
-  /* Para telas menores */
-  @media (max-width: 768px) {
-    .hero-image {
-      max-width: 100%;
-      padding: 0 20px;
-    }
-  }
+  max-width: 400px; /* Largura máxima */
+  margin: 0 auto; /* Centraliza a imagem */
+}
 
+.hero-image img {
+  width: 100%; /* Faz a imagem responder ao container */
+  height: auto; /* Mantém a proporção */
+  border-radius: 15px; /* Borda arredondada */
+}
+
+/* 
+ * Título principal
+ * Estiliza o título com gradiente de texto
+ */
 h1 {
   font-size: 2.8rem;
   margin-bottom: 20px;
   background: linear-gradient(45deg, var(--cor-secundaria), #a5d8ff);
-  -webkit-background-clip: text;
+  -webkit-background-clip: text; /* Aplica o gradiente apenas ao texto */
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
 }
@@ -169,6 +196,10 @@ h1 {
   max-width: 600px;
 }
 
+/* 
+ * Formulário de captura de leads
+ * Estiliza o formulário para inscrição
+ */
 .cta-form {
   background: var(--cor-fundo-claro);
   padding: 30px;
@@ -197,6 +228,10 @@ h1 {
   color: #666;
 }
 
+/* 
+ * Selos de credibilidade
+ * Exibe ícones e textos que aumentam a confiança
+ */
 .selos {
   display: flex;
   gap: 20px;
@@ -215,7 +250,10 @@ h1 {
   color: var(--cor-sucesso);
 }
 
-/* Botões */
+/* 
+ * Botões
+ * Estiliza os diferentes tipos de botões usados na página
+ */
 .botao {
   display: inline-block;
   background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
@@ -232,7 +270,7 @@ h1 {
 }
 
 .botao:hover {
-  transform: translateY(-3px);
+  transform: translateY(-3px); /* Efeito de elevação */
   box-shadow: 0 6px 20px rgba(77, 163, 255, 0.6);
 }
 
@@ -241,7 +279,7 @@ h1 {
 }
 
 .botao-principal {
-  animation: pulse 2s infinite;
+  animation: pulse 2s infinite; /* Animação pulsante */
   width: 100%;
 }
 
@@ -254,13 +292,20 @@ h1 {
   background: linear-gradient(45deg, #6c757d, #adb5bd);
 }
 
+/* 
+ * Animação de pulso
+ * Usada para destacar botões importantes
+ */
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.03); }
   100% { transform: scale(1); }
 }
 
-/* Métricas */
+/* 
+ * Seção de métricas
+ * Exibe números impressionantes para reforçar credibilidade
+ */
 .metricas {
   background: var(--cor-fundo-claro);
   padding: 50px 0;
@@ -291,7 +336,10 @@ h1 {
   color: var(--cor-texto-secundario);
 }
 
-/* Funcionalidades */
+/* 
+ * Seção de funcionalidades
+ * Exibe os principais recursos em cards
+ */
 .funcionalidades {
   padding: 80px 0;
 }
@@ -313,10 +361,14 @@ h2 {
 
 .func-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Layout responsivo */
   gap: 30px;
 }
 
+/* 
+ * Cards de funcionalidades
+ * Estiliza cada card de recurso com efeitos de hover
+ */
 .func-card {
   background: var(--cor-fundo-claro);
   padding: 30px;
@@ -328,7 +380,7 @@ h2 {
 }
 
 .func-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-10px); /* Efeito de elevação */
   box-shadow: 0 10px 25px rgba(0,0,0,0.4);
   border-color: var(--cor-primaria);
 }
@@ -354,6 +406,10 @@ h2 {
   color: var(--cor-texto-secundario);
 }
 
+/* 
+ * Tooltips
+ * Exibe dicas ao passar o mouse sobre elementos
+ */
 [data-tooltip]:hover:after {
   content: attr(data-tooltip);
   position: absolute;
@@ -370,7 +426,10 @@ h2 {
   z-index: 10;
 }
 
-/* Demo Section */
+/* 
+ * Seção de demonstração
+ * Contém o vídeo explicativo
+ */
 .demo {
   padding: 80px 0;
   background: var(--cor-fundo);
@@ -378,7 +437,7 @@ h2 {
 
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%; /* Proporção 16:9 */
   height: 0;
   overflow: hidden;
   border-radius: 15px;
@@ -394,7 +453,10 @@ h2 {
   height: 100%;
 }
 
-/* Timeline */
+/* 
+ * Linha do tempo
+ * Exibe a progressão de resultados em formato visual
+ */
 .timeline {
   position: relative;
   max-width: 800px;
@@ -451,7 +513,10 @@ h2 {
   left: -10px;
 }
 
-/* Depoimentos */
+/* 
+ * Seção de depoimentos
+ * Exibe testemunhos de usuários
+ */
 .depoimentos {
   padding: 80px 0;
   background: var(--cor-fundo-claro);
@@ -514,7 +579,10 @@ h2 {
   font-size: 0.9rem;
 }
 
-/* FAQ */
+/* 
+ * Seção de perguntas frequentes (FAQ)
+ * Implementa acordeões expansíveis
+ */
 .faq {
   padding: 80px 0;
 }
@@ -564,7 +632,10 @@ h2 {
   max-height: 300px;
 }
 
-/* Footer CTA */
+/* 
+ * Seção CTA do rodapé
+ * Segunda oportunidade de conversão
+ */
 .footer-cta {
   text-align: center;
   padding: 100px 20px;
@@ -588,7 +659,10 @@ h2 {
   font-size: 0.9rem;
 }
 
-/* Footer */
+/* 
+ * Rodapé
+ * Contém links, redes sociais e copyright
+ */
 footer {
   background: #000;
   padding: 60px 0 20px;
@@ -647,7 +721,10 @@ footer {
   font-size: 0.9rem;
 }
 
-/* Animações */
+/* 
+ * Animações
+ * Define efeitos visuais reutilizáveis
+ */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
@@ -658,7 +735,10 @@ footer {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Responsividade */
+/* 
+ * Responsividade
+ * Adapta o layout para diferentes tamanhos de tela
+ */
 @media (max-width: 992px) {
   .hero .container {
     flex-direction: column;
@@ -674,6 +754,7 @@ footer {
     max-width: 500px;
   }
   
+  /* Ajusta a linha do tempo para layout vertical em telas menores */
   .timeline:before {
     left: 31px;
   }
@@ -702,6 +783,7 @@ footer {
     font-size: 1.8rem;
   }
   
+  /* Ajusta o cabeçalho para layout vertical em telas menores */
   header .container {
     flex-direction: column;
   }
@@ -718,11 +800,13 @@ footer {
     margin: 0;
   }
   
+  /* Ajusta as métricas para layout vertical */
   .metricas .container {
     flex-direction: column;
     gap: 30px;
   }
   
+  /* Ajusta os cards de funcionalidades para uma coluna */
   .func-grid {
     grid-template-columns: 1fr;
   }
@@ -737,6 +821,7 @@ footer {
     font-size: 1rem;
   }
   
+  /* Ajusta botões para largura total em telas muito pequenas */
   .botao {
     width: 100%;
     padding: 15px;
@@ -748,94 +833,110 @@ footer {
     text-align: center;
   }
   
+  /* Ajusta os selos para layout vertical */
   .selos {
     flex-direction: column;
     gap: 10px;
   }
 }
 
-/* NOVAS REGRAS CSS */
+/* 
+ * Componentes adicionais
+ * Elementos específicos para melhorar a experiência do usuário
+ */
 
 /* Prova Real em Depoimentos */
 .prova-real {
-    margin-top: 10px;
-  }
-  
-  .prova-real img {
-    border-radius: 4px;
-    border: 1px solid var(--cor-borda);
-    transition: transform 0.3s;
-  }
-  
-  .prova-real:hover img {
-    transform: scale(1.05);
-  }
-  
-  /* CTA Flutuante */
+  margin-top: 10px;
+}
+
+.prova-real img {
+  border-radius: 4px;
+  border: 1px solid var(--cor-borda);
+  transition: transform 0.3s;
+}
+
+.prova-real:hover img {
+  transform: scale(1.05);
+}
+
+/* 
+ * CTA Flutuante
+ * Botão fixo que aparece em dispositivos móveis
+ */
+.cta-flutuante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  display: none;
+  animation: pulse 2s infinite;
+}
+
+.cta-flutuante .botao {
+  padding: 12px 20px;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(24, 113, 187, 0.6);
+}
+
+/* 
+ * Tooltip para Timeline
+ * Exibe informações adicionais ao passar o mouse
+ */
+.etapa {
+  position: relative;
+  cursor: help;
+}
+
+.etapa:hover:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background: var(--cor-fundo);
+  padding: 12px;
+  border-radius: 6px;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  font-size: 0.9rem;
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-primaria);
+  z-index: 10;
+  box-shadow: var(--sombra);
+}
+
+/* 
+ * Ajustes adicionais para responsividade
+ */
+@media (max-width: 768px) {
   .cta-flutuante {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 99;
-    display: none;
-    animation: pulse 2s infinite;
+    display: block; /* Exibe o botão flutuante em telas menores */
   }
   
-  .cta-flutuante .botao {
-    padding: 12px 20px;
-    font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(24, 113, 187, 0.6);
+  .hero h1 {
+    font-size: 1.8rem;
   }
   
-  /* Tooltip para Timeline */
-  .etapa {
-    position: relative;
-    cursor: help;
+  /* Ajusta os cards de depoimentos para layout vertical */
+  .depoimento-card {
+    flex-direction: column;
+    text-align: center;
   }
   
-  .etapa:hover:after {
-    content: attr(data-tooltip);
-    position: absolute;
-    background: var(--cor-fundo);
-    padding: 12px;
-    border-radius: 6px;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 250px;
-    font-size: 0.9rem;
-    color: var(--cor-texto);
-    border: 1px solid var(--cor-primaria);
-    z-index: 10;
-    box-shadow: var(--sombra);
+  .prova-real {
+    justify-content: center;
   }
-  
-  /* Responsividade */
-  @media (max-width: 768px) {
-    .cta-flutuante {
-      display: block;
-    }
-    
-    .hero h1 {
-      font-size: 1.8rem;
-    }
-    
-    .depoimento-card {
-      flex-direction: column;
-      text-align: center;
-    }
-    
-    .prova-real {
-      justify-content: center;
-    }
-  }
-  
-  /* Efeito para formulário enviado */
-  .form-sucesso {
-    animation: fadeIn 0.5s forwards;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+}
+
+/* 
+ * Efeito para formulário enviado
+ * Animação de feedback visual
+ */
+.form-sucesso {
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

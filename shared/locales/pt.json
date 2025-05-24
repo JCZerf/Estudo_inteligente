@@ -1,0 +1,110 @@
+{
+  "sidebar": {
+    "inicio": "Início",
+    "sessaoFoco": "Sessão de Foco",
+    "cronograma": "Cronograma",
+    "tarefas": "Tarefas",
+    "ranking": "Ranking",
+    "configuracoes": "Configurações",
+    "guias": "Guias",
+    "sair": "Sair"
+  },
+  "header": {
+    "usuario": "Usuário", // This key remains but won't be used for the dynamic username element
+    "alternarTema": "Alternar tema"
+  },
+  "guias": {
+    "pageTitle": "Guias | Estudo Inteligente",
+    "titulo": "Guias de Estudo",
+    "buscarPlaceholder": "Buscar guias...",
+    "filtroTodos": "Todos",
+    "filtroTecnicas": "Técnicas",
+    "filtroMaterias": "Matérias",
+    "filtroVideos": "Vídeos",
+    "pomodoroTitulo": "Método Pomodoro",
+    "pomodoroDesc": "Técnica de gestão de tempo para estudos eficientes",
+    "feynmanTitulo": "Técnica Feynman",
+    "feynmanDesc": "Aprenda a aprender ensinando conceitos complexos",
+    "mapasTitulo": "Mapas Mentais",
+    "mapasDesc": "Como criar e utilizar mapas mentais para estudos",
+    "flashcardsTitulo": "Flashcards",
+    "flashcardsDesc": "Técnica de memorização usando cartões de estudo",
+    "curvaTitulo": "Curva do Esquecimento",
+    "curvaDesc": "Como revisar para não esquecer o conteúdo",
+    "leituraTitulo": "Leitura Ativa",
+    "leituraDesc": "Técnicas para melhorar sua compreensão de textos",
+    "acessarGuia": "Acessar Guia"
+  },
+  "sessaoFoco": {
+    "pageTitle": "Sessão de Foco | Estudo Inteligente",
+    "titulo": "Sessão de Foco",
+    "escolhaTarefasTitulo": "Escolha as tarefas",
+    "tarefasSelecionadasTitulo": "Tarefas selecionadas",
+    "tarefasValidacaoTempo": "Você precisa de pelo menos 2 horas (120 minutos) para selecionar 8 tarefas",
+    "tempoInvestidoLabel": "Tempo total investido:",
+    "tempoInvestidoUnidade": "minutos",
+    "modoTimerTitulo": "Modo do Timer",
+    "modoManual": "Manual",
+    "modoAutomatico": "Automático",
+    "configAutoTitulo": "Configurações Automáticas",
+    "tempoFocoLabel": "Tempo de Foco (minutos):",
+    "tempoFocoHint": "Mínimo: 15, Máximo: 240",
+    "tempoPausaLabel": "Tempo de Pausa (minutos):",
+    "tempoPausaHint": "Mínimo: 5, Máximo: 30",
+    "usarProporcaoLabel": "Usar proporção Pomodoro padrão (pausa = 1/5 do tempo de foco)",
+    "validacaoProporcao": "O tempo de foco deve ser pelo menos 3x o tempo de pausa para manter sessões produtivas",
+    "configManualTitulo": "Configurações do Timer",
+    "tempoManualUnidade": "minutos",
+    "tempoManualHint": "Digite um valor entre 15 e 240 minutos",
+    "validacaoTempoManual": "O tempo deve ser entre 15 e 240 minutos",
+    "statusModoFoco": "Modo Foco",
+    "statusModoPausa": "Modo Pausa", // Added for completeness
+    "proximaSessaoLabel": "Próxima pausa em:", // Or "Próximo foco em:" - needs dynamic update in JS
+    "botaoIniciar": "Iniciar",
+    "botaoPausar": "Pausar", // Added for completeness
+    "botaoCancelar": "Cancelar"
+  },
+  "configuracoes": {
+    "pageTitle": "Configurações | Estudo Inteligente",
+    "titulo": "Configurações",
+    "notificacoesTitulo": "Preferências de Notificações",
+    "ativarNotificacoes": "Ativar notificações",
+    "frequenciaLabel": "Frequência:",
+    "frequenciaDiaria": "Diária",
+    "frequenciaSemanal": "Semanal",
+    "frequenciaMensal": "Mensal",
+    "horarioLabel": "Horário:",
+    "personalizacaoTitulo": "Personalização",
+    "modoEscuro": "Modo Escuro",
+    "tamanhoTextoLabel": "Tamanho do texto:",
+    "tamanhoPequeno": "Pequeno",
+    "tamanhoMedio": "Médio",
+    "tamanhoGrande": "Grande",
+    "idiomaLabel": "Idioma:",
+    "idiomaPt": "Português (BR)",
+    "idiomaEn": "Inglês",
+    "idiomaEs": "Espanhol",
+    "sincronizacaoTitulo": "Sincronização",
+    "sincronizacaoAuto": "Sincronização automática",
+    "zonaRiscoTitulo": "Zona de Risco",
+    "zonaRiscoAviso": "Ações nesta seção são irreversíveis. Por favor, proceda com cautela.",
+    "alterarCredenciaisTitulo": "Alterar Credenciais",
+    "alterarEmailBtn": "Alterar E-mail",
+    "alterarSenhaBtn": "Alterar Senha",
+    "redefinirDadosTitulo": "Redefinir Dados",
+    "redefinirProgressoBtn": "Redefinir Progresso",
+    "restaurarConfigBtn": "Restaurar Configurações",
+    "acaoCriticaTitulo": "Ação Crítica",
+    "excluirContaBtn": "Excluir Conta Permanentemente",
+    "excluirContaAviso": "Esta ação removerá todos os seus dados do sistema e não pode ser desfeita."
+  },
+  "modal": {
+    "tituloConfirmar": "Confirmar Ação",
+    "mensagemConfirmar": "Tem certeza que deseja realizar esta ação?",
+    "botaoConfirmar": "Confirmar",
+    "botaoCancelar": "Cancelar"
+  },
+  "footer": {
+    "texto": "Estudo Inteligente - 2025"
+  }
+}

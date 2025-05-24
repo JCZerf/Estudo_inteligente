@@ -1,50 +1,220 @@
-/* Estilos específicos inicio */
+/* 
+ * Estilos específicos para a página de Início (Dashboard)
+ * Define a aparência visual dos elementos específicos da página inicial
+ */
+
+/* 
+ * Estilo base para as seções de conteúdo
+ */
 .section {
   margin-bottom: 30px;
   padding: 20px;
   border-radius: 8px;
+  background-color: var(--card-bg); /* Adiciona fundo aos cards de seção */
+  box-shadow: var(--card-shadow); /* Adiciona sombra */
 }
 
-.section h1,
+/* 
+ * Espaçamento para títulos dentro das seções
+ */
+.section h2,
 .section h3 {
   margin-bottom: 15px;
+  color: var(--primary-color); /* Cor primária para títulos */
 }
 
-/* Efeito de loading */
+/* 
+ * Efeito de carregamento (skeleton loading)
+ */
 .skeleton-loading {
-  background-color: #e0e0e0;
+  background-color: var(--skeleton-bg, #e0e0e0); /* Usa variável ou padrão */
   border-radius: 8px;
-  height: 100px;
+  min-height: 80px; /* Altura mínima */
   position: relative;
   overflow: hidden;
+  display: flex; /* Centraliza texto */
+  align-items: center;
+  justify-content: center;
+  color: var(--skeleton-text, #999);
+  font-style: italic;
+  
 }
 
+/* 
+ * Ajuste de cor para o skeleton loading no tema escuro
+ */
 [data-theme="dark"] .skeleton-loading {
-  background-color: #444;
+  --skeleton-bg: #444;
+  --skeleton-text: #aaa;
 }
 
+/* 
+ * Efeito de brilho animado para o skeleton loading
+ */
 .skeleton-loading::after {
-  content: '';
+  content: 	'';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  background: linear-gradient(90deg, transparent, var(--skeleton-shine, rgba(255,255,255,0.5)), transparent);
   animation: loading 1.5s infinite;
 }
 
+/* 
+ * Ajuste do efeito de brilho para o tema escuro
+ */
 [data-theme="dark"] .skeleton-loading::after {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  --skeleton-shine: rgba(255,255,255,0.15);
 }
 
+/* 
+ * Definição da animação de carregamento
+ */
 @keyframes loading {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-/* Ajustes para o gráfico */
+/* 
+ * Ajustes para o gráfico de progresso
+ */
 #graficoHoras {
   width: 100% !important;
-  max-height: 200px;
+  max-height: 250px; /* Aumenta um pouco a altura */
 }
+
+/* 
+ * Grid para Resumos Rápidos (Minimalista)
+ */
+.summary-minimal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Colunas responsivas */
+  gap: 20px;
+  margin-top: 20px; /* Espaçamento acima */
+  margin-bottom: 30px; /* Espaçamento abaixo */
+}
+
+/* 
+ * Item individual no grid minimalista
+ */
+.summary-minimal-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease-in-out;
+}
+
+.summary-minimal-item:hover {
+    transform: translateY(-3px);
+}
+
+/* Ícone no item minimalista */
+.summary-minimal-item .icon {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  flex-shrink: 0; /* Não encolher o ícone */
+}
+
+/* Container para valor e label */
+.summary-minimal-item div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Valor (número/texto) no item minimalista */
+.summary-minimal-item .value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+/* Label (descrição) no item minimalista */
+.summary-minimal-item .label {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+}
+
+/* 
+ * Estilos para a lista de tarefas e eventos
+ */
+#listaTarefasAgendadasInicio,
+#listaProximosEventos {
+  list-style: none;
+  padding-left: 0;
+}
+
+#listaTarefasAgendadasInicio li,
+#listaProximosEventos li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+#listaTarefasAgendadasInicio li:last-child,
+#listaProximosEventos li:last-child {
+  border-bottom: none;
+}
+
+/* Título da tarefa inline */
+.task-title-inline {
+  flex-grow: 1; /* Ocupa espaço disponível */
+  font-weight: 500;
+}
+
+/* Bolinha de prioridade */
+.priority-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px; /* Espaço antes da bolinha */
+  flex-shrink: 0;
+}
+
+.priority-high { background-color: var(--priority-high-color); }
+.priority-medium { background-color: var(--priority-medium-color); }
+.priority-low { background-color: var(--priority-low-color); }
+
+/* Prazo da tarefa inline */
+.task-due-inline {
+  font-size: 0.85em;
+  color: var(--secondary-color);
+  white-space: nowrap; /* Evita quebra de linha */
+  flex-shrink: 0;
+}
+
+/* Banner motivacional */
+.banner {
+  background-color: black;
+  color: rgb(255, 255, 255);
+  padding: 15px 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .summary-minimal-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 15px;
+  }
+  .summary-minimal-item .icon {
+    font-size: 1.6rem;
+  }
+  .summary-minimal-item .value {
+    font-size: 1.3rem;
+  }
+}
+

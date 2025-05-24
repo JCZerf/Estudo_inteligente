@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Metadados básicos da página -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estudo Inteligente - Login</title>
+  
+  <!-- Folha de estilo específica para a página de login -->
   <link rel="stylesheet" href="login.css">
+  
+  <!-- Importação da fonte Inter do Google Fonts para tipografia consistente -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Biblioteca Font Awesome para ícones utilizados nos campos do formulário -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+  <!-- Elemento de fundo decorativo (imagem de fundo) -->
   <div class="background" aria-hidden="true"></div>
 
+  <!-- Container principal da tela de login com layout dividido -->
   <div class="login-container">
+    <!-- Lado esquerdo - contém apenas o logo -->
     <header class="left-side">
       <div class="logo-container">
         <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo">
       </div>
     </header>
     
+    <!-- Lado direito - contém o formulário de login -->
     <main class="right-side">
+      <!-- Cabeçalho do formulário com mensagem de boas-vindas -->
       <div class="form-header">
         <h1>Bem-vindo de volta</h1>
         <p>Faça login para continuar</p>
       </div>
       
+      <!-- Formulário de login com validação -->
       <form class="login-form" id="loginForm">
+        <!-- Campo de email -->
         <div class="form-group">
           <label for="email">E-mail</label>
           <div class="input-container">
@@ -33,6 +47,7 @@
           </div>
         </div>
         
+        <!-- Campo de senha com botão para mostrar/ocultar -->
         <div class="form-group">
           <label for="password">Senha</label>
           <div class="input-container password-wrapper">
@@ -44,8 +59,10 @@
           </div>
         </div>
         
+        <!-- Área para exibir mensagens de erro durante a validação -->
         <div id="error-message" class="error-message" role="alert"></div>
         
+        <!-- Opções adicionais do formulário (lembrar e recuperar senha) -->
         <div class="form-options">
           <label class="remember-me">
             <input type="checkbox" id="remember-me">
@@ -54,11 +71,13 @@
           <a href="#" class="forgot-password">Esqueceu a senha?</a>
         </div>
         
-        <button type="submit" class="btn btn-primary"
-          <span class="btn-text"><a href="../dashboard/inicio.html">Entrar</a></span>
+        <!-- Botão de submissão com estado de carregamento -->
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-text">Entrar</a></span>
           <i class="fas fa-spinner fa-spin loading-icon"></i>
         </button>
         
+        <!-- Link para redirecionamento à página de cadastro -->
         <div class="register-redirect">
           Não tem uma conta? <a href="cadastro.html" class="register-link">Crie uma conta</a>
         </div>
@@ -66,10 +85,12 @@
     </main>
   </div>
 
+  <!-- Rodapé com informações de copyright -->
   <footer>
     <p>Estudo Inteligente &copy; <span id="currentYear"></span></p>
   </footer>
 
+  <!-- Script JavaScript específico para funcionalidades da página de login -->
   <script src="login.js"></script>
 </body>
 </html>

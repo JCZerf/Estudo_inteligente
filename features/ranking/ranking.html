@@ -3,120 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ranking | Estudo Inteligente</title>
+  <title>Ranking Geral | Estudo Inteligente</title>
   <link rel="stylesheet" href="../../shared/css/global.css">
   <link rel="stylesheet" href="ranking.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-  <div class="sidebar">
-    <a href="../dashboard/inicio.html">
-      <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo-sidebar">
+  <aside class="sidebar">
+    <a href="../dashboard/inicio.html" aria-label="Estudo Inteligente - Página Inicial">
+      <img src="../../shared/assets/img/logoestudobranco.png" alt="" class="logo-sidebar">
     </a>
-    <nav>
-      <a href="../dashboard/inicio.html"><i class="fas fa-home"></i> Início</a>
-      <a href="../pomodoro/sessao_de_foco.html"><i class="fas fa-clock"></i> Sessão de Foco</a>
-      <a href="../schedule/cronograma.html"><i class="fas fa-calendar-alt"></i> Cronograma</a>
-      <a href="../tasks/tarefas.html"><i class="fas fa-tasks"></i> Tarefas</a>
-      <a href="./ranking.html" class="active"><i class="fas fa-chart-line"></i> Ranking</a>
-      <a href="../settings/configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
-      <a href="../guides/guias.html"><i class="fas fa-book"></i> Guias</a>
-      <a href="../../landing/index.html"><i class="fas fa-sign-out-alt"></i> Sair</a>
-    </nav>
-  </div>
+  </aside>
 
-  <div class="main">
-    <div class="header">
-        <div class="user-info">
-            <span>Usuário: Joaquim Silva</span>
-            <button id="themeToggle" aria-label="Alternar tema">
-              <i class="fas fa-moon"></i>
-            </button>
-          </div>
-    </div>
+  <main class="main">
+    <header class="header">
+      <div class="user-info">
+        <span id="userName">Carregando...</span>
+        <button id="themeToggle" aria-label="Alternar tema claro e escuro">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+          <span class="sr-only">Alternar tema</span>
+        </button>
+      </div>
+    </header>
 
     <div class="content">
       <div class="ranking-container">
         <div class="ranking-header">
-          <h1><i class="fas fa-trophy"></i> Ranking de Estudos</h1>
-          <div class="ranking-filters">
-            <button class="filter-btn active">Geral</button>
-            <button class="filter-btn">Semanal</button>
-            <button class="filter-btn">Mensal</button>
+          <h1><i class="fas fa-trophy" aria-hidden="true"></i> Ranking Geral</h1>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="points"><i class="fas fa-star"></i> Pontos</button>
+            <button class="filter-btn" data-filter="hours"><i class="fas fa-clock"></i> Horas</button>
+            <button class="filter-btn" data-filter="tasks"><i class="fas fa-check-double"></i> Tarefas</button>
           </div>
         </div>
 
-        <div class="ranking-list">
-          <!-- Top 1 -->
-          <div class="ranking-item top1">
-            <div class="position">1</div>
-            <img src="../../shared/assets/img/perfilpessoa1.jpg" alt="Tatiana Loureiro" class="profile-pic">
-            <div class="user-details">
-              <div class="user-name">Tatiana Loureiro</div>
-              <div class="user-hours">347 horas estudadas</div>
-            </div>
-            <img src="../../shared/assets/img/trofeu.jpg" alt="Troféu" class="trophy">
-          </div>
+        <h2 class="ranking-title" id="rankingTitle">Ranking Geral por Pontos</h2>
 
-          <!-- Top 2 -->
-          <div class="ranking-item top2">
-            <div class="position">2</div>
-            <img src="../../shared/assets/img/perfilpessoa2.jpg" alt="Sofia Helena" class="profile-pic">
-            <div class="user-details">
-              <div class="user-name">Sofia Helena</div>
-              <div class="user-hours">320 horas estudadas</div>
+        <div class="ranking-list" id="rankingList">
+          <div class="skeleton-loading" aria-live="polite" aria-busy="true">
+            <p>Carregando ranking...</p>
+          </div>
+        </div>
+
+        <div class="ranking-stats">
+          <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <div>
+              <span class="stat-value" id="totalUsers">0</span>
+              <span class="stat-label">Competidores</span>
             </div>
           </div>
-
-          <!-- Top 3 -->
-          <div class="ranking-item top3">
-            <div class="position">3</div>
-            <img src="../../shared/assets/img/perfilpessoa3.jpg" alt="Catarina Martins" class="profile-pic">
-            <div class="user-details">
-              <div class="user-name">Catarina Martins</div>
-              <div class="user-hours">284 horas estudadas</div>
+          <div class="stat-card">
+            <i class="fas fa-trophy"></i>
+            <div>
+              <span class="stat-value" id="topScore">0</span>
+              <span class="stat-label">Recorde</span>
             </div>
           </div>
-
-          <!-- Top 4 -->
-          <div class="ranking-item">
-            <div class="position">4</div>
-            <img src="../../shared/assets/img/perfilpessoa4.jpg" alt="Pedro Werneck" class="profile-pic">
-            <div class="user-details">
-              <div class="user-name">Pedro Werneck</div>
-              <div class="user-hours">221 horas estudadas</div>
+          <div class="stat-card">
+            <i class="fas fa-medal"></i>
+            <div>
+              <span class="stat-value" id="yourPosition">-</span>
+              <span class="stat-label">Sua posição</span>
             </div>
           </div>
+        </div>
 
-          <!-- Top 5 -->
-          <div class="ranking-item">
-            <div class="position">5</div>
-            <img src="../../shared/assets/img/perfilpessoa5.jpg" alt="João Batista" class="profile-pic">
-            <div class="user-details">
-              <div class="user-name">João Batista</div>
-              <div class="user-hours">197 horas estudadas</div>
-            </div>
-          </div>
-
-          <!-- Seu Ranking -->
-          <div class="ranking-item your-ranking">
-            <div class="position">132</div>
-            <img src="../../shared/assets/img/joaquim.jpg" alt="Joaquim Silva" class="profile-pic">
-            <div class="user-details">
-              <div class="user-name">Joaquim Silva</div>
-              <div class="user-hours">72 horas estudadas</div>
+        <div class="achievements-section" id="achievementsSection">
+          <h2><i class="fas fa-award"></i> Suas Conquistas</h2>
+          <div class="achievements-grid" id="achievementsGrid">
+            <div class="skeleton-loading" aria-live="polite" aria-busy="true">
+              <p>Carregando conquistas...</p>
             </div>
           </div>
         </div>
       </div>
 
       <footer>
-        <p>Estudo Inteligente - 2025</p>
+        <p>Estudo Inteligente - &copy; <span id="currentYear"></span></p>
       </footer>
     </div>
-  </div>
+  </main>
+  
   <script src="ranking.js"></script>
   <script src="../../shared/js/menu.js"></script>
   <script src="../../shared/js/theme.js"></script>
+  <script src="../../shared/js/global-user.js"></script>
+  <script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

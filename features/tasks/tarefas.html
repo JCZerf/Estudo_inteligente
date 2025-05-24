@@ -1,58 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
+    <!-- Metadados básicos da página -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarefas | Estudo Inteligente</title>
+    
+    <!-- Importação de bibliotecas externas e estilos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <link rel="stylesheet" href="../../shared/css/global.css">
     <link rel="stylesheet" href="tarefas.css">
+    
+    <!-- Biblioteca SortableJS para arrastar e soltar elementos -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </head>
 <body>
+    <!-- Barra lateral de navegação (Sidebar) -->
     <div class="sidebar">
+        <!-- Logo com link para a página inicial -->
         <a href="../dashboard/inicio.html">
             <img src="../../shared/assets/img/logoestudobranco.png" alt="Estudo Inteligente" class="logo-sidebar">
         </a>
-        <nav>
-            <a href="../dashboard/inicio.html"><i class="fas fa-home"></i> Início</a>
-            <a href="../pomodoro/sessao_de_foco.html"><i class="fas fa-clock"></i> Sessão de Foco</a>
-            <a href="../schedule/cronograma.html"><i class="fas fa-calendar-alt"></i> Cronograma</a>
-            <a href="./tarefas.html" class="active"><i class="fas fa-tasks"></i> Tarefas</a>
-            <a href="../ranking/ranking.html"><i class="fas fa-chart-line"></i> Ranking</a>
-            <a href="../settings/configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
-            <a href="../guides/guias.html"><i class="fas fa-book"></i> Guias</a>
-            <a href="../../landing/index.html"><i class="fas fa-sign-out-alt"></i> Sair</a>
-          </nav>
+        
+            <!-- Menu de navegação principal (Carregado dinamicamente por menu.js) -->
     </div>
     
+    <!-- Conteúdo principal da página -->
     <div class="main">
+        <!-- Cabeçalho com informações do usuário e botão de tema -->
         <div class="header">
             <div class="user-info">
-                <span>Usuário: Joaquim Silva</span>
+                <span id="userName">Usuário</span>
+                <!-- Botão para alternar entre tema claro e escuro -->
                 <button id="themeToggle" aria-label="Alternar tema">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </div>
 
+        <!-- Container principal de conteúdo -->
         <div class="content">
+            <!-- Cabeçalho da seção de tarefas com controles -->
             <div class="tasks-header">
                 <h1>Tarefas</h1>
+                
+                <!-- Controles para gerenciar tarefas -->
                 <div class="tasks-controls">
+                    <!-- Campo de busca de tarefas -->
                     <div class="search-box">
                         <i class="fas fa-search"></i>
                         <input type="text" class="search-input" placeholder="Buscar tarefas..." aria-label="Buscar tarefas">
                     </div>
+                    
+                    <!-- Filtro de status das tarefas -->
                     <select id="filterSelect" class="filter-select" aria-label="Filtrar tarefas por status">
                         <option value="all">Todas</option>
                         <option value="completed">Concluídas</option>
                         <option value="pending">Pendentes</option>
                         <option value="expired">Atrasadas</option>
                     </select>
+                    
+                    <!-- Botão para adicionar nova tarefa -->
                     <button id="newTaskButton" class="btn btn-primary" aria-label="Adicionar nova tarefa">
                         <i class="fas fa-plus"></i> Nova Tarefa
                     </button>
+                    
+                    <!-- Botões para importar/exportar tarefas -->
                     <div class="data-actions">
                         <button id="exportBtn" class="btn btn-secondary" title="Exportar tarefas">
                             <i class="fas fa-file-export"></i>
@@ -65,30 +78,43 @@
                 </div>
             </div>
 
+            <!-- Container para as categorias de tarefas -->
             <div id="taskList" class="task-categories">
-                <!-- Tarefas serão renderizadas dinamicamente aqui -->
+                <!-- Tarefas serão renderizadas dinamicamente aqui pelo JavaScript -->
             </div>
 
+            <!-- Rodapé da seção de tarefas com contador -->
             <div class="tasks-footer">
                 <span class="task-counter">Total: 0 tarefas | Concluídas: 0</span>
             </div>
         </div>
 
+        <!-- Rodapé da página -->
         <footer>
             <p>Estudo Inteligente - 2025</p>
         </footer>
     </div>
 
-    <!-- Modal para Nova Tarefa -->
+    <!-- Modal para Nova Tarefa / Editar Tarefa -->
     <div class="modal" id="taskModal">
         <div class="modal-content">
             <span class="close-modal" aria-label="Fechar modal">&times;</span>
-            <h2>Nova Tarefa</h2>
+            
+            <!-- Título dinâmico do modal (muda conforme adicionar ou editar) -->
+            <h2 id="taskModalTitle">Nova Tarefa</h2>
+            
+            <!-- Formulário para criar ou editar tarefas -->
             <form id="taskForm">
+                <!-- Campo oculto para o ID da tarefa em edição -->
+                <input type="hidden" id="editTaskId">
+                
+                <!-- Campo para título da tarefa -->
                 <div class="form-group">
                     <label for="taskTitle">Título:</label>
                     <input type="text" id="taskTitle" required aria-required="true" minlength="3">
                 </div>
+                
+                <!-- Seleção de matéria/disciplina -->
                 <div class="form-group">
                     <label for="taskSubject">Matéria:</label>
                     <select id="taskSubject" required aria-required="true">
@@ -108,12 +134,18 @@
                         <option value="physical_education">Educação Física</option>
                         <option value="other">Outra (personalizar)</option>
                     </select>
+                    
+                    <!-- Campo para matéria personalizada (visível apenas quando "Outra" é selecionada) -->
                     <input type="text" id="customSubject" class="hidden" placeholder="Digite o nome da matéria" style="margin-top: 8px;">
                 </div>
+                
+                <!-- Campo para data de vencimento -->
                 <div class="form-group">
                     <label for="taskDueDate">Prazo:</label>
                     <input type="date" id="taskDueDate" aria-label="Data de vencimento">
                 </div>
+                
+                <!-- Seleção de prioridade -->
                 <div class="form-group">
                     <label>Prioridade:</label>
                     <div class="priority-options">
@@ -122,17 +154,23 @@
                         <label><input type="radio" name="priority" value="low"> <span class="priority-low"></span> Baixa</label>
                     </div>
                 </div>
+                
+                <!-- Campo para observações adicionais -->
                 <div class="form-group">
-                    <label for="taskDescription">Descrição (opcional):</label>
-                    <textarea id="taskDescription" rows="3" aria-label="Descrição da tarefa"></textarea>
+                    <label for="taskDescription">Observações:</label>
+                    <textarea id="taskDescription" rows="3" aria-label="Observações da tarefa"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
+                
+                <!-- Botão para salvar a tarefa -->
+                <button type="submit" class="btn btn-primary" id="saveTaskButton">Salvar Tarefa</button>
             </form>
         </div>
     </div>
 
+    <!-- Scripts JavaScript -->
     <script src="tarefas.js"></script>
     <script src="../../shared/js/menu.js"></script>
     <script src="../../shared/js/theme.js"></script>
+    <script src="../../shared/js/global-user.js"></script>
 </body>
 </html>

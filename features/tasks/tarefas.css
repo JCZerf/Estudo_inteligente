@@ -1,5 +1,12 @@
-/* Tarefas CSS - Versão Aprimorada */
+/* 
+ * Estilos para a página de Tarefas
+ * Define a aparência visual e comportamento dos elementos da interface de gerenciamento de tarefas
+ */
 
+/* 
+ * Cabeçalho da seção de tarefas
+ * Organiza o título e os controles de gerenciamento
+ */
 .tasks-header {
     display: flex;
     justify-content: space-between;
@@ -9,11 +16,19 @@
     gap: 15px;
 }
 
+/* 
+ * Título da página de tarefas
+ * Estiliza o cabeçalho principal da página
+ */
 .tasks-header h1 {
     color: var(--text-color, #2c3e50);
     margin: 0;
 }
 
+/* 
+ * Container de controles de tarefas
+ * Agrupa os elementos de busca, filtro e botões de ação
+ */
 .tasks-controls {
     display: flex;
     align-items: center;
@@ -22,6 +37,10 @@
     width: 100%;
 }
 
+/* 
+ * Caixa de busca
+ * Estiliza o campo de pesquisa de tarefas
+ */
 .search-box {
     display: flex;
     align-items: center;
@@ -33,10 +52,18 @@
     border: 1px solid var(--border-color, #ddd);
 }
 
+/* 
+ * Ícone da caixa de busca
+ * Estiliza o ícone de lupa no campo de pesquisa
+ */
 .search-box i {
     color: var(--text-secondary, #6c757d);
 }
 
+/* 
+ * Campo de entrada da busca
+ * Estiliza o input de texto para pesquisa
+ */
 .search-input {
     border: none;
     background: transparent;
@@ -47,6 +74,10 @@
     color: var(--text-color, #333);
 }
 
+/* 
+ * Seletor de filtro
+ * Estiliza o dropdown para filtrar tarefas
+ */
 .filter-select {
     padding: 10px 15px;
     border-radius: 30px;
@@ -57,6 +88,10 @@
     min-width: 150px;
 }
 
+/* 
+ * Estilo base para botões
+ * Define a aparência padrão de todos os botões
+ */
 .btn {
     padding: 10px 20px;
     border-radius: 30px;
@@ -69,41 +104,73 @@
     gap: 8px;
 }
 
+/* 
+ * Botão primário
+ * Estiliza botões de ação principal como "Nova Tarefa"
+ */
 .btn-primary {
     background-color: var(--highlight-color, #4682B4);
     color: white;
 }
 
+/* 
+ * Hover do botão primário
+ * Efeito ao passar o mouse sobre botões primários
+ */
 .btn-primary:hover {
     background-color: var(--highlight-hover, #3a6d99);
     transform: translateY(-2px);
 }
 
+/* 
+ * Estado ativo do botão primário
+ * Efeito ao clicar em botões primários
+ */
 .btn-primary:active {
     transform: scale(0.95);
 }
 
+/* 
+ * Botão secundário
+ * Estiliza botões de ação secundária como importar/exportar
+ */
 .btn-secondary {
     background-color: var(--secondary-bg, #f5f7fa);
     color: var(--text-color, #333);
     border: 1px solid var(--border-color, #ddd);
 }
 
+/* 
+ * Hover do botão secundário
+ * Efeito ao passar o mouse sobre botões secundários
+ */
 .btn-secondary:hover {
     background-color: var(--secondary-hover, #e0e6ed);
 }
 
+/* 
+ * Container de ações de dados
+ * Agrupa botões de importação e exportação
+ */
 .data-actions {
     display: flex;
     gap: 5px;
 }
 
+/* 
+ * Container de categorias de tarefas
+ * Organiza as tarefas agrupadas por categorias
+ */
 .task-categories {
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
+/* 
+ * Título de categoria de tarefa
+ * Estiliza os cabeçalhos de cada grupo de tarefas
+ */
 .task-category h3 {
     margin-bottom: 15px;
     font-size: 1.3rem;
@@ -113,6 +180,10 @@
     color: var(--subject-color, #333);
 }
 
+/* 
+ * Item de tarefa
+ * Estiliza cada tarefa individual na lista
+ */
 .task {
     background: var(--task-bg, #fff);
     padding: 15px 20px;
@@ -127,11 +198,19 @@
     margin-bottom: 10px;
 }
 
+/* 
+ * Hover do item de tarefa
+ * Efeito ao passar o mouse sobre uma tarefa
+ */
 .task:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transform: translateY(-2px);
 }
 
+/* 
+ * Lado esquerdo do item de tarefa
+ * Organiza o checkbox, título e informações da tarefa
+ */
 .task-left {
     display: flex;
     align-items: center;
@@ -139,12 +218,20 @@
     flex-grow: 1;
 }
 
+/* 
+ * Alça de arrasto da tarefa
+ * Estiliza o elemento para arrastar e reordenar tarefas
+ */
 .task-handle {
     cursor: move;
     color: var(--text-secondary, #aaa);
     padding: 5px;
 }
 
+/* 
+ * Checkbox de tarefa
+ * Estiliza o checkbox para marcar tarefas como concluídas
+ */
 .task-checkbox {
     appearance: none;
     -webkit-appearance: none;
@@ -158,11 +245,19 @@
     margin-right: 10px;
 }
 
+/* 
+ * Estado marcado do checkbox
+ * Estiliza o checkbox quando a tarefa está concluída
+ */
 .task-checkbox:checked {
     background-color: var(--highlight-color, #4682B4);
     border-color: var(--highlight-color, #4682B4);
 }
 
+/* 
+ * Símbolo de verificação no checkbox
+ * Adiciona o símbolo de check quando o checkbox está marcado
+ */
 .task-checkbox:checked::after {
     content: "✓";
     position: absolute;
@@ -173,22 +268,38 @@
     transform: translate(-50%, -50%);
 }
 
+/* 
+ * Hover do checkbox
+ * Efeito ao passar o mouse sobre o checkbox
+ */
 .task-checkbox:hover {
     border-color: var(--highlight-color, #4682B4);
 }
 
+/* 
+ * Data de vencimento da tarefa
+ * Estiliza a exibição do prazo da tarefa
+ */
 .task-due {
     font-size: 0.9rem;
     color: var(--text-secondary, #666);
     margin-left: 15px;
 }
 
+/* 
+ * Container de ações da tarefa
+ * Agrupa os botões de ação para cada tarefa
+ */
 .task-actions {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
+/* 
+ * Botão de foco
+ * Estiliza o botão para adicionar tarefa à sessão de foco
+ */
 .btn-focus {
     background: none;
     border: none;
@@ -204,11 +315,19 @@
     transition: all 0.3s ease;
 }
 
+/* 
+ * Hover do botão de foco
+ * Efeito ao passar o mouse sobre o botão de foco
+ */
 .btn-focus:hover {
     background-color: rgba(70, 130, 180, 0.1);
     transform: scale(1.1);
 }
 
+/* 
+ * Botão de exclusão
+ * Estiliza o botão para excluir uma tarefa
+ */
 .btn-delete {
     background: none;
     border: none;
@@ -224,43 +343,79 @@
     transition: all 0.3s ease;
 }
 
+/* 
+ * Hover do botão de exclusão
+ * Efeito ao passar o mouse sobre o botão de exclusão
+ */
 .btn-delete:hover {
     background-color: rgba(231, 76, 60, 0.1);
     transform: scale(1.1);
 }
 
+/* 
+ * Tarefa concluída
+ * Estiliza tarefas que foram marcadas como concluídas
+ */
 .task-done {
     opacity: 0.7;
 }
 
+/* 
+ * Checkbox de tarefa concluída
+ * Ajusta a opacidade do checkbox em tarefas concluídas
+ */
 .task-done .task-checkbox:checked {
     opacity: 0.7;
 }
 
+/* 
+ * Texto de tarefa concluída
+ * Aplica tachado ao texto de tarefas concluídas
+ */
 .task-done .task-left span:not(.priority-high):not(.priority-medium):not(.priority-low) {
     text-decoration: line-through;
     color: var(--text-secondary, #777);
     opacity: 0.8;
 }
 
+/* 
+ * Data de tarefa concluída
+ * Ajusta a opacidade da data em tarefas concluídas
+ */
 .task-done .task-due {
     opacity: 0.6;
 }
 
+/* 
+ * Tarefa expirada
+ * Destaca visualmente tarefas com prazo vencido
+ */
 .task-expired {
     border-left-color: var(--danger-color, #e74c3c) !important;
 }
 
+/* 
+ * Indicadores de prioridade
+ * Define as cores para os diferentes níveis de prioridade
+ */
 .priority-high { background-color: var(--priority-high, #e74c3c); }
 .priority-medium { background-color: var(--priority-medium, #f39c12); }
 .priority-low { background-color: var(--priority-low, #2ecc71); }
 
+/* 
+ * Opções de prioridade
+ * Organiza os radio buttons de seleção de prioridade
+ */
 .priority-options {
     display: flex;
     gap: 15px;
     margin-top: 5px;
 }
 
+/* 
+ * Label de opção de prioridade
+ * Estiliza os labels dos radio buttons de prioridade
+ */
 .priority-options label {
     display: flex;
     align-items: center;
@@ -268,6 +423,10 @@
     cursor: pointer;
 }
 
+/* 
+ * Indicador visual de prioridade
+ * Estiliza os círculos coloridos que indicam o nível de prioridade
+ */
 .priority-options span {
     display: inline-block;
     width: 12px;
@@ -275,16 +434,28 @@
     border-radius: 50%;
 }
 
+/* 
+ * Rodapé da seção de tarefas
+ * Posiciona o contador de tarefas
+ */
 .tasks-footer {
     margin-top: 30px;
     text-align: right;
 }
 
+/* 
+ * Contador de tarefas
+ * Estiliza o texto que mostra o total de tarefas
+ */
 .task-counter {
     font-size: 0.9rem;
     color: var(--text-secondary, #666);
 }
 
+/* 
+ * Modal
+ * Define o container do modal para adicionar/editar tarefas
+ */
 .modal {
     display: none;
     position: fixed;
@@ -296,6 +467,10 @@
     background-color: rgba(0,0,0,0.5);
 }
 
+/* 
+ * Conteúdo do modal
+ * Estiliza o container interno do modal
+ */
 .modal-content {
     background-color: var(--modal-bg, white);
     margin: 10% auto;
@@ -307,11 +482,19 @@
     animation: modalFadeIn 0.3s;
 }
 
+/* 
+ * Animação de entrada do modal
+ * Define a transição de aparecimento do modal
+ */
 @keyframes modalFadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* 
+ * Botão de fechar modal
+ * Estiliza o X para fechar o modal
+ */
 .close-modal {
     float: right;
     font-size: 1.5rem;
@@ -320,15 +503,27 @@
     transition: all 0.3s;
 }
 
+/* 
+ * Hover do botão de fechar
+ * Efeito ao passar o mouse sobre o X do modal
+ */
 .close-modal:hover {
     color: var(--text-color, #333);
     transform: rotate(90deg);
 }
 
+/* 
+ * Grupo de formulário
+ * Estiliza cada campo do formulário de tarefa
+ */
 .form-group {
     margin-bottom: 15px;
 }
 
+/* 
+ * Label de campo de formulário
+ * Estiliza as etiquetas dos campos do formulário
+ */
 .form-group label {
     display: block;
     margin-bottom: 5px;
@@ -336,6 +531,10 @@
     color: var(--text-color, #333);
 }
 
+/* 
+ * Campos de entrada do formulário
+ * Estiliza inputs, selects e textareas do formulário
+ */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -349,6 +548,10 @@
     transition: all 0.3s;
 }
 
+/* 
+ * Estado de foco dos campos
+ * Estiliza os campos quando estão em foco
+ */
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -357,12 +560,19 @@
     outline: none;
 }
 
+/* 
+ * Área de texto
+ * Ajusta a altura mínima e comportamento de redimensionamento
+ */
 .form-group textarea {
     min-height: 80px;
     resize: vertical;
 }
 
-/* Modal de confirmação */
+/* 
+ * Modal de confirmação
+ * Estiliza o modal para confirmar ações importantes
+ */
 .confirm-modal {
     position: fixed;
     top: 0;
@@ -377,6 +587,10 @@
     backdrop-filter: blur(2px);
 }
 
+/* 
+ * Conteúdo do modal de confirmação
+ * Estiliza o container interno do modal de confirmação
+ */
 .confirm-content {
     background-color: var(--modal-bg, white);
     padding: 25px;
@@ -387,6 +601,10 @@
     animation: modalFadeIn 0.3s;
 }
 
+/* 
+ * Título do modal de confirmação
+ * Estiliza o cabeçalho do modal de confirmação
+ */
 .confirm-content h3 {
     color: var(--danger-color, #e74c3c);
     margin-top: 0;
@@ -395,11 +613,19 @@
     gap: 10px;
 }
 
+/* 
+ * Texto do modal de confirmação
+ * Estiliza o texto explicativo no modal
+ */
 .confirm-content p {
     margin: 15px 0;
     line-height: 1.5;
 }
 
+/* 
+ * Botões do modal de confirmação
+ * Organiza os botões de ação no modal
+ */
 .confirm-buttons {
     display: flex;
     justify-content: flex-end;
@@ -407,6 +633,10 @@
     margin-top: 20px;
 }
 
+/* 
+ * Estilo dos botões de confirmação
+ * Ajusta o tamanho e espaçamento dos botões
+ */
 .confirm-buttons .btn {
     padding: 10px 15px;
     display: flex;
@@ -414,17 +644,28 @@
     gap: 8px;
 }
 
+/* 
+ * Botão de perigo
+ * Estiliza botões para ações destrutivas
+ */
 .btn-danger {
     background-color: var(--danger-color, #e74c3c);
     color: white;
     border: none;
 }
 
+/* 
+ * Hover do botão de perigo
+ * Efeito ao passar o mouse sobre botões de perigo
+ */
 .btn-danger:hover {
     background-color: var(--danger-hover, #c0392b);
 }
 
-/* Toast notification */
+/* 
+ * Notificação toast
+ * Estiliza as mensagens temporárias de feedback
+ */
 .toast {
     position: fixed;
     bottom: 20px;
@@ -443,20 +684,35 @@
     gap: 10px;
 }
 
+/* 
+ * Toast visível
+ * Controla a visibilidade da notificação toast
+ */
 .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
 
+/* 
+ * Ícone do toast
+ * Ajusta o tamanho do ícone na notificação
+ */
 .toast i {
     font-size: 1.2rem;
 }
 
-/* Efeito de fade out para exclusão */
+/* 
+ * Animação de desaparecimento
+ * Define a transição para remoção de tarefas
+ */
 .task.fade-out {
     animation: fadeOut 0.3s forwards;
 }
 
+/* 
+ * Keyframes da animação de desaparecimento
+ * Define os estados da animação de remoção
+ */
 @keyframes fadeOut {
     to {
         opacity: 0;
@@ -468,7 +724,59 @@
     }
 }
 
-/* Variáveis de tema */
+/*
+ * Tooltip de observações
+ * Exibe as observações ao passar o mouse sobre eventos e tarefas
+ */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--modal-bg, white);
+  color: var(--text-color, #333);
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  width: max-content;
+  max-width: 250px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border: 1px solid var(--border-color, #ddd);
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Seta do tooltip */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--modal-bg, white) transparent transparent transparent;
+}
+
+/* 
+ * Variáveis de tema claro
+ * Define as cores e estilos para o tema claro
+ */
 [data-theme="light"] {
     --task-bg: #fff;
     --modal-bg: #fff;
@@ -500,6 +808,10 @@
     --pe-color: #27ae60;
 }
 
+/* 
+ * Variáveis de tema escuro
+ * Define as cores e estilos para o tema escuro
+ */
 [data-theme="dark"] {
     --task-bg: #2d3748;
     --modal-bg: #2d3748;
@@ -518,209 +830,187 @@
     --danger-color: #fc8181;
     --danger-hover: #e53e3e;
     --toast-bg: #38a169;
-    --subject-color: #4299e1;
-    --physics-color: #9b59b6;
-    --chemistry-color: #e67e22;
-    --geography-color: #1abc9c;
-    --philosophy-color: #7f8c8d;
-    --sociology-color: #bdc3c7;
-    --portuguese-color: #e74c3c;
-    --literature-color: #c0392b;
-    --english-color: #3498db;
-    --spanish-color: #f1c40f;
-    --art-color: #fd79a8;
-    --pe-color: #00b894;
 }
 
-[data-theme="dark"] .task-checkbox {
-    background-color: var(--input-bg, #1a202c);
-    border-color: var(--text-secondary, #4a5568);
-}
-
-[data-theme="dark"] .task-checkbox:checked {
-    background-color: var(--highlight-color, #4299e1);
-    border-color: var(--highlight-color, #4299e1);
-}
-
-[data-theme="dark"] .task {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .form-group input,
-[data-theme="dark"] .form-group select,
-[data-theme="dark"] .form-group textarea {
-    border-color: #4a5568;
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .search-input {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .filter-select {
-    color: #e2e8f0;
-    background-color: #1a202c;
-}
-
-[data-theme="dark"] .btn-secondary {
-    background-color: #2d3748;
-    color: #e2e8f0;
-    border-color: #4a5568;
-}
-
-[data-theme="dark"] .btn-secondary:hover {
-    background-color: #4a5568;
-}
-
-[data-theme="dark"] .task-done {
-    opacity: 0.8;
-    background-color: rgba(45, 55, 72, 0.7);
-}
-
-[data-theme="dark"] .task-done .task-left span {
-    color: #a0aec0;
-}
-
-[data-theme="dark"] .confirm-content h3 {
-    color: #fc8181;
-}
-
-[data-theme="dark"] .priority-options label {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] {
-    --math-color: #63b3ed;
-    --history-color: #f6ad55;
-    --biology-color: #68d391;
-    --other-color: #a0aec0;
-}
-
-/* Estilos para as cores das matérias */
-.task[data-subject="Matemática"] {
-    border-left-color: var(--math-color);
-}
-.task[data-subject="Física"] {
-    border-left-color: var(--physics-color);
-}
-.task[data-subject="Química"] {
-    border-left-color: var(--chemistry-color);
-}
-.task[data-subject="Biologia"] {
-    border-left-color: var(--biology-color);
-}
-.task[data-subject="História"] {
-    border-left-color: var(--history-color);
-}
-.task[data-subject="Geografia"] {
-    border-left-color: var(--geography-color);
-}
-.task[data-subject="Filosofia"] {
-    border-left-color: var(--philosophy-color);
-}
-.task[data-subject="Sociologia"] {
-    border-left-color: var(--sociology-color);
-}
-.task[data-subject="Português"] {
-    border-left-color: var(--portuguese-color);
-}
-.task[data-subject="Literatura"] {
-    border-left-color: var(--literature-color);
-}
-.task[data-subject="Inglês"] {
-    border-left-color: var(--english-color);
-}
-.task[data-subject="Espanhol"] {
-    border-left-color: var(--spanish-color);
-}
-.task[data-subject="Artes"] {
-    border-left-color: var(--art-color);
-}
-.task[data-subject="Educação Física"] {
-    border-left-color: var(--pe-color);
-}
-.task[data-subject="Outra"] {
-    border-left-color: var(--other-color);
-}
-
-[data-theme="dark"] .task {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .task-left span {
-    color: inherit;
-}
-
-/* Classes utilitárias */
-.hidden {
-    display: none;
-}
-
-.subject-edit {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.subject-edit i {
-    cursor: pointer;
-    color: var(--highlight-color);
-    font-size: 0.9rem;
-}
-
-.subject-edit i:hover {
-    opacity: 0.8;
-}
-
-/* Responsividade */
+/* 
+ * Responsividade para tablets e celulares
+ * Ajusta o layout para telas menores
+ */
 @media (max-width: 768px) {
+    /* Reorganiza o cabeçalho em coluna */
     .tasks-header {
         flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
+        align-items: flex-start;
     }
     
+    /* Ajusta os controles para ocupar toda a largura */
     .tasks-controls {
         flex-direction: column;
-        gap: 10px;
+        width: 100%;
     }
     
-    .search-box,
-    .filter-select,
-    #newTaskButton {
+    /* Ajusta a caixa de busca para ocupar toda a largura */
+    .search-box {
         max-width: 100%;
         width: 100%;
     }
     
+    /* Ajusta o seletor de filtro para ocupar toda a largura */
+    .filter-select {
+        width: 100%;
+    }
+    
+    /* Ajusta os botões para ocupar toda a largura */
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Reorganiza o layout das tarefas para melhor visualização em telas pequenas */
     .task {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
     
-    .task-due {
-        align-self: flex-end;
-        margin-left: 0;
-        margin-top: 5px;
+    /* Ajusta as ações da tarefa para alinhar à esquerda */
+    .task-actions {
+        width: 100%;
+        justify-content: flex-end;
     }
     
-    .modal-content {
-        margin: 20px auto;
+    /* Ajusta o modal para telas menores */
+    .modal-content, .confirm-content {
         width: 95%;
+        margin: 5% auto;
+    }
+    
+    /* Ajusta o tooltip para telas menores */
+    .tooltip-text {
+        max-width: 200px;
     }
 }
 
+/* 
+ * Responsividade para telas muito pequenas
+ * Ajustes adicionais para smartphones
+ */
 @media (max-width: 480px) {
-    .priority-options {
-        flex-direction: column;
-        gap: 8px;
+    /* Reduz o padding das tarefas */
+    .task {
+        padding: 12px 15px;
     }
     
+    /* Reduz o tamanho da fonte */
+    .task-left span {
+        font-size: 0.9rem;
+    }
+    
+    /* Ajusta o espaçamento dos botões de ação */
     .task-actions {
-        align-self: flex-end;
+        gap: 5px;
     }
     
-    .confirm-buttons {
-        flex-direction: column;
+    /* Reduz o tamanho dos botões de ação */
+    .btn-focus, .btn-delete {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
     }
 }
+
+
+/* Estilos para o indicador de prioridade na tela de tarefas */
+.task-priority-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espaço entre a bolinha e o texto */
+    padding: 2px 6px;
+    border-radius: 12px;
+    background-color: var(--secondary-bg, #f5f7fa);
+    border: 1px solid var(--border-color, #ddd);
+    font-size: 0.8rem;
+    color: var(--text-secondary, #666);
+    margin-right: 10px; /* Espaço antes do título da tarefa */
+}
+
+.priority-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.priority-text {
+    font-weight: 500;
+}
+
+/* Remove o estilo antigo de prioridade que era só a bolinha */
+.task-left > span[class^="priority-"] {
+    display: none; 
+}
+
+/* Ajuste para garantir que a tarefa ocupe a largura */
+.task {
+    /* Mantém os estilos existentes e adiciona/ajusta o necessário */
+    background: var(--task-bg, #fff);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--subject-color, #4682B4);
+    color: var(--task-text, #333);
+    margin-bottom: 10px;
+    width: 100%; /* Garante que ocupe toda a largura do container */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+/* Ajustes para o indicador de prioridade na tela inicial (inline) */
+#listaTarefasAgendadasInicio li {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaçamento entre os elementos */
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border-color, #eee);
+}
+
+#listaTarefasAgendadasInicio li:last-child {
+    border-bottom: none;
+}
+
+.task-priority-indicator-inline {
+    display: inline-flex; /* Para ficar na mesma linha */
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    padding: 1px 5px;
+    border-radius: 10px;
+    background-color: var(--secondary-bg, #f5f7fa);
+    border: 1px solid var(--border-color, #ddd);
+    color: var(--text-secondary, #666);
+    white-space: nowrap; /* Evita quebra de linha */
+}
+
+.priority-text-inline {
+    font-weight: 500;
+}
+
+.task-title-inline {
+    flex-grow: 1; /* Ocupa espaço disponível */
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.task-due-inline {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #666);
+    white-space: nowrap;
+}
+
+
