@@ -451,3 +451,43 @@ img {
 .btn, button {
     font-size: 1em; /* Herda e escala com o tamanho base */
 }
+
+
+/* Estilos para indicadores de prioridade (bolinhas e spans) */
+.priority-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 8px; /* Espaçamento à esquerda do ponto */
+  vertical-align: middle; /* Alinha verticalmente com o texto */
+}
+
+.priority-high,
+.priority-dot.priority-high {
+  background-color: #dc3545; /* Vermelho */
+}
+
+.priority-medium,
+.priority-dot.priority-medium {
+  background-color: #ffc107; /* Amarelo */
+}
+
+.priority-low,
+.priority-dot.priority-low {
+  background-color: #28a745; /* Verde */
+}
+
+/* Estilos para borda de prioridade (usado no cronograma) */
+.schedule-item.priority-border-high {
+  border-left: 4px solid #dc3545; /* Vermelho */
+}
+
+.schedule-item.priority-border-medium {
+  border-left: 4px solid #ffc107; /* Amarelo */
+}
+
+.schedule-item.priority-border-low {
+  border-left: 4px solid #28a745; /* Verde */
+}
+

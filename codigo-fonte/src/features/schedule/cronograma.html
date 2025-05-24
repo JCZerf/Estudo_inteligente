@@ -178,6 +178,16 @@
             <option value="other_task_cron">Outra Tarefa (Cronograma)</option>
           </select>
         </div>
+
+        <!-- Prioridade da tarefa (visível apenas para tarefas) -->
+        <div class="form-group hidden" id="taskPriorityCronGroup">
+          <label>Prioridade:</label>
+          <div class="priority-options">
+            <label><input type="radio" name="priorityCron" value="high"> <span class="priority-high"></span> Alta</label>
+            <label><input type="radio" name="priorityCron" value="medium" checked> <span class="priority-medium"></span> Média</label>
+            <label><input type="radio" name="priorityCron" value="low"> <span class="priority-low"></span> Baixa</label>
+          </div>
+        </div>
         
         <!-- Data da atividade -->
         <div class="form-group">
@@ -191,12 +201,7 @@
           <input type="time" id="eventTime" required>
         </div>
         
-        <!-- Duração da atividade em minutos -->
-        <div class="form-group">
-          <label for="eventDuration">Duração (minutos):</label>
-          <input type="number" id="eventDuration" min="15" max="240" value="90" step="15" required>
-        </div>
-        
+
         <!-- Observações adicionais -->
         <div class="form-group">
           <label for="eventNotes">Observações:</label>

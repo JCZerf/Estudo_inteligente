@@ -918,3 +918,99 @@
         font-size: 0.9rem;
     }
 }
+
+
+/* Estilos para o indicador de prioridade na tela de tarefas */
+.task-priority-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espaço entre a bolinha e o texto */
+    padding: 2px 6px;
+    border-radius: 12px;
+    background-color: var(--secondary-bg, #f5f7fa);
+    border: 1px solid var(--border-color, #ddd);
+    font-size: 0.8rem;
+    color: var(--text-secondary, #666);
+    margin-right: 10px; /* Espaço antes do título da tarefa */
+}
+
+.priority-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.priority-text {
+    font-weight: 500;
+}
+
+/* Remove o estilo antigo de prioridade que era só a bolinha */
+.task-left > span[class^="priority-"] {
+    display: none; 
+}
+
+/* Ajuste para garantir que a tarefa ocupe a largura */
+.task {
+    /* Mantém os estilos existentes e adiciona/ajusta o necessário */
+    background: var(--task-bg, #fff);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--subject-color, #4682B4);
+    color: var(--task-text, #333);
+    margin-bottom: 10px;
+    width: 100%; /* Garante que ocupe toda a largura do container */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+/* Ajustes para o indicador de prioridade na tela inicial (inline) */
+#listaTarefasAgendadasInicio li {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaçamento entre os elementos */
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border-color, #eee);
+}
+
+#listaTarefasAgendadasInicio li:last-child {
+    border-bottom: none;
+}
+
+.task-priority-indicator-inline {
+    display: inline-flex; /* Para ficar na mesma linha */
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    padding: 1px 5px;
+    border-radius: 10px;
+    background-color: var(--secondary-bg, #f5f7fa);
+    border: 1px solid var(--border-color, #ddd);
+    color: var(--text-secondary, #666);
+    white-space: nowrap; /* Evita quebra de linha */
+}
+
+.priority-text-inline {
+    font-weight: 500;
+}
+
+.task-title-inline {
+    flex-grow: 1; /* Ocupa espaço disponível */
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.task-due-inline {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #666);
+    white-space: nowrap;
+}
+
+

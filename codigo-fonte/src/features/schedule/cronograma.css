@@ -258,7 +258,7 @@
  */
 .event-task {
   background-color: rgba(155, 89, 182, 0.1) !important;
-  border-left: 3px solid #9b59b6 !important;
+  border-left: 3px solid #9b59b6;
 }
 
 /* 
@@ -618,3 +618,89 @@
     display: none;
   }
 }
+
+
+/* Estilos para borda de prioridade nas tarefas do cronograma */
+.event-task.priority-high {
+  border-left-color: #e53e3e !important; /* Vermelho */
+}
+
+.event-task.priority-medium {
+  border-left-color: #f6ad55 !important; /* Laranja */
+}
+
+.event-task.priority-low {
+  border-left-color: #48bb78 !important; /* Verde */
+}
+
+
+
+/* Estilos para opções de prioridade dentro do modal do cronograma */
+.modal .priority-options {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.modal .priority-options label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0; /* Remove margem inferior padrão do label no form-group */
+  font-weight: normal; /* Garante peso normal da fonte */
+}
+
+.modal .priority-options input[type="radio"] {
+  margin-right: 5px;
+  width: auto; /* Impede que o radio ocupe 100% da largura */
+  vertical-align: middle;
+}
+
+/* Estilos para os indicadores visuais de cor (spans) */
+.modal .priority-options .priority-high,
+.modal .priority-options .priority-medium,
+.modal .priority-options .priority-low {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* Cores dos indicadores - usando as cores padrão */
+.modal .priority-options .priority-high { background-color: #dc3545; } /* Vermelho */
+.modal .priority-options .priority-medium { background-color: #ffc107; } /* Amarelo */
+.modal .priority-options .priority-low { background-color: #28a745; } /* Verde */
+
+
+
+/* Estilo para a borda padrão de eventos (azul) */
+.event.event-border-default {
+  border-left: 4px solid #4682B4; /* Azul aço - Cor primária do tema claro */
+}
+
+/* Ajuste para tema escuro - Borda padrão de eventos */
+[data-theme="dark"] .event.event-border-default {
+  border-left-color: #5a9fd4; /* Azul mais claro para tema escuro */
+}
+
+/* Remove a borda padrão de .event-task para não conflitar */
+.event-task {
+  /* background-color: rgba(155, 89, 182, 0.1) !important; */ /* Mantém o fundo roxo */
+  border-left: none; /* Remove a borda roxa padrão */
+}
+
+/* Garante que as bordas de prioridade específicas funcionem */
+.event.priority-border-high {
+  border-left: 4px solid #dc3545 !important; /* Vermelho */
+}
+
+.event.priority-border-medium {
+  border-left: 4px solid #ffc107 !important; /* Amarelo */
+}
+
+.event.priority-border-low {
+  border-left: 4px solid #28a745 !important; /* Verde */
+}
+

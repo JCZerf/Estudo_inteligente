@@ -408,13 +408,23 @@ document.addEventListener("DOMContentLoaded", function () {
             eventEl.classList.add("event");
             
             // Define atributos e classes com base no tipo de item
+            let borderClass = '';
             if (itemData.itemType === "tarefa") {
                 eventEl.classList.add("event-task");
                 if (itemData.done) eventEl.classList.add("event-done");
+                // Define classe específica para a borda de prioridade
+                const priority = itemData.priority || 'medium'; // Assume 'medium' se não definida
+                borderClass = `priority-border-${priority}`;
             } else {
-                // Define o tipo de visualização com base na categoria do evento
+                // Define classe para a borda padrão de evento (azul)
+                borderClass = 'event-border-default';
+                // Define o tipo de visualização com base na categoria do evento (para background)
                 const displayType = mapEventCategoryToDisplayType(itemData.category);
                 eventEl.dataset.type = displayType;
+            }
+            // Adiciona a classe da borda ao elemento
+            if (borderClass) {
+                eventEl.classList.add(borderClass);
             }
             
             // Define atributos comuns
@@ -618,9 +628,10 @@ document.addEventListener("DOMContentLoaded", function () {
             cronEventCategory: document.getElementById("cronEventCategory"),
             taskSubjectCronGroup: document.getElementById("taskSubjectCronGroup"),
             taskSubjectCron: document.getElementById("taskSubjectCron"),
+            taskPriorityCronGroup: document.getElementById("taskPriorityCronGroup"), // Novo
             eventDate: document.getElementById("eventDate"), 
             eventTime: document.getElementById("eventTime"),
-            eventDuration: document.getElementById("eventDuration"),
+
             eventNotes: document.getElementById("eventNotes"),
             eventIdField: document.getElementById("eventIdField"),
             saveButton: document.getElementById("saveActivityButton")
@@ -662,10 +673,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Mostra campos de evento, oculta campos de tarefa
                 if (this.elements.cronEventCategoryGroup) this.elements.cronEventCategoryGroup.classList.remove("hidden");
                 if (this.elements.taskSubjectCronGroup) this.elements.taskSubjectCronGroup.classList.add("hidden");
+                if (this.elements.taskPriorityCronGroup) this.elements.taskPriorityCronGroup.classList.add("hidden"); // Oculta prioridade para eventos
             } else if (selectedType === "tarefa") {
                 // Mostra campos de tarefa, oculta campos de evento
                 if (this.elements.cronEventCategoryGroup) this.elements.cronEventCategoryGroup.classList.add("hidden");
                 if (this.elements.taskSubjectCronGroup) this.elements.taskSubjectCronGroup.classList.remove("hidden");
+                if (this.elements.taskPriorityCronGroup) this.elements.taskPriorityCronGroup.classList.remove("hidden"); // Mostra prioridade para tarefas
             }
         },
         
@@ -701,6 +714,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Fallback se originalCategoryKeyForSelect estiver ausente
                         this.elements.taskSubjectCron.value = mapTaskCategoryDisplayNameToSelectValue(itemData.originalCategoryName, this.elements.taskSubjectCron);
                     }
+                    // Define a prioridade selecionada
+                    const priority = itemData.priority || 'medium';
+                    const priorityInput = document.querySelector(`input[name="priorityCron"][value="${priority}"]`);
+                    if (priorityInput) priorityInput.checked = true;
+
                 } else if (itemData.itemType === "evento") {
                     // Preenche campos específicos de evento
                     if(this.elements.cronEventCategory && itemData.category) {
@@ -753,19 +771,21 @@ document.addEventListener("DOMContentLoaded", function () {
             const title = this.elements.eventTitle.value.trim();
             const itemDateISO = this.elements.eventDate.value; 
             const time = this.elements.eventTime.value;
-            const duration = parseInt(this.elements.eventDuration.value);
+            // const duration = parseInt(this.elements.eventDuration.value); // Removido
             const notes = this.elements.eventNotes.value.trim();
+            const priority = creationType === 'tarefa' ? document.querySelector('input[name="priorityCron"]:checked').value : null; // Obtém prioridade selecionada
 
-            // Validação básica
-            if (!title || !itemDateISO || !time || isNaN(duration) || duration <= 0) {
-                 alert("Por favor, preencha todos os campos obrigatórios corretamente (Título, Data, Horário, Duração)."); 
+            // Validação básica (removida validação de duração)
+            if (!title || !itemDateISO || !time) {
+                 alert("Por favor, preencha todos os campos obrigatórios corretamente (Título, Data, Horário)."); 
                  return; 
             }
             
-            // Calcula o horário de término
-            const startTimeObj = new Date(`${itemDateISO}T${time}:00`);
-            const endTimeObj = new Date(startTimeObj.getTime() + duration * 60000);
-            const endTimeString = endTimeObj.toTimeString().substring(0, 5);
+            // Calcula o horário de término - Removido, pois não há mais duração
+            // const startTimeObj = new Date(`${itemDateISO}T${time}:00`);
+            // const endTimeObj = new Date(startTimeObj.getTime() + duration * 60000);
+            // const endTimeString = endTimeObj.toTimeString().substring(0, 5);
+            const endTimeString = "-"; // Define endTime como indefinido ou vazio
 
             if (creationType === "tarefa") {
                 // Processa tarefa (adição ou edição)
@@ -787,16 +807,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
                     
-                    // Atualiza os dados da tarefa
+                    // Atualiza os dados da tarefa (sem duration e endTime)
                     const originalTask = studyTasksData[originalCategoryName][taskIndex];
                     const updatedTaskData = {
                         ...originalTask, 
                         title: title,
                         due: itemDateISO,
                         time: time,
-                        endTime: endTimeString,
-                        duration: duration,
+                        endTime: endTimeString, // Atualizado
+                        // duration: duration, // Removido
                         description: notes,
+                        priority: priority // Salva a prioridade atualizada
                     };
 
                     if (originalCategoryName !== newTaskCategoryName) {
@@ -810,7 +831,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         studyTasksData[originalCategoryName][taskIndex] = updatedTaskData;
                     }
                 } else { 
-                    // Modo de adição
+                    // Modo de adição (sem duration e endTime)
                     const taskId = `task-cron-${Date.now()}`;
                     const taskData = {
                         id: taskId, 
@@ -818,10 +839,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         itemType: "tarefa", 
                         due: itemDateISO, 
                         time: time, 
-                        endTime: endTimeString, 
-                        duration: duration, 
+                        endTime: endTimeString, // Atualizado
+                        // duration: duration, // Removido
                         description: notes, 
-                        priority: "medium", 
+                        priority: priority, // Salva a prioridade atualizada
                         done: false, 
                     };
                     
@@ -840,7 +861,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
                 
                 if (this.currentEditId) {
-                    // Modo de edição
+                    // Modo de edição (sem duration e endTime)
                     const eventIndex = studySchedule.findIndex(e => e.id === this.currentEditId);
                     if (eventIndex === -1) {
                         alert("Erro: Evento não encontrado para edição.");
@@ -853,14 +874,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         title: title,
                         date: itemDateISO,
                         time: time,
-                        endTime: endTimeString,
-                        duration: duration,
+                        endTime: endTimeString, // Atualizado
+                        // duration: duration, // Removido
                         description: notes,
                         category: eventCategoryValue,
                         categoryName: eventCategoryName
                     };
                 } else {
-                    // Modo de adição
+                    // Modo de adição (sem duration e endTime)
                     const eventId = `event-${Date.now()}`;
                     const eventData = {
                         id: eventId,
@@ -868,8 +889,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         itemType: "evento",
                         date: itemDateISO,
                         time: time,
-                        endTime: endTimeString,
-                        duration: duration,
+                        endTime: endTimeString, // Atualizado
+                        // duration: duration, // Removido
                         description: notes,
                         category: eventCategoryValue,
                         categoryName: eventCategoryName,

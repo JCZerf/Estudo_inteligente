@@ -1,3 +1,48 @@
+// Array com 30 frases motivacionais
+const motivationalPhrases = [
+    "Acredite em você mesmo e tudo será possível.",
+    "O sucesso nasce do querer, da determinação e persistência.",
+    "Não espere por oportunidades, crie-as.",
+    "Cada dia é uma nova chance para ser melhor.",
+    "A jornada de mil milhas começa com um único passo.",
+    "Seu maior obstáculo é você mesmo. Supere-se!",
+    "A persistência realiza o impossível.",
+    "O conhecimento é a chave para abrir qualquer porta.",
+    "Estudar é iluminar a mente para um futuro brilhante.",
+    "Não tenha medo de falhar, tenha medo de não tentar.",
+    "A disciplina é a ponte entre metas e realizações.",
+    "Concentre-se onde você quer chegar, não onde você está.",
+    "O aprendizado é um tesouro que segue seu dono em todo lugar.",
+    "Transforme seus sonhos em planos e seus planos em realidade.",
+    "A força não vem da capacidade física, mas de uma vontade indomável.",
+    "Pequenos progressos diários somam grandes resultados.",
+    "O futuro pertence àqueles que acreditam na beleza de seus sonhos.",
+    "Desafie seus limites e surpreenda a si mesmo.",
+    "A educação é a arma mais poderosa que você pode usar para mudar o mundo.",
+    "Mantenha o foco nos seus objetivos, a distração é inimiga do sucesso.",
+    "Você é mais forte do que pensa e será mais feliz do que imagina.",
+    "Nunca é tarde demais para ser aquilo que você poderia ter sido.",
+    "O esforço de hoje é o sucesso de amanhã.",
+    "Acredite no poder dos seus estudos.",
+    "Sua dedicação abrirá caminhos incríveis.",
+    "Continue firme, cada página virada é uma vitória.",
+    "Lembre-se por que começou e não desista.",
+    "O estudo transforma vidas. Transforme a sua!",
+    "Foco, força e fé nos estudos!",
+    "Você está construindo um futuro brilhante. Continue!"
+];
+
+/**
+ * Carrega e exibe uma frase motivacional aleatória no banner
+ */
+function loadMotivationalPhrase() {
+    const banner = document.querySelector(".banner");
+    if (banner) {
+        const randomIndex = Math.floor(Math.random() * motivationalPhrases.length);
+        banner.textContent = motivationalPhrases[randomIndex];
+    }
+}
+
 /**
  * Script JavaScript para a página de Início (Dashboard)
  * Gerencia a exibição de dados, carregamento de informações e interações da interface
@@ -10,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
     initProgressoSemanaChart(); // Inicializa o gráfico de progresso semanal
     loadTempoMedioEstudoSemana(); // Calcula e exibe o tempo médio de estudo na semana
     loadProximosEventos();    // Carrega os próximos eventos do calendário
+    loadMotivationalPhrase(); // Carrega a frase motivacional
     document.getElementById("currentYear").textContent = new Date().getFullYear(); // Atualiza o ano no rodapé
     checkNotificationPermission(); // Verifica permissão para notificações
 });
@@ -30,7 +76,7 @@ function loadUserName() {
 
 /**
  * Carrega e exibe as tarefas agendadas do usuário
- * Filtra as tarefas não concluídas com prazo a partir de hoje
+ * Filtra as tarefas não concluídas com prazo a partir de hoje e ordena por data e prioridade
  */
 function loadTarefasAgendadas() {
     const tarefasSection = document.getElementById("tarefasSection");
@@ -38,38 +84,60 @@ function loadTarefasAgendadas() {
 
     const loadingDiv = tarefasSection.querySelector(".skeleton-loading");
     
-    // Garante que o HTML da seção de tarefas seja recriado apenas se necessário
-    // ou se o loadingDiv ainda existir.
     if (loadingDiv || !document.getElementById("listaTarefasAgendadasInicio")) {
         if (loadingDiv) loadingDiv.remove();
         tarefasSection.innerHTML = "<h3>Tarefas Agendadas</h3><ul id=\"listaTarefasAgendadasInicio\"></ul>";
     }
     const listaTarefasUl = document.getElementById("listaTarefasAgendadasInicio");
-    if (!listaTarefasUl) return; // Sai se o UL não pode ser encontrado
+    if (!listaTarefasUl) return;
     listaTarefasUl.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
 
     try {
-        // Recupera as tarefas do localStorage
         const studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-        let temTarefas = false;
+        let tarefasFiltradas = [];
         const hoje = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+        const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
 
-        // Percorre todas as tarefas e filtra as não concluídas com prazo futuro
+        // Filtra tarefas relevantes
         Object.values(studyTasks).flat().forEach(task => {
-            if (!task.done && task.due >= hoje) { 
-                const li = document.createElement("li");
-                li.textContent = `${task.title} (Prazo: ${new Date(task.due).toLocaleDateString("pt-BR", {timeZone: "UTC"})})`;
-                listaTarefasUl.appendChild(li);
-                temTarefas = true;
+            if (!task.done && task.due && task.due >= hoje) { 
+                tarefasFiltradas.push(task);
             }
         });
 
-        // Exibe mensagem se não houver tarefas
-        if (!temTarefas) {
-            listaTarefasUl.innerHTML = "<li>Nenhuma tarefa agendada.</li>";
+        // Ordena as tarefas: primeiro por data (ascendente), depois por prioridade (descendente)
+        tarefasFiltradas.sort((a, b) => {
+            const dateA = new Date(a.due);
+            const dateB = new Date(b.due);
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+
+            // Se as datas forem iguais, ordena por prioridade (maior primeiro)
+            const priorityA = priorityOrder[a.priority || 'medium'] || 0;
+            const priorityB = priorityOrder[b.priority || 'medium'] || 0;
+            return priorityB - priorityA; // Descendente
+        });
+
+        // Renderiza as tarefas ordenadas
+        if (tarefasFiltradas.length > 0) {
+            tarefasFiltradas.forEach(task => {
+                const li = document.createElement("li");
+                const priority = task.priority || 'medium';
+                const priorityText = priority === 'high' ? 'Alta' : priority === 'medium' ? 'Média' : 'Baixa';
+                // Adiciona título, bolinha de prioridade (à direita) e prazo
+                li.innerHTML = `
+                    <span class="task-title-inline">${task.title}</span> 
+                    <span class="priority-dot priority-${priority}" title="Prioridade: ${priorityText}"></span>
+                    <span class="task-due-inline">(Prazo: ${new Date(task.due).toLocaleDateString("pt-BR", {timeZone: "UTC"})})</span>
+                `;
+                listaTarefasUl.appendChild(li);
+            });
+        } else {
+            listaTarefasUl.innerHTML = "<li>Nenhuma tarefa agendada encontrada.</li>";
         }
+
     } catch (e) {
-        console.error("Erro ao carregar tarefas agendadas:", e);
+        console.error("Erro ao carregar e ordenar tarefas agendadas:", e);
         if (listaTarefasUl) listaTarefasUl.innerHTML = "<li>Erro ao carregar tarefas.</li>";
     }
 }
@@ -241,7 +309,7 @@ function loadTempoMedioEstudoSemana() {
 
 /**
  * Carrega e exibe os próximos eventos do calendário
- * Filtra eventos dos próximos 7 dias e exibe os 4 mais próximos
+ * Filtra eventos da semana atual (Domingo a Sábado) e exibe os 5 mais próximos
  */
 function loadProximosEventos() {
     const proximosEventosUl = document.getElementById("listaProximosEventos");
@@ -253,41 +321,58 @@ function loadProximosEventos() {
         // Recupera os eventos do calendário do localStorage
         const studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
         
-        // Define o período de filtro (hoje até 7 dias à frente)
+        // Define o período de filtro (Semana Atual: Domingo a Sábado)
         const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
+        const diaDaSemanaHoje = hoje.getDay(); // 0 = Domingo, 6 = Sábado
+        
+        const primeiroDiaSemana = new Date(hoje);
+        primeiroDiaSemana.setDate(hoje.getDate() - diaDaSemanaHoje);
+        primeiroDiaSemana.setHours(0, 0, 0, 0);
 
-        const dataLimite = new Date(hoje);
-        dataLimite.setDate(hoje.getDate() + 7); // Eventos nos próximos 7 dias
+        const ultimoDiaSemana = new Date(primeiroDiaSemana);
+        ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6);
+        ultimoDiaSemana.setHours(23, 59, 59, 999);
 
-        // Filtra eventos dentro do período desejado
+        // Filtra eventos dentro da semana atual e que ainda não passaram (ou são de hoje)
+        const hojeInicioDia = new Date(); // Para comparar eventos futuros no mesmo dia
+        hojeInicioDia.setHours(0, 0, 0, 0);
+
         const eventosFiltrados = studySchedule.filter(evento => {
             if (!evento.date) return false;
             const dataEvento = new Date(evento.date + "T00:00:00"); // Normaliza para comparar datas
-            return dataEvento >= hoje && dataEvento < dataLimite; // Inclui hoje, até o final do 7º dia
+            // Verifica se está na semana atual E se é de hoje ou futuro
+            return dataEvento >= primeiroDiaSemana && dataEvento <= ultimoDiaSemana && dataEvento >= hojeInicioDia;
         });
 
-        // Ordena por data mais próxima
-        eventosFiltrados.sort((a, b) => new Date(a.date) - new Date(b.date));
+        // Ordena por data e hora mais próxima (se hora existir)
+        eventosFiltrados.sort((a, b) => {
+            const dataHoraA = new Date(`${a.date}T${a.time || '00:00'}`);
+            const dataHoraB = new Date(`${b.date}T${b.time || '00:00'}`);
+            return dataHoraA - dataHoraB;
+        });
 
-        // Limita a 4 eventos para exibição
-        const eventosParaExibir = eventosFiltrados.slice(0, 4);
+        // Limita a 5 eventos para exibição
+        const eventosParaExibir = eventosFiltrados.slice(0, 5);
 
         if (eventosParaExibir.length > 0) {
             // Cria elementos de lista para cada evento
             eventosParaExibir.forEach(evento => {
                 const li = document.createElement("li");
-                const dataEventoFormatada = new Date(evento.date + "T00:00:00").toLocaleDateString("pt-BR", { day: '2-digit', month: '2-digit' });
-                let textoEvento = `${dataEventoFormatada} - ${evento.subject}`;
+                // Formata a data para DD/MM
+                const dataEventoFormatada = new Date(evento.date + "T00:00:00").toLocaleDateString("pt-BR", { day: '2-digit', month: '2-digit', timeZone: 'UTC' });
+                // Monta o texto: Título (Data Hora)
+                let textoEvento = `${evento.subject} (${dataEventoFormatada}`;
+                // Adiciona a hora se existir e não for "-"
                 if (evento.time && evento.time !== "-") {
-                    textoEvento += ` (${evento.time.substring(0,5)})`;
+                    textoEvento += ` ${evento.time.substring(0,5)}`;
                 }
+                textoEvento += `)`; // Fecha parênteses
                 li.textContent = textoEvento;
                 proximosEventosUl.appendChild(li);
             });
         } else {
-            // Exibe mensagem se não houver eventos
-            proximosEventosUl.innerHTML = "<li>Nenhum evento próximo nos próximos 7 dias.</li>";
+            // Exibe mensagem se não houver eventos na semana atual
+            proximosEventosUl.innerHTML = "<li>Nenhum evento próximo nesta semana.</li>";
         }
     } catch (e) {
         console.error("Erro ao carregar próximos eventos:", e);
@@ -334,5 +419,17 @@ window.addEventListener('storage', function(event) {
     // Atualiza o nome do usuário quando ele é modificado
     if (event.key === 'loggedInUserName') {
         loadUserName();
+    }
+});
+
+/**
+ * Listener para o evento 'pageshow'
+ * Garante que a frase motivacional seja atualizada ao navegar de volta para a página de início
+ */
+window.addEventListener('pageshow', function(event) {
+    // Verifica se a página está sendo exibida a partir do cache de navegação (bfcache)
+    // ou se é uma navegação normal. Em ambos os casos, atualiza a frase.
+    if (event.persisted || performance.navigation.type === performance.navigation.TYPE_NAVIGATE) {
+        loadMotivationalPhrase();
     }
 });
