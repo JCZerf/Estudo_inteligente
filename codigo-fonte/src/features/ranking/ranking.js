@@ -1,22 +1,33 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     // Elementos do DOM
     const rankingList = document.getElementById("rankingList");
     const filterBtns = document.querySelectorAll(".filter-btn");
     const rankingTitleElement = document.getElementById("rankingTitle");
     const achievementsGrid = document.getElementById("achievementsGrid");
-    const userNameElement = document.getElementById("userName"); // Elemento do nome do usuário
+    const userNameElement = document.getElementById("userName");
+    const achievementsSection = document.getElementById("achievementsSection");
 
     // Dados do usuário (do localStorage)
-    const loggedInUserName = localStorage.getItem("userName") || "Carregando...";
     const userTotalPoints = parseInt(localStorage.getItem("userTotalPoints")) || 0;
     const userTotalHours = parseFloat(localStorage.getItem("userTotalFocusHours")) || 0;
     const userCompletedTasks = parseInt(localStorage.getItem("completedTasksCount")) || 0;
     const userAvatarPath = "../../shared/assets/avatars/owl.png";
 
-    
+    function getLoggedInUserName() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('usuarioLogado'));
+        if (userData && userData.username) {
+            return userData.username;
+        }
+        return localStorage.getItem("userName") || "Usuário";
+    } catch (e) {
+        return localStorage.getItem("userName") || "Usuário";
+    }
+}
 
-    // Escada da Inteligência (usada apenas para agrupamento)
+let loggedInUserName = getLoggedInUserName(); // Mantenha esta linha
+
+    // Escada da Inteligência
     const intelligenceLadder = [
         { threshold: 5000, title: "Lenda Suprema" },
         { threshold: 3000, title: "Gênio" },
@@ -27,29 +38,30 @@ document.addEventListener("DOMContentLoaded", () => {
         { threshold: 0, title: "Iniciante" }
     ];
 
-    // Atualiza o nome do usuário no header
-    function updateUserName() {
-        userNameElement.textContent = loggedInUserName;
-        
-    }
-
-    // Gerar usuários fictícios (mínimo 5 por faixa)
+    // Gerar pelo menos 10 usuários fictícios por faixa
     function generateDummyUsers() {
         const users = [];
-        const firstNames = ["Ana", "Bruno", "Carla", "Daniel", "Eduarda", "Fábio", "Gabriela", "Hugo", "Isabela", "Jorge"];
-        const lastNames = ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", "Lima"];
+        const firstNames = ["Ana", "Bruno", "Carla", "Daniel", "Eduarda", "Fábio", "Gabriela", "Hugo", 
+                          "Isabela", "Jorge", "Larissa", "Marcos", "Natália", "Otávio", "Patrícia",
+                          "Quésia", "Rafael", "Sandra", "Tiago", "Úrsula", "Vinícius", "Wanessa"];
+        const lastNames = ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", 
+                          "Pereira", "Lima", "Costa", "Martins", "Gomes", "Ribeiro", "Carvalho"];
         const animalAvatarPaths = [
             "../../shared/assets/avatars/lion.png",
             "../../shared/assets/avatars/bear.png",
             "../../shared/assets/avatars/tiger.png",
             "../../shared/assets/avatars/duck.png",
             "../../shared/assets/avatars/turtle.png",
-            "../../shared/assets/avatars/hare.png"
+            "../../shared/assets/avatars/hare.png",
+            "../../shared/assets/avatars/fox.png",
+            "../../shared/assets/avatars/owl.png",
+            "../../shared/assets/avatars/wolf.png",
+            "../../shared/assets/avatars/frog.png"
         ];
 
-        // Garante pelo menos 5 usuários por faixa
+        // Gerar exatamente 10 usuários para cada faixa
         intelligenceLadder.forEach(level => {
-            const usersInLevel = 5 + Math.floor(Math.random() * 3); // Entre 5 e 7 usuários
+            const usersInLevel = 9; // Fixo em 9 usuários por faixa
             
             for (let i = 0; i < usersInLevel; i++) {
                 const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -57,9 +69,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // Gera pontos dentro da faixa atual
                 const minPoints = level.threshold;
-                const maxPoints = intelligenceLadder.find(l => l.threshold > minPoints)?.threshold || minPoints * 1.5;
-                const points = Math.floor(minPoints + Math.random() * (maxPoints - minPoints));
+                const nextLevel = intelligenceLadder.find(l => l.threshold > minPoints);
+                const maxPoints = nextLevel ? nextLevel.threshold - 1 : minPoints * 2;
                 
+                // Garante que o último nível (Iniciante) tenha pontos entre 0 e 100
+                const points = level.threshold === 0 ? 
+                    Math.floor(Math.random() * 100) :
+                    Math.floor(minPoints + Math.random() * (maxPoints - minPoints));
+                
+                // Gera horas e tarefas proporcionalmente aos pontos
                 const hours = parseFloat((points / 50 + Math.random() * 5).toFixed(1));
                 const tasks = Math.floor(points / 20 + Math.random() * 10);
 
@@ -76,20 +94,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return users;
     }
 
-    // Dados dos usuários (fictícios + usuário logado)
+    // Dados dos usuários (70 fictícios + usuário logado)
     const dummyUsers = generateDummyUsers();
-    const allUsersData = [
+    let allUsersData = [
         ...dummyUsers,
-        { 
-            name: loggedInUserName, // Usa o nome do usuário logado
-            points: userTotalPoints, 
-            hours: userTotalHours, 
-            tasks: userCompletedTasks, 
-            avatar: userAvatarPath, 
-            isCurrentUser: true 
+        {
+            name: loggedInUserName,
+            points: userTotalPoints,
+            hours: userTotalHours,
+            tasks: userCompletedTasks,
+            avatar: userAvatarPath,
+            isCurrentUser: true
         }
     ];
 
+    // Sincroniza o nome do usuário em todos os lugares
+function syncUserName() {
+    const currentName = getLoggedInUserName(); // Usa a nova função
+    const currentUser = allUsersData.find(u => u.isCurrentUser);
+    
+    if (currentUser) {
+        currentUser.name = currentName;
+        loggedInUserName = currentName;
+        
+        if (userNameElement) {
+            userNameElement.textContent = currentName;
+        }
+        
+        const activeFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "points";
+        renderGroupedRanking(allUsersData, activeFilter);
+}
+}
+
+
+
+    // Atualiza o nome do usuário no header
+    function updateUserName() {
+        syncUserName();
+    }
 
     // Funções auxiliares
     function getUserIntelligenceTitle(points) {
@@ -110,14 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return `${hours}h ${minutes > 0 ? minutes + "min" : ""}`.trim();
             case "tasks": return `${value} Tarefa${value !== 1 ? "s" : ""}`;
             default: return value;
-        }
-    }
-
-    // Atualiza o cabeçalho com as informações do usuário
-    function updateUserHeader() {
-        const currentUser = allUsersData.find(u => u.isCurrentUser);
-        if (currentUser) {
-            document.getElementById('userName').textContent = currentUser.name;
         }
     }
 
@@ -143,6 +177,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Renderiza o ranking por faixa
     function renderGroupedRanking(usersData, sortBy) {
+        if (!rankingList) return;
+        
         rankingList.innerHTML = "";
         
         const currentUser = usersData.find(u => u.isCurrentUser);
@@ -228,7 +264,9 @@ document.addEventListener("DOMContentLoaded", () => {
             tasks: "Ranking por Tarefas Concluídas"
         };
         
-        rankingTitleElement.textContent = titles[filterType] || "Ranking Geral";
+        if (rankingTitleElement) {
+            rankingTitleElement.textContent = titles[filterType] || "Ranking Geral";
+        }
         renderGroupedRanking(allUsersData, filterType);
         updateRankingStats(allUsersData, filterType);
     }
@@ -266,6 +304,27 @@ document.addEventListener("DOMContentLoaded", () => {
             achievementsGrid.appendChild(item);
         });
     }
+        // Função para sincronizar o nome em todos os lugares
+function syncUserName() {
+    // Atualiza no array de dados
+    const currentUser = allUsersData.find(u => u.isCurrentUser);
+    if (currentUser) {
+        currentUser.name = loggedInUserName;
+    }
+    
+    // Atualiza no header
+    if (userNameElement) {
+        userNameElement.textContent = loggedInUserName;
+    }
+    
+    // Atualiza no localStorage
+    localStorage.setItem("userName", loggedInUserName);
+    
+    // Força atualização do ranking
+    const activeFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "points";
+    renderGroupedRanking(allUsersData, activeFilter);
+}
+
 
     // Event Listeners
     filterBtns.forEach((btn) => {
@@ -277,35 +336,62 @@ document.addEventListener("DOMContentLoaded", () => {
     // Listeners para atualizações
     window.addEventListener("userPointsChanged", (event) => {
         const currentUser = allUsersData.find(u => u.isCurrentUser);
-        if (currentUser) currentUser.points = event.detail.newTotalPoints;
-        const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+        if (currentUser) {
+            currentUser.points = event.detail.newTotalPoints;
+            localStorage.setItem("userTotalPoints", event.detail.newTotalPoints);
+        }
+        const activeFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "points";
         renderGroupedRanking(allUsersData, activeFilter);
         updateRankingStats(allUsersData, activeFilter);
-        updateUserHeader();
+        updateUserName();
     });
 
     window.addEventListener("userFocusHoursChanged", (event) => {
         const currentUser = allUsersData.find(u => u.isCurrentUser);
-        if (currentUser) currentUser.hours = event.detail.newTotalHours;
-        const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+        if (currentUser) {
+            currentUser.hours = event.detail.newTotalHours;
+            localStorage.setItem("userTotalFocusHours", event.detail.newTotalHours);
+        }
+        const activeFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "points";
         renderGroupedRanking(allUsersData, activeFilter);
         updateRankingStats(allUsersData, activeFilter);
     });
 
     window.addEventListener("completedTasksChanged", (event) => {
         const currentUser = allUsersData.find(u => u.isCurrentUser);
-        if (currentUser) currentUser.tasks = event.detail.count;
-        const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+        if (currentUser) {
+            currentUser.tasks = event.detail.count;
+            localStorage.setItem("completedTasksCount", event.detail.count);
+        }
+        const activeFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "points";
         renderGroupedRanking(allUsersData, activeFilter);
         updateRankingStats(allUsersData, activeFilter);
     });
+
+        // Atualização do event listener
+window.addEventListener("userNameChanged", (event) => {
+    // Atualiza ambos os sistemas de armazenamento
+    localStorage.setItem("userName", event.detail.newName);
+    
+    try {
+        const userData = JSON.parse(localStorage.getItem('usuarioLogado')) || {};
+        userData.username = event.detail.newName;
+        localStorage.setItem('usuarioLogado', JSON.stringify(userData));
+    } catch (e) {
+        console.error("Erro ao atualizar usuarioLogado", e);
+    }
+    
+    syncUserName();
+});
 
     window.addEventListener("achievementUnlocked", () => {
         loadAndDisplayAchievements();
     });
 
     // Inicialização
-    updateUserName(); // Atualiza o nome do usuário no header
+    updateUserName();
     updateFilter("points");
     loadAndDisplayAchievements();
 });
+
+syncUserName();

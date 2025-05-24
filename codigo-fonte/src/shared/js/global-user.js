@@ -54,3 +54,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
+
+// Dispara evento para outros sistemas saberem que o nome mudou
+window.dispatchEvent(new CustomEvent("userNameChanged", {
+    detail: { newName: userData.username }
+}));
