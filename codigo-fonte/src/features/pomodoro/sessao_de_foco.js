@@ -1,13 +1,9 @@
-/**
- * Script JavaScript para a página de Sessão de Foco (Pomodoro)
- * Gerencia o timer, seleção de tarefas (múltiplas permitidas, uma ativa por vez) e controle de sessões de estudo.
- */
-
 document.addEventListener("DOMContentLoaded", function () {
     // Elementos do DOM
     const startBtn = document.getElementById("start-btn");
     const cancelBtn = document.getElementById("cancel-btn");
-    const timeDisplay = document.getElementById("clock-circle");
+    const timeDisplay = document.getElementById("time-display");
+    const progressCircle = document.getElementById("clock-progress");
     const customTimeInput = document.getElementById("custom-time-input");
     const taskListDiv = document.querySelector(".task-list");
     const selectedTasksListDiv = document.getElementById("selectedTasksList");
@@ -15,35 +11,64 @@ document.addEventListener("DOMContentLoaded", function () {
     const tasksValidationElement = document.getElementById("tasksValidation");
     const nextSessionElement = document.getElementById("nextSessionInfo");
     const timerModeElement = document.getElementById("timerModeIndicator");
+    const timerModeText = document.getElementById("timerModeText");
+    const progressPercentageElement = document.getElementById("progress-percentage");
+
+    // Elementos de áudio
+    const focusStartSound = document.getElementById("focusStartSound");
+    const focusEndSound = document.getElementById("focusEndSound");
+    const breakStartSound = document.getElementById("breakStartSound");
+    const breakEndSound = document.getElementById("breakEndSound");
 
     // Variáveis de controle do timer
     let timer;
     let isRunning = false;
-    let selectedTime = 25; // Tempo manual padrão
+    let selectedTime = 25;
     let remainingTime = selectedTime * 60;
-    let totalFocusDurationForCurrentTask = selectedTime * 60; // Duração total do foco para a tarefa ATIVA
-    let focusTimeElapsed = 0; // Tempo de foco decorrido na tarefa ATIVA
+    let totalFocusDurationForCurrentTask = selectedTime * 60;
+    let focusTimeElapsed = 0;
 
-    // Variáveis para o modo automático (Pomodoro)
+    // Variáveis para o modo automático
     let timerMode = "manual";
-    let isFocusTime = true; // Indica se é tempo de foco ou pausa no modo auto
+    let isFocusTime = true;
     let autoSettings = {
         focusDuration: 25,
         breakDuration: 5,
         usePomodoroRatio: false,
     };
-    let sessionCount = 0; // Contador de ciclos foco/pausa no modo auto
+    let sessionCount = 0;
     const pomodoroRatio = 1 / 5;
 
-    // Controle de tarefas selecionadas e ativa
-    let selectedTasks = []; // Array de objetos { id, title, eligibleForPoints, progress }
-    let activeTaskIndex = -1; // Índice da tarefa ativa em selectedTasks (-1 se nenhuma)
+    // Controle de tarefas
+    let selectedTasks = [];
+    let activeTaskIndex = -1;
     const MAX_TASKS = 8;
     const MIN_MINUTES_PER_TASK = 15;
 
-    /**
-     * Atualiza a contagem de tarefas selecionadas e valida o tempo.
-     */
+    // Inicializa os marcadores de tempo
+    function createTimeMarkers() {
+        const markersContainer = document.getElementById("time-markers");
+        markersContainer.innerHTML = '';
+        
+        for (let i = 0; i < 60; i++) {
+            const marker = document.createElement("div");
+            marker.className = "time-marker";
+            marker.style.transform = `rotate(${i * 6}deg)`;
+            if (i % 5 === 0) {
+                marker.style.height = "15px";
+                marker.style.background = "var(--text-color)";
+            }
+            markersContainer.appendChild(marker);
+        }
+    }
+
+    // Função para tocar sons
+    function playSound(sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.error("Erro ao reproduzir som:", e));
+    }
+
+    // Atualiza a contagem de tarefas selecionadas
     function updateSelectedTasksCountAndValidation() {
         selectedTasksCountElement.textContent = `${selectedTasks.length}/${MAX_TASKS}`;
 
@@ -52,47 +77,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (selectedTasks.length > 0 && totalMinutesNeeded > availableMinutes) {
             tasksValidationElement.textContent = `Tempo insuficiente. Você precisa de pelo menos ${totalMinutesNeeded} min para ${selectedTasks.length} tarefas.`;
-            tasksValidationElement.style.display = "block";
+            tasksValidationElement.style.display = "flex";
             startBtn.disabled = true;
         } else {
             tasksValidationElement.style.display = "none";
-            startBtn.disabled = selectedTasks.length === 0 || isRunning; // Desabilita se 0 tarefas ou se já rodando
+            startBtn.disabled = selectedTasks.length === 0 || isRunning;
         }
     }
 
-    /**
-     * Define qual tarefa está ativa.
-     * @param {number} index - Índice da tarefa a ser ativada em selectedTasks.
-     */
+    // Define a tarefa ativa
     function setActiveTask(index) {
-        activeTaskIndex = index;
-        renderSelectedTasks(); // Re-renderiza para atualizar o destaque visual
-        resetTimerForActiveTask(); // Prepara o timer para a nova tarefa ativa
+        if (index >= 0 && index < selectedTasks.length) {
+            activeTaskIndex = index;
+            document.querySelectorAll('.selected-task').forEach(task => {
+                task.classList.remove('task-active');
+            });
+            const activeTaskElement = selectedTasksListDiv.querySelector(`.selected-task[data-task-id="${selectedTasks[index].id}"]`);
+            if (activeTaskElement) {
+                activeTaskElement.classList.add('task-active');
+            }
+            resetTimerForActiveTask();
+        } else {
+            activeTaskIndex = -1;
+        }
     }
 
-    /**
-     * Renderiza as tarefas selecionadas na interface, destacando a ativa.
-     */
+    // Renderiza as tarefas selecionadas
     function renderSelectedTasks() {
         selectedTasksListDiv.innerHTML = "";
         selectedTasks.forEach((task, index) => {
             const taskElement = document.createElement("div");
-            taskElement.className = "selected-task";
+            taskElement.className = `selected-task ${index === activeTaskIndex ? 'task-active' : ''}`;
             taskElement.setAttribute("data-task-id", task.id);
-            if (index === activeTaskIndex) {
-                taskElement.classList.add("task-active"); // Adiciona classe para destacar a ativa
-            }
             taskElement.innerHTML = `
                 <span class="task-title">${task.title}</span>
                 <div class="task-progress-bar">
-                    <div class="progress" style="width: ${task.progress || 0}%;"></div>
+                    <div class="progress" style="width: ${task.progress || 0}%;">
+                        <span class="progress-text">${Math.round(task.progress || 0)}%</span>
+                    </div>
                 </div>
                 <i class="fas fa-times remove-task-icon" data-task-id="${task.id}" aria-label="Remover tarefa ${task.title}"></i>
             `;
             selectedTasksListDiv.appendChild(taskElement);
         });
 
-        // Adiciona evento de remoção
+        // Adiciona eventos de remoção
         selectedTasksListDiv.querySelectorAll(".remove-task-icon").forEach((icon) => {
             icon.addEventListener("click", (e) => {
                 if (isRunning) {
@@ -104,71 +133,283 @@ document.addEventListener("DOMContentLoaded", function () {
                 
                 selectedTasks = selectedTasks.filter(task => task.id !== taskIdToRemove);
                 
-                // Reativa o botão na lista de disponíveis
                 const taskButton = taskListDiv.querySelector(`.btn-task[data-task-id="${taskIdToRemove}"]`);
                 if (taskButton) {
                     taskButton.classList.remove("active");
                     taskButton.disabled = false;
                 }
 
-                // Ajusta o índice ativo se necessário
                 if (selectedTasks.length === 0) {
                     activeTaskIndex = -1;
                 } else if (removedTaskIndex === activeTaskIndex) {
-                    // Se removeu a ativa, ativa a primeira (ou nenhuma se for a única)
                     setActiveTask(0);
                 } else if (removedTaskIndex < activeTaskIndex) {
-                    // Se removeu uma antes da ativa, ajusta o índice
                     activeTaskIndex--;
                 }
                 
                 renderSelectedTasks();
                 updateSelectedTasksCountAndValidation();
-                resetTimer(); // Reseta o timer geral
+                resetTimer();
                 e.stopPropagation();
             });
         });
+        
         updateSelectedTasksCountAndValidation();
     }
 
-    /**
-     * Atualiza a barra de progresso da tarefa ATIVA.
-     * @param {number} percentage - Percentual de progresso (0 a 100).
-     */
+    // Atualiza o progresso da tarefa ativa
     function updateActiveTaskProgress(percentage) {
-        if (activeTaskIndex === -1) return; // Nenhuma tarefa ativa
+        if (activeTaskIndex === -1) return;
 
-        const activeTaskElement = selectedTasksListDiv.querySelector(`.selected-task[data-task-id="${selectedTasks[activeTaskIndex].id}"]`);
+        const clampedPercentage = Math.max(0, Math.min(100, percentage));
+        const activeTaskElement = selectedTasksListDiv.querySelector(
+            `.selected-task[data-task-id="${selectedTasks[activeTaskIndex].id}"]`
+        );
+        
         if (activeTaskElement) {
             const progressBar = activeTaskElement.querySelector(".progress");
-            const clampedPercentage = Math.max(0, Math.min(100, percentage));
+            const progressText = activeTaskElement.querySelector(".progress-text");
+            
             progressBar.style.width = `${clampedPercentage}%`;
-            selectedTasks[activeTaskIndex].progress = clampedPercentage; // Salva o progresso no objeto da tarefa
-        }
-    }
-    
-    /**
-     * Reseta a barra de progresso de uma tarefa específica.
-     * @param {number} index - Índice da tarefa em selectedTasks.
-     */
-    function resetTaskProgress(index) {
-        if (index < 0 || index >= selectedTasks.length) return;
-        selectedTasks[index].progress = 0;
-        const taskElement = selectedTasksListDiv.querySelector(`.selected-task[data-task-id="${selectedTasks[index].id}"]`);
-         if (taskElement) {
-            const progressBar = taskElement.querySelector(".progress");
-            if(progressBar) progressBar.style.width = `0%`;
+            progressText.textContent = `${Math.round(clampedPercentage)}%`;
+            
+            if (clampedPercentage > 50) {
+                progressText.style.left = "auto";
+                progressText.style.right = "4px";
+                progressText.style.color = "white";
+                progressText.style.mixBlendMode = "overlay";
+            } else {
+                progressText.style.left = "4px";
+                progressText.style.right = "auto";
+                progressText.style.color = "var(--text-color)";
+                progressText.style.mixBlendMode = "normal";
+            }
+            
+            if (clampedPercentage === 100) {
+                progressBar.style.background = "var(--success-color)";
+            } else {
+                progressBar.style.background = "linear-gradient(90deg, var(--primary-color), var(--secondary-color))";
+            }
+            
+            selectedTasks[activeTaskIndex].progress = clampedPercentage;
         }
     }
 
-    /**
-     * Valida o tempo personalizado inserido pelo usuário (15-240 min).
-     */
+    // Formata o tempo para MM:SS
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    }
+
+    // Atualiza o display do timer
+    function updateTimerDisplay() {
+        timeDisplay.textContent = formatTime(remainingTime);
+        
+        const totalTime = timerMode === "manual" ? selectedTime * 60 : 
+                       isFocusTime ? autoSettings.focusDuration * 60 : autoSettings.breakDuration * 60;
+        const progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
+        
+        progressCircle.style.background = `conic-gradient(var(--primary-color) ${progressPercentage}%, transparent ${progressPercentage}%)`;
+        progressPercentageElement.textContent = `${Math.round(progressPercentage)}%`;
+        
+        if (remainingTime <= 10) {
+            document.getElementById("clock-circle").classList.add("timer-active");
+        } else {
+            document.getElementById("clock-circle").classList.remove("timer-active");
+        }
+    }
+
+    // Atualiza as informações da próxima sessão
+    function updateNextSessionInfo() {
+        if (activeTaskIndex === -1) {
+            nextSessionElement.textContent = "Selecione uma tarefa para começar";
+            timerModeText.textContent = "Nenhuma tarefa ativa";
+            return;
+        }
+        
+        const currentActiveTaskTitle = selectedTasks[activeTaskIndex].title;
+
+        if (timerMode === "auto") {
+            if (isFocusTime) {
+                timerModeElement.className = "timer-mode-indicator focus";
+                timerModeText.textContent = `Foco: ${currentActiveTaskTitle}`;
+                nextSessionElement.innerHTML = `<i class="fas fa-coffee"></i> Próxima pausa em: ${formatTime(autoSettings.breakDuration * 60)}`;
+            } else {
+                timerModeElement.className = "timer-mode-indicator break";
+                timerModeText.textContent = "Pausa Curta";
+                nextSessionElement.innerHTML = `<i class="fas fa-brain"></i> Próximo foco em: ${formatTime(autoSettings.focusDuration * 60)}`;
+            }
+        } else {
+            timerModeElement.className = "timer-mode-indicator focus";
+            timerModeText.textContent = `Foco: ${currentActiveTaskTitle}`;
+            nextSessionElement.innerHTML = `<i class="fas fa-clock"></i> Duração: ${formatTime(selectedTime * 60)}`;
+        }
+    }
+
+    // Inicializa os controles de modo
+    function initModeControls() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                timerMode = tabId === 'manual-tab' ? 'manual' : 'auto';
+                resetTimer();
+                updateNextSessionInfo();
+                updateSelectedTasksCountAndValidation();
+            });
+        });
+
+        // Função para atualizar o timer com base no input manual
+        function handleManualTimeUpdate() {
+            if (validateCustomTime(customTimeInput)) {
+                selectedTime = parseInt(customTimeInput.value);
+                remainingTime = selectedTime * 60;
+                totalFocusDurationForCurrentTask = remainingTime;
+                updateTimerDisplay();
+                updateNextSessionInfo();
+                resetTimerForActiveTask();
+            }
+        }
+
+        customTimeInput.addEventListener('blur', handleManualTimeUpdate);
+        customTimeInput.addEventListener('input', function() {
+            if (validateCustomTime(customTimeInput)) {
+                selectedTime = parseInt(this.value);
+                remainingTime = selectedTime * 60;
+                totalFocusDurationForCurrentTask = remainingTime;
+                updateTimerDisplay();
+                updateNextSessionInfo();
+            }
+        });
+        customTimeInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                handleManualTimeUpdate();
+                customTimeInput.blur();
+            }
+        });
+
+        const focusTimeInput = document.getElementById('focus-time');
+        const breakTimeInput = document.getElementById('break-time');
+        const pomodoroRatioCheckbox = document.getElementById('use-pomodoro-ratio');
+
+        // Função para atualizar o timer com base no input de tempo de foco
+        function handleFocusTimeUpdate() {
+            let value = parseInt(focusTimeInput.value);
+            if (isNaN(value)) value = 25;
+            value = Math.max(15, Math.min(240, value));
+            focusTimeInput.value = value;
+            autoSettings.focusDuration = value;
+            
+            if (autoSettings.usePomodoroRatio) {
+                const newBreak = Math.max(5, Math.min(30, Math.round(value * pomodoroRatio)));
+                breakTimeInput.value = newBreak;
+                autoSettings.breakDuration = newBreak;
+            }
+            
+            validateAutoTimeSettings();
+            
+            if (isFocusTime && !isRunning) {
+                remainingTime = autoSettings.focusDuration * 60;
+                totalFocusDurationForCurrentTask = remainingTime;
+                updateTimerDisplay();
+            }
+            updateNextSessionInfo();
+        }
+
+        focusTimeInput.addEventListener('blur', handleFocusTimeUpdate);
+        focusTimeInput.addEventListener('input', function() {
+            let value = parseInt(this.value);
+            if (!isNaN(value)) {
+                value = Math.max(15, Math.min(240, value));
+                this.value = value;
+                autoSettings.focusDuration = value;
+                
+                if (autoSettings.usePomodoroRatio) {
+                    const newBreak = Math.max(5, Math.min(30, Math.round(value * pomodoroRatio)));
+                    breakTimeInput.value = newBreak;
+                    autoSettings.breakDuration = newBreak;
+                }
+                
+                if (isFocusTime && !isRunning) {
+                    remainingTime = autoSettings.focusDuration * 60;
+                    totalFocusDurationForCurrentTask = remainingTime;
+                    updateTimerDisplay();
+                }
+                updateNextSessionInfo();
+            }
+        });
+        focusTimeInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                handleFocusTimeUpdate();
+                focusTimeInput.blur();
+            }
+        });
+
+        // Função para atualizar o timer com base no input de tempo de pausa
+        function handleBreakTimeUpdate() {
+            let value = parseInt(breakTimeInput.value);
+            if (isNaN(value)) value = 5;
+            value = Math.max(5, Math.min(30, value));
+            breakTimeInput.value = value;
+            autoSettings.breakDuration = value;
+            validateAutoTimeSettings();
+            
+            if (!isFocusTime && !isRunning) {
+                remainingTime = autoSettings.breakDuration * 60;
+                updateTimerDisplay();
+            }
+            updateNextSessionInfo();
+        }
+
+        breakTimeInput.addEventListener('blur', handleBreakTimeUpdate);
+        breakTimeInput.addEventListener('input', function() {
+            let value = parseInt(this.value);
+            if (!isNaN(value)) {
+                value = Math.max(5, Math.min(30, value));
+                this.value = value;
+                autoSettings.breakDuration = value;
+                
+                if (!isFocusTime && !isRunning) {
+                    remainingTime = autoSettings.breakDuration * 60;
+                    updateTimerDisplay();
+                }
+                updateNextSessionInfo();
+            }
+        });
+        breakTimeInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                handleBreakTimeUpdate();
+                breakTimeInput.blur();
+            }
+        });
+
+        pomodoroRatioCheckbox.addEventListener('change', () => {
+            autoSettings.usePomodoroRatio = pomodoroRatioCheckbox.checked;
+            if (autoSettings.usePomodoroRatio) {
+                const newBreak = Math.max(5, Math.min(30, Math.round(autoSettings.focusDuration * pomodoroRatio)));
+                breakTimeInput.value = newBreak;
+                autoSettings.breakDuration = newBreak;
+                validateAutoTimeSettings();
+                resetTimer();
+            }
+        });
+    }
+
+    // Valida o tempo personalizado
     function validateCustomTime(input) {
         const value = parseInt(input.value);
         const validationMsg = document.getElementById("timeValidation");
         if (isNaN(value) || value < 15 || value > 240) {
-            validationMsg.style.display = "block";
+            validationMsg.style.display = "flex";
             return false;
         } else {
             validationMsg.style.display = "none";
@@ -176,15 +417,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    /**
-     * Valida as configurações de tempo do modo automático (foco >= 3 * pausa).
-     */
+    // Valida as configurações de tempo automático
     function validateAutoTimeSettings() {
         const focusTime = parseInt(document.getElementById("focus-time").value);
         const breakTime = parseInt(document.getElementById("break-time").value);
         const validationMsg = document.getElementById("time-validation-message");
         if (focusTime / breakTime < 3) {
-            validationMsg.style.display = "block";
+            validationMsg.style.display = "flex";
             return false;
         } else {
             validationMsg.style.display = "none";
@@ -192,9 +431,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    /**
-     * Carrega e exibe as tarefas disponíveis para seleção.
-     */
+    // Carrega e exibe as tarefas disponíveis
     function loadAndDisplayTasks() {
         if (!taskListDiv) return;
         taskListDiv.innerHTML = "";
@@ -222,29 +459,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     const taskId = this.getAttribute("data-task-id");
                     const taskIndex = selectedTasks.findIndex((t) => t.id === taskId);
 
-                    if (taskIndex !== -1) {
-                        // Deselecionar (já implementado no evento do ícone de remover)
-                    } else {
-                        if (selectedTasks.length >= MAX_TASKS) {
-                            alert(`Você pode selecionar no máximo ${MAX_TASKS} tarefas.`);
-                            return;
-                        }
-                        selectedTasks.push({
-                            id: taskId,
-                            title: task.title,
-                            eligibleForPoints: false,
-                            progress: 0, // Inicializa progresso
-                        });
-                        this.classList.add("active");
-                        this.disabled = true;
-                        // Se for a primeira tarefa selecionada, torna-a ativa
-                        if (selectedTasks.length === 1) {
-                            setActiveTask(0);
-                        }
+                    if (taskIndex !== -1) return;
+
+                    if (selectedTasks.length >= MAX_TASKS) {
+                        alert(`Você pode selecionar no máximo ${MAX_TASKS} tarefas.`);
+                        return;
                     }
+                    
+                    selectedTasks.push({
+                        id: taskId,
+                        title: task.title,
+                        eligibleForPoints: false,
+                        progress: 0,
+                    });
+                    
+                    this.classList.add("active");
+                    this.disabled = true;
+                    
+                    if (selectedTasks.length === 1) {
+                        setActiveTask(0);
+                    }
+                    
                     renderSelectedTasks();
                     updateSelectedTasksCountAndValidation();
-                    resetTimer(); // Reseta timer ao mudar seleção
+                    resetTimer();
                 });
                 taskListDiv.appendChild(button);
             });
@@ -255,149 +493,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    /**
-     * Atualiza as informações da próxima sessão na interface.
-     */
-    function updateNextSessionInfo() {
-        if (activeTaskIndex === -1) {
-             nextSessionElement.textContent = "Selecione uma tarefa";
-             timerModeElement.innerHTML = ".";
-             return;
-        }
-        
-        const currentActiveTaskTitle = selectedTasks[activeTaskIndex].title;
-
-        if (timerMode === "auto") {
-            if (isFocusTime) {
-                timerModeElement.className = "timer-mode-indicator focus";
-                timerModeElement.innerHTML = `<i class="fas fa-brain"></i> Foco: ${currentActiveTaskTitle}`;
-                nextSessionElement.textContent = `Próxima pausa em: ${formatTime(autoSettings.focusDuration * 60)}`;
-            } else {
-                timerModeElement.className = "timer-mode-indicator break";
-                timerModeElement.innerHTML = `<i class="fas fa-coffee"></i> Pausa`;
-                nextSessionElement.textContent = `Próximo foco (${currentActiveTaskTitle}) em: ${formatTime(autoSettings.breakDuration * 60)}`;
-            }
-        } else {
-            timerModeElement.className = "timer-mode-indicator focus";
-            timerModeElement.innerHTML = `<i class="fas fa-brain"></i> Foco: ${currentActiveTaskTitle}`;
-            nextSessionElement.textContent = `Tempo total: ${formatTime(selectedTime * 60)}`;
-        }
-    }
-
-    /**
-     * Formata o tempo em segundos para o formato MM:SS.
-     */
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-    }
-
-    /**
-     * Atualiza o display visual do timer.
-     */
-    function updateTimerDisplay() {
-        timeDisplay.textContent = formatTime(remainingTime);
-    }
-
-    /**
-     * Inicializa os controles de modo do timer.
-     */
-    function initModeControls() {
-        const modeRadios = document.querySelectorAll("input[name=\"timerMode\"]");
-        const autoSettingsDiv = document.getElementById("auto-settings");
-        const manualTimeOptions = document.getElementById("manual-time-options");
-        const focusTimeInput = document.getElementById("focus-time");
-        const breakTimeInput = document.getElementById("break-time");
-        const pomodoroRatioCheckbox = document.getElementById("use-pomodoro-ratio");
-
-        modeRadios.forEach((radio) => {
-            radio.addEventListener("change", () => {
-                timerMode = radio.value;
-                autoSettingsDiv.style.display = timerMode === "auto" ? "block" : "none";
-                manualTimeOptions.style.display = timerMode === "manual" ? "block" : "none";
-                resetTimer();
-                updateNextSessionInfo();
-                updateSelectedTasksCountAndValidation();
-            });
-        });
-
-        focusTimeInput.addEventListener("input", () => {
-            let value = parseInt(focusTimeInput.value);
-            if (isNaN(value) || value < 15) value = 15;
-            if (value > 240) value = 240;
-            focusTimeInput.value = value;
-            autoSettings.focusDuration = value;
-            if (autoSettings.usePomodoroRatio) {
-                const newBreak = Math.max(5, Math.min(30, Math.round(value * pomodoroRatio)));
-                breakTimeInput.value = newBreak;
-                autoSettings.breakDuration = newBreak;
-            }
-            validateAutoTimeSettings();
-            resetTimer();
-        });
-
-        breakTimeInput.addEventListener("input", () => {
-            let value = parseInt(breakTimeInput.value);
-            if (isNaN(value) || value < 5) value = 5;
-            if (value > 30) value = 30;
-            breakTimeInput.value = value;
-            autoSettings.breakDuration = value;
-            validateAutoTimeSettings();
-            resetTimer();
-        });
-
-        pomodoroRatioCheckbox.addEventListener("change", () => {
-            autoSettings.usePomodoroRatio = pomodoroRatioCheckbox.checked;
-            if (autoSettings.usePomodoroRatio) {
-                const newBreak = Math.max(5, Math.min(30, Math.round(autoSettings.focusDuration * pomodoroRatio)));
-                breakTimeInput.value = newBreak;
-                autoSettings.breakDuration = newBreak;
-                validateAutoTimeSettings();
-                resetTimer();
-            }
-        });
-
-        customTimeInput.addEventListener("input", () => {
-            if (validateCustomTime(customTimeInput)) {
-                selectedTime = parseInt(customTimeInput.value);
-                resetTimer();
-            }
-        });
-
-        autoSettingsDiv.style.display = "none";
-        manualTimeOptions.style.display = "block";
-    }
-
-    /**
-     * Inicia ou pausa o timer.
-     */
+    // Inicia/pausa o timer
     function toggleTimer() {
         if (isRunning) {
-            // Pausa
             clearInterval(timer);
             isRunning = false;
             startBtn.innerHTML = '<i class="fas fa-play"></i> Retomar';
         } else {
-            // Inicia/Retoma
             if (activeTaskIndex === -1) {
                 alert("Selecione uma tarefa para iniciar.");
                 return;
             }
             isRunning = true;
             startBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
-            startBtn.disabled = true; // Desabilita durante a execução para evitar cliques duplos
+            startBtn.disabled = true;
             cancelBtn.disabled = false;
 
-            // Define a duração total do foco para a tarefa ATIVA
             totalFocusDurationForCurrentTask = (timerMode === "manual" ? selectedTime : autoSettings.focusDuration) * 60;
-            // Garante que focusTimeElapsed comece de onde parou ou 0 se for nova tarefa
             focusTimeElapsed = (totalFocusDurationForCurrentTask - remainingTime);
+
+            // Toca o som apropriado
+            if (timerMode === "manual" || isFocusTime) {
+                playSound(focusStartSound);
+            } else {
+                playSound(breakStartSound);
+            }
 
             timer = setInterval(() => {
                 if (remainingTime > 0) {
                     remainingTime--;
-                    // Atualiza progresso apenas se estiver em modo foco
                     if (timerMode === "manual" || (timerMode === "auto" && isFocusTime)) {
                         focusTimeElapsed++;
                         const progressPercentage = (focusTimeElapsed / totalFocusDurationForCurrentTask) * 100;
@@ -408,80 +532,63 @@ document.addEventListener("DOMContentLoaded", function () {
                     completeSession();
                 }
             }, 1000);
-            // Reabilita o botão após um pequeno delay para evitar problemas
             setTimeout(() => { startBtn.disabled = false; }, 500);
         }
     }
 
-    /**
-     * Chamada quando uma sessão (foco ou pausa) termina.
-     */
+    // Completa uma sessão
     function completeSession() {
         clearInterval(timer);
         isRunning = false;
         startBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
-        startBtn.disabled = activeTaskIndex === -1; // Habilita se houver tarefa ativa
+        startBtn.disabled = activeTaskIndex === -1;
         cancelBtn.disabled = true;
-
-        // Tocar som (opcional)
-        // const alarmSound = new Audio('../../shared/assets/sounds/alarm.mp3');
-        // alarmSound.play();
 
         if (timerMode === "auto") {
             if (isFocusTime) {
-                // Foco da tarefa ativa terminou
+                playSound(focusEndSound);
                 if (activeTaskIndex !== -1) {
                     selectedTasks[activeTaskIndex].eligibleForPoints = true;
-                    updateActiveTaskProgress(100); // Garante 100%
-                    saveFocusSession(totalFocusDurationForCurrentTask / 60, selectedTasks[activeTaskIndex]); // Salva info da tarefa focada
-                    console.log(`Tarefa "${selectedTasks[activeTaskIndex].title}" elegível para pontos.`);
+                    updateActiveTaskProgress(100);
+                    saveFocusSession(totalFocusDurationForCurrentTask / 60, selectedTasks[activeTaskIndex]);
                 }
-                alert("Sessão de foco concluída! Hora da pausa.");
+                setTimeout(() => playSound(breakStartSound), 500);
                 isFocusTime = false;
                 remainingTime = autoSettings.breakDuration * 60;
             } else {
-                // Pausa terminou, avança para próxima tarefa
-                alert("Pausa concluída! Preparando próximo foco.");
+                playSound(breakEndSound);
                 isFocusTime = true;
                 sessionCount++;
-                // Tenta avançar para a próxima tarefa
+                setTimeout(() => playSound(focusStartSound), 500);
                 if (activeTaskIndex + 1 < selectedTasks.length) {
                     setActiveTask(activeTaskIndex + 1);
-                    // O timer já foi resetado em setActiveTask
                 } else {
-                    // Todas as tarefas foram focadas
                     alert("Todas as tarefas selecionadas foram focadas nesta sessão!");
-                    resetTimer(); // Reseta tudo
-                    return; // Sai da função para não iniciar nada
+                    resetTimer();
+                    return;
                 }
             }
         } else {
-            // Modo manual terminou
+            playSound(focusEndSound);
             if (activeTaskIndex !== -1) {
                 selectedTasks[activeTaskIndex].eligibleForPoints = true;
-                updateActiveTaskProgress(100); // Garante 100%
+                updateActiveTaskProgress(100);
                 saveFocusSession(totalFocusDurationForCurrentTask / 60, selectedTasks[activeTaskIndex]);
-                 console.log(`Tarefa "${selectedTasks[activeTaskIndex].title}" elegível para pontos.`);
             }
-            alert("Sessão de foco concluída!");
-            // Tenta avançar para a próxima tarefa automaticamente
-             if (activeTaskIndex + 1 < selectedTasks.length) {
-                 setActiveTask(activeTaskIndex + 1);
-                 // O timer já foi resetado em setActiveTask
-             } else {
-                 alert("Todas as tarefas selecionadas foram focadas!");
-                 resetTimer(); // Reseta tudo
-                 return;
-             }
+            if (activeTaskIndex + 1 < selectedTasks.length) {
+                setActiveTask(activeTaskIndex + 1);
+            } else {
+                alert("Todas as tarefas selecionadas foram focadas!");
+                resetTimer();
+                return;
+            }
         }
 
         updateTimerDisplay();
         updateNextSessionInfo();
     }
-    
-    /**
-     * Reseta o timer para a tarefa ativa atual ou estado inicial.
-     */
+
+    // Reseta o timer para a tarefa ativa
     function resetTimerForActiveTask() {
         clearInterval(timer);
         isRunning = false;
@@ -495,12 +602,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 selectedTime = parseInt(customTimeInput.value) || 25;
                 remainingTime = selectedTime * 60;
             } else {
-                 // No modo auto, sempre reseta para o tempo de foco da tarefa atual
-                 isFocusTime = true; // Garante que está em modo foco ao resetar para uma tarefa
+                 isFocusTime = true;
                  remainingTime = autoSettings.focusDuration * 60;
             }
-            totalFocusDurationForCurrentTask = remainingTime; // Atualiza duração total para a tarefa ativa
-            resetTaskProgress(activeTaskIndex); // Reseta o progresso visual da tarefa ativa
+            totalFocusDurationForCurrentTask = remainingTime;
+            updateActiveTaskProgress(0);
         }
         
         updateTimerDisplay();
@@ -510,21 +616,23 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelBtn.disabled = true;
     }
 
-    /**
-     * Reseta o timer completamente (ao cancelar ou mudar modo/tempo).
-     */
+    // Reseta completamente o timer
     function resetTimer() {
+        focusStartSound.pause();
+        focusEndSound.pause();
+        breakStartSound.pause();
+        breakEndSound.pause();
+        
         clearInterval(timer);
         isRunning = false;
         isFocusTime = true;
         sessionCount = 0;
         focusTimeElapsed = 0;
-        activeTaskIndex = selectedTasks.length > 0 ? 0 : -1; // Volta para a primeira tarefa ou nenhuma
+        activeTaskIndex = selectedTasks.length > 0 ? 0 : -1;
         
-        // Reseta progresso e elegibilidade de todas as tarefas selecionadas
         selectedTasks.forEach((task, index) => {
             task.eligibleForPoints = false;
-            resetTaskProgress(index);
+            updateActiveTaskProgress(0);
         });
 
         if (timerMode === "manual") {
@@ -537,7 +645,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         totalFocusDurationForCurrentTask = remainingTime;
 
-        renderSelectedTasks(); // Re-renderiza para mostrar a primeira como ativa
+        renderSelectedTasks();
         updateTimerDisplay();
         updateNextSessionInfo();
         startBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
@@ -545,11 +653,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelBtn.disabled = true;
     }
 
-    /**
-     * Salva a sessão de foco concluída no localStorage.
-     * @param {number} durationMinutes - Duração da sessão de foco em minutos.
-     * @param {object} focusedTask - Objeto da tarefa que foi focada { id, title }.
-     */
+    // Salva a sessão de foco
     function saveFocusSession(durationMinutes, focusedTask) {
         if (!focusedTask) return;
         try {
@@ -558,164 +662,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 date: new Date().toISOString().split("T")[0],
                 time: new Date().toTimeString().split(" ")[0],
                 durationMinutes: durationMinutes,
-                task: { id: focusedTask.id, title: focusedTask.title }, // Salva a tarefa específica focada
-                completedWithPoints: false, // Flag para ser usada na conclusão da tarefa
+                task: { id: focusedTask.id, title: focusedTask.title },
+                completedWithPoints: false,
             };
             sessions.push(sessionData);
             localStorage.setItem("focusSessions", JSON.stringify(sessions));
-            console.log("Sessão de foco salva:", sessionData);
         } catch (e) {
             console.error("Erro ao salvar sessão de foco:", e);
         }
     }
 
-    // --- Inicialização ---
+    // Inicialização
+    createTimeMarkers();
     loadAndDisplayTasks();
     initModeControls();
-    resetTimer(); // Define o estado inicial
+    resetTimer();
 
-    // Event listeners para os botões principais
+    // Event listeners
     startBtn.addEventListener("click", toggleTimer);
     cancelBtn.addEventListener("click", resetTimer);
 });
-
-// --- Lógica de Pontuação (Exemplo - Precisa ser integrada com a conclusão de tarefas) ---
-
-/**
- * Função (exemplo) chamada quando uma tarefa é marcada como concluída.
- * @param {string} taskId - ID da tarefa concluída.
- */
-function handleTaskCompletion(taskId) {
-    let awardedPoints = 0;
-    let taskWasEligible = false;
-
-    // 1. Verifica se a tarefa estava elegível na ÚLTIMA sessão de foco salva para ELA
-    try {
-        const sessions = JSON.parse(localStorage.getItem("focusSessions")) || [];
-        // Encontra a última sessão salva PARA ESTA TAREFA que ainda não foi pontuada
-        const lastRelevantSessionIndex = sessions.findLastIndex(s => s.task && s.task.id === taskId && !s.completedWithPoints);
-
-        if (lastRelevantSessionIndex !== -1) {
-            taskWasEligible = true;
-            // Marca a sessão como pontuada para não dar pontos novamente pela mesma sessão
-            sessions[lastRelevantSessionIndex].completedWithPoints = true;
-            localStorage.setItem("focusSessions", JSON.stringify(sessions));
-        }
-    } catch (e) {
-        console.error("Erro ao verificar elegibilidade de pontos da tarefa:", e);
-    }
-
-    // 2. Se a tarefa estava elegível, calcula e adiciona pontos
-    if (taskWasEligible) {
-        awardedPoints = calculatePointsForTask(taskId); // Implementar esta função
-        updateUserPoints(awardedPoints); // Implementar esta função para salvar os pontos do usuário
-        console.log(`Tarefa ${taskId} concluída com ${awardedPoints} pontos!`);
-        // Adicionar lógica para conquistas aqui, se aplicável (ex: primeira tarefa com pontos)
-        checkAndAwardAchievement('first_focus_task');
-    } else {
-        console.log(`Tarefa ${taskId} concluída sem pontos (não via sessão de foco completa).`);
-    }
-
-    // 3. Marca a tarefa como concluída no localStorage ("studyTasks")
-    markTaskAsDoneInStorage(taskId);
-    // Adicionar lógica para conquistas aqui (ex: concluir X tarefas)
-    checkAndAwardAchievement('task_master_1'); // Exemplo: primeira tarefa concluída
-}
-
-/**
- * Calcula os pontos para uma tarefa concluída via sessão de foco (Exemplo).
- * @param {string} taskId - ID da tarefa.
- * @returns {number} - Pontos calculados.
- */
-function calculatePointsForTask(taskId) {
-    let basePoints = 10;
-    // Poderia buscar a prioridade da tarefa e adicionar bônus
-    return basePoints;
-}
-
-/**
- * Atualiza os pontos totais do usuário no localStorage (Exemplo).
- * @param {number} pointsToAdd - Pontos a serem adicionados.
- */
-function updateUserPoints(pointsToAdd) {
-    try {
-        let currentPoints = parseInt(localStorage.getItem("userTotalPoints")) || 0;
-        currentPoints += pointsToAdd;
-        localStorage.setItem("userTotalPoints", currentPoints);
-        console.log("Pontos totais atualizados:", currentPoints);
-        window.dispatchEvent(new CustomEvent("userPointsChanged", { detail: { newTotalPoints: currentPoints } }));
-        // Verificar conquistas relacionadas a pontos
-        checkAndAwardAchievement('points_milestone_100', currentPoints);
-    } catch (e) {
-        console.error("Erro ao atualizar pontos do usuário:", e);
-    }
-}
-
-/**
- * Marca a tarefa como concluída no localStorage ("studyTasks") (Placeholder).
- * @param {string} taskId - ID da tarefa.
- */
-function markTaskAsDoneInStorage(taskId) {
-    console.log(`(Placeholder) Marcando tarefa ${taskId} como concluída no storage.`);
-    try {
-        let studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-        let taskFound = false;
-        let completedTasksCount = 0;
-        Object.keys(studyTasks).forEach(category => {
-            const taskIndex = studyTasks[category].findIndex(t => t.id === taskId);
-            if (taskIndex !== -1 && !studyTasks[category][taskIndex].done) { // Marca apenas se não estiver done
-                studyTasks[category][taskIndex].done = true;
-                taskFound = true;
-            }
-            // Conta tarefas concluídas
-            completedTasksCount += studyTasks[category].filter(t => t.done).length;
-        });
-        if (taskFound) {
-            localStorage.setItem("studyTasks", JSON.stringify(studyTasks));
-            localStorage.setItem("completedTasksCount", completedTasksCount); // Salva contagem
-            window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
-            window.dispatchEvent(new CustomEvent("completedTasksChanged", { detail: { count: completedTasksCount } })); // Evento para contador
-            // Verificar conquistas relacionadas a número de tarefas concluídas
-            checkAndAwardAchievement('task_master_10', completedTasksCount);
-        } else {
-            console.warn("Tarefa não encontrada ou já concluída:", taskId);
-        }
-    } catch (e) {
-        console.error("Erro ao marcar tarefa como concluída:", e);
-    }
-}
-
-// --- Funções de Conquistas (Placeholder) ---
-/**
- * Verifica se uma conquista foi alcançada e a concede.
- * @param {string} achievementId - ID da conquista.
- * @param {*} value - Valor atual para comparação (opcional, ex: pontos, contagem).
- */
-function checkAndAwardAchievement(achievementId, value = null) {
-    let achievements = JSON.parse(localStorage.getItem('userAchievements')) || {};
-    if (achievements[achievementId]) return; // Já conquistada
-
-    let achieved = false;
-    switch (achievementId) {
-        case 'first_focus_task': achieved = true; break; // Concedida na primeira tarefa com pontos
-        case 'task_master_1': achieved = true; break; // Concedida na primeira tarefa concluída (com ou sem pontos)
-        case 'task_master_10': achieved = value >= 10; break;
-        case 'points_milestone_100': achieved = value >= 100; break;
-        // Adicionar mais casos para as 9+ conquistas
-        case 'perfect_week': /* Lógica para verificar 7 dias seguidos de foco */ break;
-        case 'marathon_runner': /* Lógica para sessão de foco longa (ex: > 120 min) */ break;
-        case 'early_bird': /* Lógica para concluir tarefa antes das 8h */ break;
-        case 'night_owl': /* Lógica para concluir tarefa depois das 22h */ break;
-        case 'diversified_learner': /* Lógica para concluir tarefas de diferentes categorias */ break;
-    }
-
-    if (achieved) {
-        achievements[achievementId] = { achievedDate: new Date().toISOString() };
-        localStorage.setItem('userAchievements', JSON.stringify(achievements));
-        console.log(`Conquista desbloqueada: ${achievementId}!`);
-        // Exibir notificação para o usuário (implementação futura)
-        // alert(`Conquista desbloqueada: ${achievementId}!`);
-        window.dispatchEvent(new CustomEvent('achievementUnlocked', { detail: { id: achievementId } }));
-    }
-}
-
