@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Premium - Estudo Inteligente</title>
+    <link rel="stylesheet" href="../../shared/css/global.css">
+    <link rel="stylesheet" href="perfil.css">
+    <link rel="shortcut icon" href="../../shared/assets/img/logoestudobranco.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="../dashboard/inicio.html" aria-label="Estudo Inteligente - Página Inicial">
+            <img src="../../shared/assets/img/logoestudobranco.png" alt="" class="logo-sidebar">
+        </a>
+    </aside>
+
+    <div class="main">
+        <div class="header">
+            <div class="user-info">
+                <span id="userName">Usuário</span>
+                <button id="themeToggle" aria-label="Alternar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <header id="menu-container"></header>
+
+        <main class="profile-container">
+            <div class="profile-header">
+                <h1><i class="fas fa-user-crown"></i> Meu Perfil</h1>
+                <div class="profile-status">
+                    <span class="status-badge"><i class="fas fa-gem"></i> Conta Ativa</span>
+                </div>
+            </div>
+
+            <section class="profile-details">
+                <div class="profile-avatar-section">
+                    <div class="avatar-wrapper">
+                        <img id="profile-avatar-img" src="" alt="Avatar do Usuário" class="profile-avatar">
+                        <div class="avatar-badge"><i class="fas fa-check"></i></div>
+                    </div>
+                    <button id="change-avatar-btn" class="btn btn-secondary">
+                        <i class="fas fa-camera"></i> Alterar Avatar
+                    </button>
+                </div>
+
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label><i class="fas fa-id-card"></i> Nome Completo:</label>
+                        <span id="profile-fullname"></span>
+                    </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-envelope"></i> Email:</label>
+                        <span id="profile-email"></span>
+                    </div>
+                    <div class="info-item editable-item">
+                        <label><i class="fas fa-user-tag"></i> Nome de Usuário:</label>
+                        <span id="profile-username-display"></span>
+                        <input type="text" id="profile-username-input" class="hidden">
+                        <button id="edit-username-btn" class="btn-icon"><i class="fas fa-pencil-alt"></i></button>
+                        <button id="save-username-btn" class="btn btn-primary hidden">Salvar</button>
+                        <button id="cancel-username-btn" class="btn btn-secondary hidden">Cancelar</button>
+                    </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-trophy"></i> Ranking:</label>
+                        <span id="profile-ranking" class="ranking-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-calendar-alt"></i> Membro desde:</label>
+                        <span id="profile-joindate"></span>
+                    </div>
+                </div>
+            </section>
+
+            <div id="avatar-selection-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-btn" id="close-avatar-modal">&times;</span>
+                    <h2><i class="fas fa-user-astronaut"></i>Escolha seu Avatar</h2>
+                    <div id="avatar-options" class="avatar-grid">
+                        <!-- Avatares serão carregados aqui pelo JS -->
+                    </div>
+                    <button id="confirm-avatar-btn" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Confirmar Avatar
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Estudo Inteligente - &copy; <span id="currentYear"></span></p>
+        </footer>
+
+        <script src="../../shared/js/menu.js"></script>
+        <script src="../../shared/js/global-user.js"></script>
+        <script src="../../shared/js/theme.js"></script>
+        <script src="perfil.js"></script>
+        <script>
+            document.getElementById("currentYear").textContent = new Date().getFullYear();
+        </script>
+    </div>
+</body>
+</html>

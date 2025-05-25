@@ -12,7 +12,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const userTotalHours = parseFloat(localStorage.getItem("userTotalFocusHours")) || 0;
     // ALTERADO: Busca sessões de foco concluídas em vez de tarefas
     const userCompletedFocusSessions = parseInt(localStorage.getItem("completedFocusSessionsCount")) || 0;
-    const userAvatarPath = "../../shared/assets/avatars/owl.png";
+    let userAvatarPath = "../../shared/assets/avatars/lion.png"; // valor padrão
+
+    const userDataString = localStorage.getItem("usuarioLogado");
+            if (userDataString) {
+            try {
+                const userData = JSON.parse(userDataString);
+                if (userData.avatar) {
+                userAvatarPath = userData.avatar;
+                }
+            } catch (e) {
+                console.error("Erro ao carregar avatar do ranking:", e);
+            }
+        }
 
     function getLoggedInUserName() {
     try {

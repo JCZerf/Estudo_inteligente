@@ -57,7 +57,7 @@
  * Estiliza o ícone de lupa no campo de pesquisa
  */
 .search-box i {
-    color: var(--text-secondary, #6c757d);
+    color: var(--text-secondary, #000000);
 }
 
 /* 
@@ -203,7 +203,7 @@
  * Efeito ao passar o mouse sobre uma tarefa
  */
 .task:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(223, 13, 13, 0.1);
     transform: translateY(-2px);
 }
 
@@ -778,7 +778,7 @@
  * Define as cores e estilos para o tema claro
  */
 [data-theme="light"] {
-    --task-bg: #fff;
+    --task-bg: #eeeeeebe;
     --modal-bg: #fff;
     --input-bg: #fff;
     --search-bg: #f8f9fa;
@@ -956,15 +956,15 @@
     background: var(--task-bg, #fff);
     padding: 15px 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(231, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
-    border-left: 4px solid var(--subject-color, #4682B4);
-    color: var(--task-text, #333);
+    border-left: 4px solid var(--subject-color, #008cff);
+    color: var(--task-text, #008cff);
     margin-bottom: 10px;
-    width: 100%; /* Garante que ocupe toda a largura do container */
+    width: 100%; /* Garante que ocupe toda as largura do container */
     box-sizing: border-box; /* Inclui padding e border na largura total */
 }
 
