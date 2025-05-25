@@ -58,7 +58,7 @@
             </div>
             
             <div id="tasksValidation" class="time-validation" style="display: none;">
-              Você precisa de pelo menos 2 horas (120 minutos) para selecionar 8 tarefas
+              <!-- Mensagem de validação -->
             </div>
           </div>
         </section>
@@ -111,31 +111,30 @@
               <div id="auto-tab" class="tab-content">
                 <div class="auto-settings-group">
                   <div class="form-row">
-                    <label for="focus-time">
-                      <i class="fas fa-brain"></i> Tempo de Foco
+                    <label for="total-session-time">
+                      <i class="fas fa-hourglass-half"></i> Duração Total da Sessão
                     </label>
                     <div class="number-input">
-                      <input type="number" id="focus-time" min="15" max="240" value="25">
+                      <!-- ID alterado de focus-time para total-session-time -->
+                      <input type="number" id="total-session-time" min="20" max="240" value="60">
                       <span class="input-suffix">min</span>
                     </div>
+                     <small class="hint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
                   </div>
                   
                   <div class="form-row">
                     <label for="break-time">
-                      <i class="fas fa-coffee"></i> Tempo de Pausa
+                      <i class="fas fa-coffee"></i> Tempo de Pausa Curta
                     </label>
                     <div class="number-input">
                       <input type="number" id="break-time" min="5" max="30" value="5">
                       <span class="input-suffix">min</span>
                     </div>
+                     <small class="hint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
                   </div>
                   
-                  <div class="form-row checkbox-row">
-                    <input type="checkbox" id="use-pomodoro-ratio">
-                    <label for="use-pomodoro-ratio">
-                      Usar proporção Pomodoro padrão (1:5)
-                    </label>
-                  </div>
+                  <!-- Checkbox removido -->
+                  
                 </div>
               </div>
             </div>
@@ -164,6 +163,10 @@
   <script src="../../shared/js/global-user.js"></script>
   <script>
     document.getElementById("currentYear").textContent = new Date().getFullYear();
+    // Adicionar lógica para carregar tarefas do localStorage ou API aqui
+    // Exemplo básico:
+    // const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    // renderAvailableTasks(tasks);
   </script>
 </body>
 </html>

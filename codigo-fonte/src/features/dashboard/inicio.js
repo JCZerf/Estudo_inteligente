@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
     loadUserName();           // Carrega o nome do usuário
     loadTarefasAgendadas();   // Carrega as tarefas agendadas do usuário
     loadTempoFocoHoje();      // Carrega o tempo de foco do dia atual
-    loadCompletedTasksCounter(); // Carrega o contador de tarefas concluídas
+    loadCompletedFocusSessionsCounter(); // CORREÇÃO: Carrega o contador de SESSÕES DE FOCO concluídas
     loadTotalPointsDisplay(); // Carrega a exibição de pontos totais
     initProgressoSemanaChart(); // Inicializa o gráfico de progresso semanal
     loadProximosEventos();    // Carrega os próximos eventos do calendário
@@ -67,8 +67,8 @@ document.addEventListener("DOMContentLoaded", function() {
     checkNotificationPermission(); // Verifica permissão para notificações
 
     // Listeners para atualizar os contadores dinamicamente
-    window.addEventListener("completedTasksChanged", (event) => {
-        updateCompletedTasksCounter(event.detail.count);
+    window.addEventListener("completedFocusSessionsChanged", (event) => { // CORREÇÃO: Ouvir evento correto
+        updateCompletedFocusSessionsCounter(event.detail.count);
     });
     window.addEventListener("userPointsChanged", (event) => {
         updateTotalPointsDisplay(event.detail.newTotalPoints);
@@ -192,19 +192,19 @@ function loadTempoFocoHoje() {
 }
 
 /**
- * Carrega e exibe o contador de tarefas concluídas.
+ * Carrega e exibe o contador de sessões de foco concluídas.
  */
-function loadCompletedTasksCounter() {
-    const count = parseInt(localStorage.getItem("completedTasksCount")) || 0;
-    updateCompletedTasksCounter(count);
+function loadCompletedFocusSessionsCounter() {
+    const count = parseInt(localStorage.getItem("completedFocusSessionsCount")) || 0;
+    updateCompletedFocusSessionsCounter(count);
 }
 
 /**
- * Atualiza o elemento do contador de tarefas concluídas na interface.
- * @param {number} count - O número de tarefas concluídas.
+ * Atualiza o elemento do contador de sessões de foco concluídas na interface.
+ * @param {number} count - O número de sessões de foco concluídas.
  */
-function updateCompletedTasksCounter(count) {
-    const counterElement = document.getElementById("completedTasksCounter");
+function updateCompletedFocusSessionsCounter(count) {
+    const counterElement = document.getElementById("completedFocusSessionsCounter"); // ID ATUALIZADO
     if (counterElement) {
         counterElement.textContent = count;
     }
@@ -344,7 +344,7 @@ function loadProximosEventos() {
             eventosParaExibir.forEach(evento => {
                 const li = document.createElement("li");
                 const dataEventoFormatada = new Date(evento.date + "T00:00:00").toLocaleDateString("pt-BR", { day: '2-digit', month: '2-digit', timeZone: 'UTC' });
-                let textoEvento = `${evento.subject} (${dataEventoFormatada}`;
+                let textoEvento = `${evento.title} (${dataEventoFormatada}`;
                 if (evento.time && evento.time !== "-") {
                     textoEvento += ` ${evento.time.substring(0,5)}`;
                 }

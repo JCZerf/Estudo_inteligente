@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Dados do usuário (do localStorage)
     const userTotalPoints = parseInt(localStorage.getItem("userTotalPoints")) || 0;
     const userTotalHours = parseFloat(localStorage.getItem("userTotalFocusHours")) || 0;
-    const userCompletedTasks = parseInt(localStorage.getItem("completedTasksCount")) || 0;
+    // ALTERADO: Busca sessões de foco concluídas em vez de tarefas
+    const userCompletedFocusSessions = parseInt(localStorage.getItem("completedFocusSessionsCount")) || 0;
     const userAvatarPath = "../../shared/assets/avatars/owl.png";
 
     function getLoggedInUserName() {
@@ -77,15 +78,15 @@ let loggedInUserName = getLoggedInUserName(); // Mantenha esta linha
                     Math.floor(Math.random() * 100) :
                     Math.floor(minPoints + Math.random() * (maxPoints - minPoints));
                 
-                // Gera horas e tarefas proporcionalmente aos pontos
+                // Gera horas e SESSÕES DE FOCO proporcionalmente aos pontos
                 const hours = parseFloat((points / 50 + Math.random() * 5).toFixed(1));
-                const tasks = Math.floor(points / 20 + Math.random() * 10);
+                const focusSessions = Math.floor(points / 15 + Math.random() * 15); // Ajuste na proporção
 
                 users.push({
                     name: `${firstName} ${lastName}`,
                     points: points,
                     hours: hours,
-                    tasks: tasks,
+                    focusSessions: focusSessions, // ALTERADO: tasks -> focusSessions
                     avatar: animalAvatarPaths[Math.floor(Math.random() * animalAvatarPaths.length)]
                 });
             }
@@ -102,7 +103,7 @@ let loggedInUserName = getLoggedInUserName(); // Mantenha esta linha
             name: loggedInUserName,
             points: userTotalPoints,
             hours: userTotalHours,
-            tasks: userCompletedTasks,
+            focusSessions: userCompletedFocusSessions, // ALTERADO: tasks -> focusSessions
             avatar: userAvatarPath,
             isCurrentUser: true
         }
@@ -150,7 +151,8 @@ function syncUserName() {
                 const hours = Math.floor(value);
                 const minutes = Math.round((value - hours) * 60);
                 return `${hours}h ${minutes > 0 ? minutes + "min" : ""}`.trim();
-            case "tasks": return `${value} Tarefa${value !== 1 ? "s" : ""}`;
+            // ALTERADO: tasks -> focusSessions
+            case "focusSessions": return `${value} Sess${value !== 1 ? "ões" : "ão"} de Foco`;
             default: return value;
         }
     }
@@ -261,7 +263,8 @@ function syncUserName() {
         const titles = {
             points: "Ranking por Pontos",
             hours: "Ranking por Horas de Foco", 
-            tasks: "Ranking por Tarefas Concluídas"
+            // ALTERADO: tasks -> focusSessions
+            focusSessions: "Ranking por Sessões de Foco"
         };
         
         if (rankingTitleElement) {
