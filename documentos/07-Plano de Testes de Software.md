@@ -257,7 +257,7 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
  </tr>
  <tr>
   <td>CT-13 – Extrair e Adicionar documentos da propria maquina na seção de tarefas</td>
-  <td><ul><li>RF-03: Cronogramas personalizados</li></ul></td>
+  <td><ul><li>RF-03: tarefas persolanizadas</li></ul></td>
   <td>Funcionamento da importação e extração de documentos na area de tarefas </td>
   <td><ol><li>Acessar tarefas</li><li>Adicionar documento</li><li>exportar documentos</li></ol></td>
   <td>Documentos podem ser importadas, finalizados e extraidos </td>
