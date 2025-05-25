@@ -242,6 +242,25 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>Funcionamento da adição, conclusão e exclusão de atividades</td>
   <td><ol><li>Acessar Cronograma</li><li>Adicionar atividade</li><li>Concluir ou excluir atividade</li></ol></td>
   <td>Atividades podem ser adicionadas, concluídas e excluídas</td>
-  <td>Guilherme</td>
+  <td>Guilherme Lodron</td>
+ </tr>
+</table>
+
+<table>
+ <tr>
+  <th>Caso de testes</th>
+  <th>Requisitos associados</th>
+  <th>Objetivo do teste</th>
+  <th>Passos</th>
+  <th>Critérios de êxito</th>
+  <th>Responsável</th>
+ </tr>
+ <tr>
+  <td>CT-12 – Extrair e Adicionar documentos da propria maquina na seção de tarefas</td>
+  <td><ul><li>RF-03: Cronogramas personalizados</li></ul></td>
+  <td>Funcionamento da importação e extração de documentos na area de tarefas </td>
+  <td><ol><li>Acessar tarefas</li><li>Adicionar documento</li><li>exportar documentos</li></ol></td>
+  <td>Documentos podem ser importadas, finalizados e extraidos </td>
+  <td>Guilherme Lodron</td>
  </tr>
 </table>
