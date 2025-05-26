@@ -1,32 +1,70 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Elementos do DOM
-    const startBtn = document.getElementById("start-btn");
-    const cancelBtn = document.getElementById("cancel-btn");
-    const timeDisplay = document.getElementById("time-display");
-    const progressCircle = document.getElementById("clock-progress");
-    const customTimeInput = document.getElementById("custom-time-input"); // Manual mode
-    const totalSessionTimeInput = document.getElementById("total-session-time"); // Auto mode
-    const breakTimeInput = document.getElementById("break-time"); // Auto mode
-    const taskListDiv = document.querySelector(".task-list");
-    const selectedTasksListDiv = document.getElementById("selectedTasksList");
-    const selectedTasksCountElement = document.getElementById("selectedTasksCount");
-    const tasksValidationElement = document.getElementById("tasksValidation");
-    const nextSessionElement = document.getElementById("nextSessionInfo");
-    const timerModeElement = document.getElementById("timerModeIndicator");
-    const timerModeText = document.getElementById("timerModeText");
-    const progressPercentageElement = document.getElementById("progress-percentage");
+    // Helper function to safely get elements
+    function getElement(id) {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.warn(`[FocusSession] Element with ID "${id}" not found.`);
+        }
+        return element;
+    }
 
-    // Elementos de áudio
-    const focusStartSound = document.getElementById("focusStartSound");
-    const focusEndSound = document.getElementById("focusEndSound");
-    const breakStartSound = document.getElementById("breakStartSound");
-    const breakEndSound = document.getElementById("breakEndSound");
+    function querySelector(selector) {
+        const element = document.querySelector(selector);
+        if (!element) {
+            console.warn(`[FocusSession] Element with selector "${selector}" not found.`);
+        }
+        return element;
+    }
+
+    // Elementos do DOM (com verificação)
+    const startBtn = getElement("start-btn");
+    const cancelBtn = getElement("cancel-btn");
+    const timeDisplay = getElement("time-display");
+    const progressCircle = getElement("clock-progress");
+    const customTimeInput = getElement("custom-time-input"); // Manual mode
+    const totalSessionTimeInput = getElement("total-session-time"); // Auto mode
+    const breakTimeInput = getElement("break-time"); // Auto mode
+    const taskListDiv = querySelector(".task-list");
+    const selectedTasksListDiv = getElement("selectedTasksList");
+    const selectedTasksCountElement = getElement("selectedTasksCount");
+    const tasksValidationElement = getElement("tasksValidation");
+    const nextSessionElement = getElement("nextSessionInfo");
+    const timerModeElement = getElement("timerModeIndicator");
+    const timerModeText = getElement("timerModeText");
+    const progressPercentageElement = getElement("progress-percentage");
+    const markersContainer = getElement("time-markers"); // Added check
+    const clockCircle = getElement("clock-circle"); // Added check
+
+    // Elementos de áudio (com verificação)
+    const focusStartSound = getElement("focusStartSound");
+    const focusEndSound = getElement("focusEndSound");
+    const breakStartSound = getElement("breakStartSound");
+    const breakEndSound = getElement("breakEndSound");
+
+    // Early exit if essential elements are missing
+    if (!startBtn || !cancelBtn || !timeDisplay || !progressCircle || !taskListDiv || !selectedTasksListDiv || !selectedTasksCountElement || !tasksValidationElement || !nextSessionElement || !timerModeElement || !timerModeText || !progressPercentageElement || !markersContainer || !clockCircle) {
+        console.error("[FocusSession] Essential DOM elements are missing. Script cannot initialize properly.");
+        // Optionally display a user-friendly error message on the page
+        const errorDiv = document.createElement('div');
+        errorDiv.textContent = 'Erro: Elementos essenciais para a sessão de foco não foram encontrados. Verifique o HTML.';
+        errorDiv.style.color = 'red';
+        errorDiv.style.padding = '10px';
+        errorDiv.style.border = '1px solid red';
+        // Try to prepend to body, or append if body is not ready (though DOMContentLoaded should ensure it is)
+        if (document.body) {
+            document.body.prepend(errorDiv);
+        } else {
+            console.error("[FocusSession] document.body not available to display error message.");
+        }
+        return; // Stop script execution
+    }
 
     // Variáveis de controle do timer
     let timer;
     let isRunning = false;
     let remainingTime = 0; // Tempo restante no ciclo atual (foco ou pausa)
     let timerMode = "manual"; // 'manual' ou 'auto'
+    let lastCycleDurationMinutes = 0; // Armazena a duração do último ciclo de foco concluído
 
     // Configurações Modo Manual
     let manualFocusDuration = 25; // Duração definida pelo usuário
@@ -39,9 +77,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentCycleFocusDuration = 0; // Duração calculada para o ciclo de foco atual
     let currentCycleBreakDuration = 0; // Duração calculada para o ciclo de pausa atual
     let isFocusTime = true; // Indica se o ciclo atual é de foco
-    let sessionCount = 0; // Número total de ciclos de foco completados na sessão
-    let focusCyclesCompletedInBlock = 0; // Ciclos de foco completados desde a última pausa longa
+    let sessionCount = 0; // Número total de ciclos de foco completados NA SESSÃO ATUAL
+    let focusCyclesCompletedInBlock = 0; // Ciclos de foco completados desde a última pausa longa NA SESSÃO ATUAL
     let totalSessionRemainingTime = 0; // Tempo total restante na sessão automática
+    let autoSessionStarted = false; // Indica se a sessão automática foi iniciada
     const LONG_BREAK_INTERVAL = 4; // Número de ciclos de foco antes de uma pausa longa
 
     // Controle de tarefas
@@ -50,23 +89,118 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeTaskIndex = -1; // Índice da tarefa ativa DENTRO de selectedTasks
     const MAX_TASKS = 8;
 
-    // --- Inicialização ---
+    // --- Funções de Persistência e Sincronização ---
 
+    function getUserFocusStats() {
+        try {
+            const stats = JSON.parse(localStorage.getItem("userFocusStats")) || {};
+            stats.totalFocusTimeMinutes = stats.totalFocusTimeMinutes || 0;
+            stats.totalFocusSessions = stats.totalFocusSessions || 0;
+            stats.totalPoints = stats.totalPoints || 0;
+            stats.dailyFocus = stats.dailyFocus || {};
+            return stats;
+        } catch (e) {
+            console.error("[FocusSession] Error getting userFocusStats:", e);
+            return { totalFocusTimeMinutes: 0, totalFocusSessions: 0, totalPoints: 0, dailyFocus: {} };
+        }
+    }
+
+    function saveUserFocusStats(stats) {
+        try {
+            localStorage.setItem("userFocusStats", JSON.stringify(stats));
+            console.log("[FocusSession] userFocusStats saved:", stats);
+            window.dispatchEvent(new CustomEvent("focusDataUpdated", { detail: { stats: stats } }));
+            window.dispatchEvent(new CustomEvent("userPointsChanged", { detail: { newTotalPoints: stats.totalPoints } }));
+        } catch (e) {
+            console.error("[FocusSession] Error saving userFocusStats:", e);
+        }
+    }
+
+    function getFocusSessionHistory() {
+        try {
+            const history = JSON.parse(localStorage.getItem("focusSessionHistory")) || [];
+            return Array.isArray(history) ? history : [];
+        } catch (e) {
+            console.error("[FocusSession] Error getting focusSessionHistory:", e);
+            return [];
+        }
+    }
+
+    function saveFocusSessionHistory(history) {
+        try {
+            localStorage.setItem("focusSessionHistory", JSON.stringify(history));
+            console.log("[FocusSession] focusSessionHistory saved. Length:", history.length);
+        } catch (e) {
+            console.error("[FocusSession] Error saving focusSessionHistory:", e);
+        }
+    }
+
+    function addFocusSessionToHistory(sessionData) {
+        const history = getFocusSessionHistory();
+        history.push(sessionData);
+        saveFocusSessionHistory(history);
+    }
+
+    // CORREÇÃO: Modificada para aceitar `isAutoSession` e registrar corretamente
+    function recordCompletedFocusCycle(durationMinutes, mode, isAutoSession = false) {
+        console.log(`[FocusSession] Recording completed focus cycle. Duration: ${durationMinutes}, Mode: ${mode}, IsAutoSession: ${isAutoSession}`);
+        const stats = getUserFocusStats();
+        const today = new Date().toISOString().split("T")[0];
+
+        stats.totalFocusTimeMinutes += durationMinutes;
+        // CORREÇÃO: Só incrementa totalFocusSessions se for um ciclo de foco real (manual ou auto)
+        // A contagem de sessões para o ranking agora é feita aqui.
+        stats.totalFocusSessions += 1;
+
+        if (!stats.dailyFocus[today]) {
+            stats.dailyFocus[today] = { minutes: 0, sessions: 0 };
+        }
+        stats.dailyFocus[today].minutes += durationMinutes;
+        stats.dailyFocus[today].sessions += 1;
+
+        let pointsEarned = 1; // Ponto base por ciclo de foco
+        stats.totalPoints += pointsEarned;
+        console.log(`[FocusSession] Points earned for cycle: ${pointsEarned}. New total: ${stats.totalPoints}`);
+
+        saveUserFocusStats(stats);
+
+        const activeTask = activeTaskIndex !== -1 && selectedTasks[activeTaskIndex] ? selectedTasks[activeTaskIndex].title : "Nenhuma";
+        const now = new Date();
+        addFocusSessionToHistory({
+            date: today,
+            time: now.toLocaleTimeString("pt-BR"),
+            durationMinutes: durationMinutes,
+            mode: mode,
+            taskTitle: activeTask,
+            pointsEarned: pointsEarned,
+            isAutoSession: isAutoSession // Adiciona flag se foi parte de uma sessão auto
+        });
+    }
+
+    function addBonusPoints(points, reason) {
+        console.log(`[FocusSession] Adding bonus points: ${points}. Reason: ${reason}`);
+        const stats = getUserFocusStats();
+        stats.totalPoints += points;
+        saveUserFocusStats(stats);
+    }
+
+    // --- Inicialização ---
     function initializeApp() {
         console.log("[FocusSession] Initializing App...");
         createTimeMarkers();
         initModeControls();
-        loadTasksFromStorage(); // Carrega tarefas do localStorage
-        renderSelectedTasks(); // Renderiza lista de selecionadas (vazia inicialmente)
-        resetTimer(); // Define o estado inicial do timer
-        updateSelectedTasksCountAndValidation(); // Atualiza contagem e validação
+        loadTasksFromStorage();
+        renderSelectedTasks();
+        resetTimer();
+        updateSelectedTasksCountAndValidation();
+        // Adiciona listener para evento 'tasksUpdated' de outras telas
+        window.addEventListener("tasksUpdated", handleExternalTaskUpdate);
         console.log("[FocusSession] App Initialized.");
     }
 
-    // Inicializa os marcadores de tempo no relógio
     function createTimeMarkers() {
-        const markersContainer = document.getElementById("time-markers");
-        markersContainer.innerHTML = ''; // Limpa marcadores existentes
+        // markersContainer already checked in the beginning
+        markersContainer.innerHTML = ""; // Clear existing markers
         for (let i = 0; i < 60; i++) {
             const marker = document.createElement("div");
             marker.className = "time-marker";
@@ -79,93 +213,109 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Função auxiliar para tocar sons
     function playSound(soundElement) {
-        if (soundElement && typeof soundElement.play === 'function') {
+        // Check if the element exists before trying to play
+        if (soundElement && typeof soundElement.play === "function") {
             soundElement.currentTime = 0;
             soundElement.play().catch(error => {
                 console.warn(`[FocusSession] Could not play sound ${soundElement.id}:`, error);
             });
         } else {
-            console.warn(`[FocusSession] Sound element ${soundElement ? soundElement.id : 'undefined'} not found or is not playable.`);
+            // Warning already logged if element is null during initialization
+            if (soundElement) { // Log only if element exists but is not playable
+                 console.warn(`[FocusSession] Sound element ${soundElement.id} is not playable.`);
+            }
         }
     }
 
-    // Carrega tarefas do localStorage (CORRIGIDO para usar 'studyTasks' e estrutura de objeto)
+    // CORREÇÃO: Modificada para recarregar tarefas PENDENTES
     function loadTasksFromStorage() {
-        console.log("[FocusSession] Loading tasks from localStorage key 'studyTasks'...");
-        // A chave correta usada em tarefas.js é 'studyTasks'
-        const storedData = localStorage.getItem('studyTasks');
-        allAvailableTasks = []; // Limpa antes de carregar
-        selectedTasks = []; // Limpa selecionadas também
-        activeTaskIndex = -1; // Reseta índice ativo
+        console.log("[FocusSession] Loading tasks from localStorage key \"studyTasks\"...");
+        const storedData = localStorage.getItem("studyTasks");
+        allAvailableTasks = [];
 
         if (storedData) {
-            console.log("[FocusSession] Found data string in localStorage ('studyTasks'):", storedData);
             try {
-                // tarefas.js armazena um OBJETO onde as chaves são matérias
                 const tasksBySubject = JSON.parse(storedData);
-                console.log("[FocusSession] Parsed tasks object from localStorage:", tasksBySubject);
-
-                // Verifica se é um objeto
-                if (tasksBySubject && typeof tasksBySubject === 'object' && !Array.isArray(tasksBySubject)) {
-                    // Itera sobre cada matéria (chave do objeto)
+                if (tasksBySubject && typeof tasksBySubject === "object" && !Array.isArray(tasksBySubject)) {
                     Object.values(tasksBySubject).forEach(subjectTasks => {
-                        // Verifica se o valor da matéria é um array
                         if (Array.isArray(subjectTasks)) {
-                            // Filtra as tarefas não concluídas desta matéria e adiciona ao array plano
-                            const pendingTasks = subjectTasks.filter(task => task && task.completed !== true && task.id && task.title);
+                            // CORREÇÃO: Filtra apenas tarefas NÃO completadas
+                            const pendingTasks = subjectTasks.filter(task => task && !task.completed && task.id && task.title);
                             allAvailableTasks.push(...pendingTasks);
                         }
                     });
-                    console.log(`[FocusSession] Flattened and filtered non-completed tasks (${allAvailableTasks.length}):`, allAvailableTasks);
+                    console.log(`[FocusSession] Loaded ${allAvailableTasks.length} PENDING tasks:`, allAvailableTasks);
                 } else {
-                    console.warn("[FocusSession] Parsed data from localStorage ('studyTasks') is not an object as expected.", tasksBySubject);
-                    allAvailableTasks = [];
+                    console.warn("[FocusSession] Parsed data from localStorage (\"studyTasks\") is not an object.");
                 }
             } catch (e) {
-                console.error("[FocusSession] Error parsing tasks from localStorage ('studyTasks'):", e);
-                allAvailableTasks = [];
+                console.error("[FocusSession] Error parsing tasks from localStorage (\"studyTasks\"):", e);
             }
-        } else {
-            console.log("[FocusSession] No data found in localStorage for key 'studyTasks'.");
-            allAvailableTasks = [];
         }
-        // Chama a renderização mesmo que a lista esteja vazia (para mostrar a mensagem)
+        // CORREÇÃO: Não limpa selectedTasks aqui, permite manter seleção entre recargas
+        // selectedTasks = [];
+        // activeTaskIndex = -1;
         renderAvailableTasks(allAvailableTasks);
+        // Sincroniza a lista de selecionadas com as disponíveis (remove tarefas que não existem mais ou foram completadas externamente)
+        syncSelectedTasksWithAvailable();
     }
 
-    // Renderiza as tarefas disponíveis para seleção (agora recebe um array plano)
-    function renderAvailableTasks(tasks) {
-        console.log("[FocusSession] Rendering available tasks list (flat array). Count:", tasks ? tasks.length : 0);
-        taskListDiv.innerHTML = ""; // Limpa a lista antes de renderizar
-        if (!tasks || tasks.length === 0) {
-             console.log("[FocusSession] No available tasks to render.");
-             taskListDiv.innerHTML = "<p>Nenhuma tarefa pendente encontrada.</p>";
-             return;
-        }
-        tasks.forEach((task, index) => {
-            // Verifica se a tarefa tem ID e Título antes de tentar renderizar
-            if (!task || typeof task.id === 'undefined' || typeof task.title === 'undefined') {
-                console.warn(`[FocusSession] Skipping rendering task at index ${index} due to missing id or title:`, task);
-                return; // Pula esta tarefa se faltar dados essenciais
+    // CORREÇÃO: Nova função para lidar com atualizações externas de tarefas
+    function handleExternalTaskUpdate() {
+        console.log("[FocusSession] Received 'tasksUpdated' event. Reloading tasks...");
+        loadTasksFromStorage(); // Recarrega a lista de tarefas disponíveis
+        // A função loadTasksFromStorage agora chama syncSelectedTasksWithAvailable
+    }
+
+    // CORREÇÃO: Nova função para sincronizar tarefas selecionadas com as disponíveis
+    function syncSelectedTasksWithAvailable() {
+        const currentSelectedIds = selectedTasks.map(t => t.id);
+        let changed = false;
+        selectedTasks = selectedTasks.filter(selectedTask => {
+            const stillAvailable = allAvailableTasks.some(availableTask => availableTask.id === selectedTask.id);
+            if (!stillAvailable) {
+                console.log(`[FocusSession] Removing task ${selectedTask.id} from selection because it's no longer available/pending.`);
+                changed = true;
             }
-            console.log(`[FocusSession] Rendering task button ${index}: ID=${task.id}, Title=${task.title}`);
+            return stillAvailable;
+        });
+
+        // Re-renderiza se houve mudança
+        if (changed) {
+            console.log("[FocusSession] Selected tasks updated after sync:", selectedTasks);
+            if (activeTaskIndex >= selectedTasks.length) {
+                activeTaskIndex = selectedTasks.length > 0 ? 0 : -1;
+            }
+            renderSelectedTasks();
+            renderAvailableTasks(allAvailableTasks); // Re-renderiza botões disponíveis para refletir estado
+            updateSelectedTasksCountAndValidation();
+        }
+    }
+
+    function renderAvailableTasks(tasks) {
+        console.log("[FocusSession] Rendering available tasks list. Count:", tasks ? tasks.length : 0);
+        // taskListDiv already checked
+        taskListDiv.innerHTML = "";
+        if (!tasks || tasks.length === 0) {
+            taskListDiv.innerHTML = "<p>Nenhuma tarefa pendente encontrada.</p>";
+            return;
+        }
+        tasks.forEach((task) => {
+            if (!task || typeof task.id === "undefined" || typeof task.title === "undefined") return;
             const isSelected = selectedTasks.some(st => st.id === task.id);
             const button = document.createElement("button");
-            button.className = `btn btn-task ${isSelected ? 'active' : ''}`;
+            button.className = `btn btn-task ${isSelected ? "active" : ""}`;
             button.textContent = task.title;
             button.setAttribute("data-task-id", task.id);
             button.setAttribute("aria-pressed", isSelected ? "true" : "false");
             button.addEventListener("click", () => toggleTaskSelection(task, button));
             taskListDiv.appendChild(button);
         });
-        console.log("[FocusSession] Finished rendering available tasks.");
     }
 
-    // --- Lógica de Tarefas (sem alterações significativas, mantendo logs anteriores) ---
+    // --- Lógica de Tarefas ---
 
-    // Alterna a seleção de uma tarefa
     function toggleTaskSelection(task, button) {
         console.log(`[FocusSession] Toggling selection for task: ${task.id}`);
         if (isRunning) {
@@ -177,24 +327,27 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(`[FocusSession] Deselecting task: ${task.id}`);
             const removingActive = (activeTaskIndex === taskIndexInSelected);
             selectedTasks.splice(taskIndexInSelected, 1);
-            button.classList.remove("active");
-            button.setAttribute("aria-pressed", "false");
+            if (button) { // Check if button exists
+                button.classList.remove("active");
+                button.setAttribute("aria-pressed", "false");
+            }
             if (removingActive) {
-                activeTaskIndex = -1;
-                if (selectedTasks.length > 0) setActiveTask(0);
+                activeTaskIndex = selectedTasks.length > 0 ? 0 : -1; // Define para 0 se houver outras, senão -1
             } else if (activeTaskIndex > taskIndexInSelected) {
                 activeTaskIndex--;
             }
-            console.log("[FocusSession] Selected tasks after deselection:", selectedTasks, "Active index:", activeTaskIndex);
+            setActiveTask(activeTaskIndex); // Atualiza visualmente
         } else {
             if (selectedTasks.length < MAX_TASKS) {
                 console.log(`[FocusSession] Selecting task: ${task.id}`);
-                // Adiciona uma cópia da tarefa com progresso e estado de conclusão resetados para a sessão
                 selectedTasks.push({ ...task, progress: 0, completed: false });
-                button.classList.add("active");
-                button.setAttribute("aria-pressed", "true");
-                if (selectedTasks.length === 1) setActiveTask(0);
-                console.log("[FocusSession] Selected tasks after selection:", selectedTasks, "Active index:", activeTaskIndex);
+                if (button) { // Check if button exists
+                    button.classList.add("active");
+                    button.setAttribute("aria-pressed", "true");
+                }
+                if (selectedTasks.length === 1) {
+                    setActiveTask(0);
+                }
             } else {
                 alert(`Você pode selecionar no máximo ${MAX_TASKS} tarefas.`);
             }
@@ -203,312 +356,347 @@ document.addEventListener("DOMContentLoaded", function () {
         updateSelectedTasksCountAndValidation();
     }
 
-    // Renderiza a lista de tarefas selecionadas na área designada
     function renderSelectedTasks() {
         console.log("[FocusSession] Rendering selected tasks list. Count:", selectedTasks.length, "Active index:", activeTaskIndex);
+        // selectedTasksListDiv already checked
         selectedTasksListDiv.innerHTML = "";
         if (selectedTasks.length === 0) {
-             selectedTasksListDiv.innerHTML = "<p>Nenhuma tarefa selecionada para a sessão.</p>";
-             activeTaskIndex = -1;
-        }
-        selectedTasks.forEach((task, index) => {
-             if (!task || typeof task.id === 'undefined' || typeof task.title === 'undefined') {
-                console.warn(`[FocusSession] Skipping rendering selected task at index ${index} due to missing data:`, task);
-                return;
-            }
-            const taskElement = document.createElement("div");
-            // Usa task.completed da cópia local (selectedTasks) para o estado visual na sessão
-            taskElement.className = `selected-task ${index === activeTaskIndex ? 'task-active' : ''} ${task.completed ? 'completed' : ''}`;
-            taskElement.setAttribute("data-task-id", task.id);
-            taskElement.innerHTML = `
-                <span class="task-title">${task.title} ${task.completed ? '(Concluída na sessão)' : ''}</span>
-                <div class="task-progress-bar">
-                    <div class="progress" style="width: ${task.progress || 0}%;">
-                        <span class="progress-text">${Math.round(task.progress || 0)}%</span>
+            selectedTasksListDiv.innerHTML = "<p>Nenhuma tarefa selecionada para a sessão.</p>";
+            activeTaskIndex = -1;
+        } else {
+            selectedTasks.forEach((task, index) => {
+                if (!task || typeof task.id === "undefined" || typeof task.title === "undefined") return;
+                const taskElement = document.createElement("div");
+                taskElement.className = `selected-task ${index === activeTaskIndex ? "task-active" : ""} ${task.completed ? "completed" : ""}`;
+                taskElement.setAttribute("data-task-id", task.id);
+                // Check if task.progress is defined, default to 0
+                const progressValue = task.progress || 0;
+                const roundedProgress = Math.round(progressValue);
+                taskElement.innerHTML = `
+                    <span class="task-title">${task.title} ${task.completed ? "(Concluída na sessão)" : ""}</span>
+                    <div class="task-progress-bar">
+                        <div class="progress" style="width: ${progressValue}%;">
+                            <span class="progress-text">${roundedProgress}%</span>
+                        </div>
                     </div>
-                </div>
-                <i class="fas fa-times remove-task-icon" data-task-id="${task.id}" aria-label="Remover tarefa ${task.title} da sessão"></i>
-            `;
-            selectedTasksListDiv.appendChild(taskElement);
-        });
-        selectedTasksListDiv.querySelectorAll(".remove-task-icon").forEach((icon) => {
-            icon.addEventListener("click", (e) => {
-                if (isRunning) {
-                    alert("Cancele a sessão atual antes de remover tarefas.");
-                    return;
-                }
-                const taskIdToRemove = e.target.getAttribute("data-task-id");
-                console.log(`[FocusSession] Remove icon clicked for task: ${taskIdToRemove}`);
-                // Encontra o botão correspondente na lista de disponíveis para atualizar o estado visual
-                const taskButton = taskListDiv.querySelector(`.btn-task[data-task-id="${taskIdToRemove}"]`);
-                // Encontra a tarefa na lista de disponíveis (allAvailableTasks) para passar ao toggle
-                // É importante usar a referência de allAvailableTasks aqui
-                const taskDefinition = allAvailableTasks.find(t => t.id === taskIdToRemove);
-
-                if (taskDefinition && taskButton) {
-                    // Chama toggleTaskSelection com a definição original da tarefa e o botão
-                    toggleTaskSelection(taskDefinition, taskButton);
-                } else {
-                     console.warn(`[FocusSession] Task definition or button not found for removal: ${taskIdToRemove}. Forcing removal from selected list.`);
-                     // Força a remoção da lista de selecionadas se algo deu errado
-                     const idx = selectedTasks.findIndex(t => t.id === taskIdToRemove);
-                     if (idx > -1) {
-                         selectedTasks.splice(idx, 1);
-                         renderSelectedTasks(); // Re-renderiza a lista de selecionadas
-                         updateSelectedTasksCountAndValidation(); // Atualiza contagem e botão
-                     }
-                }
-                e.stopPropagation();
+                    <i class="fas fa-times remove-task-icon" data-task-id="${task.id}" aria-label="Remover tarefa ${task.title} da sessão"></i>
+                `;
+                selectedTasksListDiv.appendChild(taskElement);
             });
-        });
+            // Add event listeners for remove icons
+            selectedTasksListDiv.querySelectorAll(".remove-task-icon").forEach((icon) => {
+                icon.addEventListener("click", (e) => {
+                    if (isRunning) {
+                        alert("Cancele a sessão atual antes de remover tarefas.");
+                        return;
+                    }
+                    const taskIdToRemove = e.target.getAttribute("data-task-id");
+                    // Find the corresponding button in the available list
+                    const taskButton = taskListDiv ? taskListDiv.querySelector(`.btn-task[data-task-id="${taskIdToRemove}"]`) : null;
+                    const taskDefinition = allAvailableTasks.find(t => t.id === taskIdToRemove);
+
+                    if (taskDefinition && taskButton) {
+                        // Use toggleTaskSelection if the button exists in the available list
+                        toggleTaskSelection(taskDefinition, taskButton);
+                    } else {
+                        // If button doesn't exist (e.g., task was removed externally), just remove from selected list
+                        const idx = selectedTasks.findIndex(t => t.id === taskIdToRemove);
+                        if (idx > -1) {
+                            console.log(`[FocusSession] Removing task ${taskIdToRemove} directly from selection (button not found).`);
+                            selectedTasks.splice(idx, 1);
+                            // Adjust active index if needed
+                            if (activeTaskIndex === idx) {
+                                activeTaskIndex = selectedTasks.length > 0 ? 0 : -1;
+                            } else if (activeTaskIndex > idx) {
+                                activeTaskIndex--;
+                            }
+                            renderSelectedTasks(); // Re-render the list
+                            updateSelectedTasksCountAndValidation(); // Update count and validation
+                        }
+                    }
+                    e.stopPropagation(); // Prevent event bubbling
+                });
+            });
+        }
         updateNextSessionInfo();
         console.log("[FocusSession] Finished rendering selected tasks.");
     }
 
-    // Define a tarefa ativa (index na lista selectedTasks)
     function setActiveTask(index) {
         console.log(`[FocusSession] Attempting to set active task index to: ${index}`);
+        let newActiveIndex = -1; // Default to no active task
+
         if (index >= 0 && index < selectedTasks.length) {
-            // Verifica se a tarefa NESTA SESSÃO (selectedTasks) já está marcada como concluída
             if (selectedTasks[index].completed) {
-                console.log(`[FocusSession] Task at index ${index} is marked completed in this session. Searching for next available.`);
-                let nextAvailableIndex = -1;
-                // Procura a próxima tarefa NÃO concluída na lista de selecionadas
+                console.log(`[FocusSession] Task at index ${index} is completed in session. Finding next.`);
+                // Try finding the next available task after the current index
                 for (let i = index + 1; i < selectedTasks.length; i++) {
-                    if (!selectedTasks[i].completed) { nextAvailableIndex = i; break; }
-                }
-                if (nextAvailableIndex === -1) {
-                     for (let i = 0; i < index; i++) {
-                        if (!selectedTasks[i].completed) { nextAvailableIndex = i; break; }
+                    if (!selectedTasks[i].completed) {
+                        newActiveIndex = i;
+                        break;
                     }
                 }
-                if (nextAvailableIndex !== -1) {
-                    console.log(`[FocusSession] Found next available task in session at index: ${nextAvailableIndex}`);
-                    index = nextAvailableIndex;
-                } else {
-                    console.log("[FocusSession] No available (non-completed) selected tasks found in this session.");
-                    activeTaskIndex = -1;
-                    renderSelectedTasks(); // Atualiza UI para remover destaque
-                    updateNextSessionInfo();
-                    return;
+                // If no task found after, try searching from the beginning up to the current index
+                if (newActiveIndex === -1) {
+                    for (let i = 0; i < index; i++) {
+                        if (!selectedTasks[i].completed) {
+                            newActiveIndex = i;
+                            break;
+                        }
+                    }
                 }
+                // If still no available task found, newActiveIndex remains -1
+            } else {
+                // If the task at the target index is not completed, set it as active
+                newActiveIndex = index;
             }
-            activeTaskIndex = index;
-            console.log(`[FocusSession] Active task index set to: ${activeTaskIndex}`);
-            document.querySelectorAll('.selected-task').forEach((taskEl, idx) => {
-                 taskEl.classList.toggle('task-active', idx === activeTaskIndex);
-            });
-        } else {
-            console.log(`[FocusSession] Invalid index (${index}) or no selected tasks. Setting active index to -1.`);
-            activeTaskIndex = -1;
-            document.querySelectorAll('.selected-task').forEach(taskEl => {
-                taskEl.classList.remove('task-active');
-            });
+        } else if (selectedTasks.length > 0) {
+             // If index is invalid but there are tasks, try finding the first available one
+             const firstAvailable = selectedTasks.findIndex(t => !t.completed);
+             if (firstAvailable !== -1) {
+                 newActiveIndex = firstAvailable;
+             }
         }
-        updateNextSessionInfo();
+
+        activeTaskIndex = newActiveIndex; // Update the global active index
+
+        console.log(`[FocusSession] Active task index set to: ${activeTaskIndex}`);
+
+        // Update visual representation
+        // selectedTasksListDiv already checked
+        selectedTasksListDiv.querySelectorAll(".selected-task").forEach((taskEl, idx) => {
+            taskEl.classList.toggle("task-active", idx === activeTaskIndex);
+        });
+
+        updateNextSessionInfo(); // Update info display
     }
 
-    // Atualiza a barra de progresso da tarefa ativa durante o foco
     function updateActiveTaskProgress() {
         if (activeTaskIndex === -1 || !selectedTasks[activeTaskIndex] || selectedTasks[activeTaskIndex].completed || !isFocusTime || !isRunning) return;
-        const totalDuration = (timerMode === 'manual' ? manualFocusDuration : currentCycleFocusDuration) * 60;
+
+        const totalDuration = (timerMode === "manual" ? manualFocusDuration : currentCycleFocusDuration) * 60;
         if (totalDuration <= 0) return;
+
         const elapsed = totalDuration - remainingTime;
         const percentage = (elapsed / totalDuration) * 100;
         const clampedPercentage = Math.max(0, Math.min(100, percentage));
+
+        // Find the container for the active task
+        // selectedTasksListDiv already checked
         const activeTaskElementContainer = selectedTasksListDiv.querySelector(`.selected-task[data-task-id="${selectedTasks[activeTaskIndex].id}"]`);
-        if (!activeTaskElementContainer) return;
+        if (!activeTaskElementContainer) {
+            console.warn(`[FocusSession] Could not find DOM element for active task ID: ${selectedTasks[activeTaskIndex].id}`);
+            return; // Exit if the element is not found
+        }
+
         const progressBar = activeTaskElementContainer.querySelector(".progress");
         const progressText = activeTaskElementContainer.querySelector(".progress-text");
+
         if (progressBar && progressText) {
             progressBar.style.width = `${clampedPercentage}%`;
-            progressText.textContent = `${Math.round(clampedPercentage)}%`;
-            if (clampedPercentage > 50) {
-                progressText.style.color = "white";
-                progressText.style.mixBlendMode = "overlay";
-            } else {
-                progressText.style.color = "var(--text-color)";
-                progressText.style.mixBlendMode = "normal";
-            }
+            const roundedPercentage = Math.round(clampedPercentage);
+            progressText.textContent = `${roundedPercentage}%`;
+            // Adjust text color for better visibility based on progress
+            progressText.style.color = clampedPercentage > 50 ? "white" : "var(--text-color)";
+            progressText.style.mixBlendMode = clampedPercentage > 50 ? "overlay" : "normal"; // Optional visual effect
+            // Update the progress in the task object
+            selectedTasks[activeTaskIndex].progress = clampedPercentage;
+        } else {
+            console.warn(`[FocusSession] Progress bar or text element not found within task container for ID: ${selectedTasks[activeTaskIndex].id}`);
         }
     }
 
-    // Marca a tarefa ativa como concluída NA SESSÃO e salva no localStorage
     function markTaskAsCompleted() {
         if (activeTaskIndex !== -1 && selectedTasks[activeTaskIndex]) {
             const completedTaskId = selectedTasks[activeTaskIndex].id;
             console.log(`[FocusSession] Marking task ${completedTaskId} as completed IN SESSION.`);
-            // Marca como concluída na lista da sessão (selectedTasks)
             selectedTasks[activeTaskIndex].progress = 100;
             selectedTasks[activeTaskIndex].completed = true;
 
-            // Salva o estado concluído PERMANENTEMENTE no localStorage
-            saveTaskCompletionStatus(completedTaskId, true);
+            saveTaskCompletionStatus(completedTaskId, true); // Salva no localStorage
 
-            // Re-renderiza a lista de selecionadas para mostrar o estado atualizado
-            renderSelectedTasks();
+            renderSelectedTasks(); // Re-renderiza lista de selecionadas para mostrar como concluída
 
-            // Tenta mover para a próxima tarefa não concluída na lista de selecionadas
+            // Encontra a próxima tarefa NÃO concluída na sessão
             let nextIndex = -1;
             for (let i = 0; i < selectedTasks.length; i++) {
-                 // Procura a próxima *diferente* da atual que não esteja completa na sessão
-                 if (i !== activeTaskIndex && !selectedTasks[i].completed) { nextIndex = i; break; }
+                if (!selectedTasks[i].completed) {
+                    nextIndex = i;
+                    break;
+                }
             }
-            // Se não encontrou depois, tenta do início até a atual
-            // (Não precisa verificar antes, pois a lógica acima cobre isso ao iterar de 0)
-            // if (nextIndex === -1) { ... }
 
             if (nextIndex !== -1) {
                 console.log(`[FocusSession] Moving to next available task in session at index ${nextIndex}`);
-                setActiveTask(nextIndex);
+                setActiveTask(nextIndex); // Define a próxima tarefa como ativa
             } else {
-                console.log("[FocusSession] No more available tasks in the selected list for this session.");
-                activeTaskIndex = -1; // Nenhuma tarefa ativa restante na sessão
+                console.log("[FocusSession] All selected tasks completed in this session.");
+                activeTaskIndex = -1; // Nenhuma tarefa ativa
                 updateNextSessionInfo();
-                // Verifica se TODAS as tarefas disponíveis (não apenas as selecionadas) foram concluídas
-                // A lista allAvailableTasks já foi atualizada por saveTaskCompletionStatus
-                if (allAvailableTasks.length === 0) {
-                     alert("Parabéns! Todas as tarefas pendentes foram concluídas!");
-                } else if (selectedTasks.every(task => task.completed)) {
-                     alert("Parabéns! Todas as tarefas selecionadas para esta sessão foram concluídas.");
+                updateSelectedTasksCountAndValidation(); // Atualiza validação e contagem
+                if (selectedTasks.every(task => task.completed)) {
+                    alert("Parabéns! Todas as tarefas selecionadas para esta sessão foram concluídas.");
                 }
             }
         }
     }
 
-    // Função para salvar o status de conclusão da tarefa no localStorage (usando 'studyTasks')
+    // CORREÇÃO: Modificada para lidar com `completed` e `done`
     function saveTaskCompletionStatus(taskId, isCompleted) {
-        console.log(`[FocusSession] Saving completion status (${isCompleted}) for task ${taskId} to localStorage ('studyTasks').`);
-        const storedData = localStorage.getItem('studyTasks');
+        console.log(`[FocusSession] Saving completion status (${isCompleted}) for task ${taskId} to localStorage (\"studyTasks\").`);
+        const storedData = localStorage.getItem("studyTasks");
         let tasksBySubject = {};
         if (storedData) {
             try {
                 tasksBySubject = JSON.parse(storedData);
-                if (!tasksBySubject || typeof tasksBySubject !== 'object' || Array.isArray(tasksBySubject)) {
-                    console.error("[FocusSession] Data in localStorage for 'studyTasks' is not a valid object. Cannot save completion status.");
+                if (!tasksBySubject || typeof tasksBySubject !== "object" || Array.isArray(tasksBySubject)) {
+                    console.error("[FocusSession] Data in localStorage for \"studyTasks\" is not a valid object.");
                     return;
                 }
             } catch (e) {
-                console.error("[FocusSession] Error reading tasks from localStorage ('studyTasks') for saving completion:", e);
+                console.error("[FocusSession] Error reading tasks from localStorage (\"studyTasks\") for saving:", e);
                 return;
             }
         }
 
         let taskFoundAndUpdated = false;
-        // Itera sobre as matérias para encontrar e atualizar a tarefa
         Object.keys(tasksBySubject).forEach(subject => {
             if (Array.isArray(tasksBySubject[subject])) {
                 const taskIndex = tasksBySubject[subject].findIndex(t => t && t.id === taskId);
                 if (taskIndex !== -1) {
                     tasksBySubject[subject][taskIndex].completed = isCompleted;
-                    // Opcional: Atualizar data de conclusão, etc.
-                    // tasksBySubject[subject][taskIndex].completionDate = new Date().toISOString();
+                    tasksBySubject[subject][taskIndex].done = isCompleted; // Sincroniza 'done'
                     taskFoundAndUpdated = true;
                 }
             }
         });
 
         if (taskFoundAndUpdated) {
-            localStorage.setItem('studyTasks', JSON.stringify(tasksBySubject));
-            console.log(`[FocusSession] Task ${taskId} status saved to localStorage ('studyTasks').`);
-
-            // Atualiza também a lista `allAvailableTasks` para remover a tarefa concluída da lista de disponíveis na UI
-            const internalTaskIndex = allAvailableTasks.findIndex(t => t && t.id === taskId);
-            if (internalTaskIndex !== -1) {
-                allAvailableTasks.splice(internalTaskIndex, 1);
-                renderAvailableTasks(allAvailableTasks); // Re-renderiza a lista de disponíveis
+            localStorage.setItem("studyTasks", JSON.stringify(tasksBySubject));
+            console.log(`[FocusSession] Task ${taskId} status saved to localStorage (\"studyTasks\").`);
+            // CORREÇÃO: Dispara evento para outras telas saberem da mudança
+            window.dispatchEvent(new CustomEvent("tasksUpdated"));
+            // Atualiza a lista interna de disponíveis APÓS salvar e disparar evento
+            // Isso garante que a lógica de recarga funcione corretamente
+            if (isCompleted) {
+                 const internalTaskIndex = allAvailableTasks.findIndex(t => t && t.id === taskId);
+                 if (internalTaskIndex !== -1) {
+                     allAvailableTasks.splice(internalTaskIndex, 1);
+                     renderAvailableTasks(allAvailableTasks); // Re-render available tasks to remove the completed one
+                 }
+            } else {
+                // Se desmarcou (isCompleted = false), precisa recarregar a lista de disponíveis
+                // para que a tarefa reapareça como pendente.
+                loadTasksFromStorage();
             }
         } else {
-            console.warn(`[FocusSession] Task ${taskId} not found in localStorage ('studyTasks') object for saving completion.`);
+            console.warn(`[FocusSession] Task ${taskId} not found in localStorage (\"studyTasks\") object for saving.`);
         }
     }
 
-    // Atualiza a contagem de tarefas selecionadas e habilita/desabilita botão Iniciar
     function updateSelectedTasksCountAndValidation() {
         const count = selectedTasks.length;
+        // selectedTasksCountElement and tasksValidationElement already checked
         selectedTasksCountElement.textContent = `${count}/${MAX_TASKS}`;
-        // Verifica se há pelo menos uma tarefa selecionada E que não esteja marcada como concluída NESTA SESSÃO
-        const canStart = !isRunning && count > 0 && selectedTasks.some(t => !t.completed);
+        const hasPendingSelected = selectedTasks.some(t => !t.completed);
+        const canStart = !isRunning && count > 0 && hasPendingSelected;
+
         if (count === 0) {
             tasksValidationElement.textContent = "Selecione pelo menos uma tarefa.";
             tasksValidationElement.style.display = "flex";
-        } else if (!selectedTasks.some(t => !t.completed)) {
-             tasksValidationElement.textContent = "Todas as tarefas selecionadas nesta sessão estão concluídas.";
-             tasksValidationElement.style.display = "flex";
+        } else if (!hasPendingSelected) {
+            tasksValidationElement.textContent = "Todas as tarefas selecionadas nesta sessão estão concluídas.";
+            tasksValidationElement.style.display = "flex";
         } else {
             tasksValidationElement.style.display = "none";
         }
+        // startBtn already checked
         startBtn.disabled = !canStart;
         console.log(`[FocusSession] Start button enabled: ${!startBtn.disabled}`);
     }
 
-    // --- Lógica do Timer (sem alterações significativas, mantendo logs anteriores) ---
+    // --- Lógica do Timer ---
 
-    // Formata segundos para MM:SS
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
 
-    // Atualiza o display visual do timer (relógio, progresso)
     function updateTimerDisplay() {
+        // timeDisplay, progressCircle, progressPercentageElement, clockCircle already checked
         timeDisplay.textContent = formatTime(remainingTime);
         let totalTimeForProgress = 0;
+
+        // Determine the total duration for the current cycle/mode for progress calculation
         if (!isRunning) {
-            // Calcula o tempo total baseado no modo e duração atual para exibir progresso 0
-            if (timerMode === 'manual') {
+            // If timer is not running, show progress based on the *next* focus cycle duration
+            if (timerMode === "manual") {
                 totalTimeForProgress = manualFocusDuration * 60;
             } else {
-                // Usa a duração calculada para o ciclo atual (que seria o primeiro se fosse iniciar)
-                calculateAutoDurations(); // Garante que currentCycleFocusDuration está atualizado
+                calculateAutoDurations(); // Ensure durations are calculated
                 totalTimeForProgress = currentCycleFocusDuration * 60;
             }
-        } else if (timerMode === 'manual') {
+            // When not running, remaining time should reflect the full duration for the display
+            remainingTime = totalTimeForProgress;
+        } else if (timerMode === "manual") {
             totalTimeForProgress = manualFocusDuration * 60;
-        } else { // Auto
+        } else { // Auto mode, running
             totalTimeForProgress = isFocusTime ? currentCycleFocusDuration * 60 : currentCycleBreakDuration * 60;
         }
-        const progressPercentage = totalTimeForProgress > 0 ? ((totalTimeForProgress - remainingTime) / totalTimeForProgress) * 100 : 0;
+
+        // Calculate progress percentage
+        // Ensure remainingTime doesn't exceed totalTimeForProgress visually due to potential rounding or state issues
+        const currentProgressTime = Math.max(0, totalTimeForProgress - remainingTime);
+        const progressPercentage = totalTimeForProgress > 0 ? (currentProgressTime / totalTimeForProgress) * 100 : 0;
         const clampedProgress = Math.max(0, Math.min(100, progressPercentage));
-        const progressColor = isFocusTime ? 'var(--primary-color)' : 'var(--break-color, var(--secondary-color))';
+
+        // Update visual elements
+        const progressColor = isFocusTime ? "var(--primary-color)" : "var(--break-color, var(--secondary-color))"; // Use fallback for break color
         progressCircle.style.background = `conic-gradient(${progressColor} ${clampedProgress}%, transparent ${clampedProgress}%)`;
         progressPercentageElement.textContent = `${Math.round(clampedProgress)}%`;
-        document.getElementById("clock-circle").classList.toggle("timer-active", remainingTime <= 10 && remainingTime > 0 && isRunning);
+
+        // Add visual cue when time is low (e.g., last 10 seconds)
+        clockCircle.classList.toggle("timer-active", remainingTime <= 10 && remainingTime > 0 && isRunning);
     }
 
-    // Atualiza as informações de status (tarefa ativa, próxima pausa/foco)
+
     function updateNextSessionInfo() {
+        // timerModeElement, timerModeText, nextSessionElement already checked
         let currentActiveTaskTitle = "Nenhuma tarefa ativa";
         if (activeTaskIndex !== -1 && selectedTasks[activeTaskIndex]) {
             currentActiveTaskTitle = selectedTasks[activeTaskIndex].title;
         }
+
         if (timerMode === "auto") {
             if (!isRunning) {
-                 timerModeElement.className = "timer-mode-indicator auto";
-                 timerModeText.textContent = "Modo Automático";
-                 // Verifica se há tarefas PENDENTES selecionadas para mostrar 'Pronto'
-                 const readyMsg = selectedTasks.some(t => !t.completed) ? `Pronto (${autoSettings.totalSessionDuration} min)` : (selectedTasks.length > 0 ? 'Todas selecionadas concluídas' : 'Selecione tarefas pendentes');
-                 nextSessionElement.innerHTML = `<i class="fas fa-hourglass-start"></i> ${readyMsg}`;
+                timerModeElement.className = "timer-mode-indicator auto";
+                timerModeText.textContent = "Modo Automático";
+                const hasPending = selectedTasks.some(t => !t.completed);
+                const readyMsg = hasPending ? `Pronto (${autoSettings.totalSessionDuration} min)` : (selectedTasks.length > 0 ? "Todas selecionadas concluídas" : "Selecione tarefas pendentes");
+                nextSessionElement.innerHTML = `<i class="fas fa-hourglass-start"></i> ${readyMsg}`;
             } else if (isFocusTime) {
                 timerModeElement.className = "timer-mode-indicator focus";
                 timerModeText.textContent = `Foco: ${currentActiveTaskTitle}`;
-                const nextBreakDuration = (focusCyclesCompletedInBlock + 1) % LONG_BREAK_INTERVAL === 0 ? autoSettings.baseBreakDuration * 2 : autoSettings.baseBreakDuration;
+                // Calculate next break duration accurately
+                const isLongBreakNext = (focusCyclesCompletedInBlock + 1) % LONG_BREAK_INTERVAL === 0;
+                const nextBreakDuration = isLongBreakNext ? autoSettings.baseBreakDuration * 2 : autoSettings.baseBreakDuration;
                 nextSessionElement.innerHTML = `<i class="fas fa-coffee"></i> Próxima pausa (${nextBreakDuration} min) em ${formatTime(remainingTime)}`;
-            } else { // Em pausa
+            } else { // Auto mode, break time
                 timerModeElement.className = "timer-mode-indicator break";
                 const isLongBreak = currentCycleBreakDuration > autoSettings.baseBreakDuration;
                 timerModeText.textContent = isLongBreak ? "Pausa Longa" : "Pausa Curta";
+                calculateAutoDurations(); // Ensure next focus duration is calculated for the info message
                 nextSessionElement.innerHTML = `<i class="fas fa-brain"></i> Próximo foco (${currentCycleFocusDuration} min) em ${formatTime(remainingTime)}`;
             }
-        } else { // Modo Manual
-             timerModeElement.className = "timer-mode-indicator focus";
-             timerModeText.textContent = `Foco Manual: ${currentActiveTaskTitle}`;
-             nextSessionElement.innerHTML = `<i class="fas fa-clock"></i> Duração: ${formatTime(manualFocusDuration * 60)}`;
+        } else { // Manual mode
+            timerModeElement.className = "timer-mode-indicator focus";
+            timerModeText.textContent = `Foco Manual: ${currentActiveTaskTitle}`;
+            nextSessionElement.innerHTML = `<i class="fas fa-clock"></i> Duração: ${formatTime(manualFocusDuration * 60)}`;
         }
     }
 
-    // Reseta o timer para o estado inicial (parado)
+
     function resetTimer() {
         console.log("[FocusSession] Resetting timer...");
         clearInterval(timer);
@@ -517,353 +705,475 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionCount = 0;
         focusCyclesCompletedInBlock = 0;
         totalSessionRemainingTime = 0;
+        autoSessionStarted = false;
+        lastCycleDurationMinutes = 0;
+
+        // Reset remaining time based on current mode
         if (timerMode === "manual") {
             remainingTime = manualFocusDuration * 60;
-        } else { // Auto
+        } else {
             totalSessionRemainingTime = autoSettings.totalSessionDuration * 60;
-            calculateAutoDurations(); // Calcula durações iniciais baseado no tempo total
+            calculateAutoDurations(); // Calculate initial focus duration for auto mode
             remainingTime = currentCycleFocusDuration * 60;
         }
-        updateTimerDisplay();
-        updateNextSessionInfo();
-        // Reseta progresso visual das tarefas selecionadas (não apenas a ativa)
-        selectedTasks.forEach(task => { task.progress = 0; });
-        renderSelectedTasks(); // Re-renderiza para mostrar progresso 0
 
-        updateSelectedTasksCountAndValidation();
+        updateTimerDisplay(); // Update display with reset values (will set progress to 0%)
+        updateNextSessionInfo(); // Update info display
+
+        // Re-enable/disable buttons and inputs
+        // startBtn, cancelBtn, customTimeInput, totalSessionTimeInput, breakTimeInput already checked
+        startBtn.disabled = !selectedTasks.some(t => !t.completed); // Can start only if there are pending selected tasks
         cancelBtn.disabled = true;
-        document.getElementById("clock-circle").classList.remove("timer-active");
-        customTimeInput.disabled = false;
-        totalSessionTimeInput.disabled = false;
-        breakTimeInput.disabled = false;
+        if (customTimeInput) customTimeInput.disabled = timerMode !== 'manual'; // Enable only in manual mode
+        if (totalSessionTimeInput) totalSessionTimeInput.disabled = timerMode !== 'auto'; // Enable only in auto mode
+        if (breakTimeInput) breakTimeInput.disabled = timerMode !== 'auto'; // Enable only in auto mode
+
         console.log("[FocusSession] Timer reset complete.");
     }
 
-    // Calcula as durações de foco/pausa para o modo automático
+
     function calculateAutoDurations() {
         const totalMinutes = autoSettings.totalSessionDuration;
-        // Lógica de adaptação simples (pode ser melhorada)
+        let calculatedFocusDuration = 25; // Default focus duration
+
+        // Example logic for dynamic focus duration based on total session time
         if (totalMinutes <= 45) {
-            currentCycleFocusDuration = Math.min(40, Math.max(20, totalMinutes - autoSettings.baseBreakDuration));
+            // Shorter sessions might have slightly longer focus periods relative to breaks
+            calculatedFocusDuration = Math.min(40, Math.max(20, totalMinutes - autoSettings.baseBreakDuration));
         } else if (totalMinutes <= 90) {
-            currentCycleFocusDuration = 30;
+            calculatedFocusDuration = 30;
         } else if (totalMinutes <= 150) {
-            currentCycleFocusDuration = 25;
-        } else { // >= 150
-            currentCycleFocusDuration = 20;
+            calculatedFocusDuration = 25;
+        } else { // Longer sessions
+            calculatedFocusDuration = 20;
         }
-        // Garante que o foco não seja maior que o tempo total restante na sessão
-        // Usa Math.max com 1 para garantir que haja pelo menos 1 min se houver tempo restante
-        // Considera o tempo total restante da SESSÃO, não apenas do ciclo
-        currentCycleFocusDuration = Math.min(currentCycleFocusDuration, Math.max(1, Math.ceil(totalSessionRemainingTime / 60)));
-        console.log(`[FocusSession] Calculated auto durations: Focus=${currentCycleFocusDuration}min based on total remaining ${totalSessionRemainingTime/60}min`);
+
+        // Ensure focus duration is reasonable and doesn't exceed remaining total time (if session started)
+        if (autoSessionStarted && totalSessionRemainingTime > 0) {
+             // Calculate based on remaining time, but ensure it's not excessively short
+             const maxPossibleFocus = Math.floor(totalSessionRemainingTime / 60);
+             currentCycleFocusDuration = Math.min(calculatedFocusDuration, maxPossibleFocus);
+        } else {
+             currentCycleFocusDuration = calculatedFocusDuration;
+        }
+        // Ensure focus duration is at least a minimum value (e.g., 5 minutes)
+        currentCycleFocusDuration = Math.max(5, currentCycleFocusDuration);
+
+        console.log(`[FocusSession] Calculated Auto Durations - Focus: ${currentCycleFocusDuration} min, Base Break: ${autoSettings.baseBreakDuration} min`);
+        // Break duration is calculated when the focus cycle ends
     }
 
-    // Função principal do tick do timer
+
     function tick() {
         if (remainingTime <= 0) {
             handleCycleEnd();
         } else {
             remainingTime--;
-            if (timerMode === 'auto') {
+            if (timerMode === "auto" && autoSessionStarted) { // Ensure total time only decreases if auto session is running
                 totalSessionRemainingTime--;
             }
             updateTimerDisplay();
             updateActiveTaskProgress();
-            // Verifica se o tempo total da sessão automática acabou
-            if (timerMode === 'auto' && totalSessionRemainingTime <= 0 && isRunning) {
-                 console.log("[FocusSession] Auto session total time ended.");
-                 handleSessionEnd();
+
+            // Check if total auto session time has run out
+            if (timerMode === "auto" && autoSessionStarted && totalSessionRemainingTime <= 0 && isRunning) {
+                console.log("[FocusSession] Auto session total time ended during tick.");
+                handleSessionEnd(true); // End session because time ran out
             }
         }
     }
 
-    // Lida com o fim de um ciclo (foco ou pausa)
+
     function handleCycleEnd() {
         console.log(`[FocusSession] Cycle ended. Mode: ${timerMode}, IsFocus: ${isFocusTime}`);
-        clearInterval(timer);
-        isRunning = false;
+        clearInterval(timer); // Stop the interval timer
+        isRunning = false; // Mark timer as not running
+
         if (timerMode === "manual") {
             playSound(focusEndSound);
-            alert("Sessão de foco manual concluída!");
-            // Perguntar sobre conclusão da tarefa manual
-             if (activeTaskIndex !== -1 && selectedTasks[activeTaskIndex] && !selectedTasks[activeTaskIndex].completed) {
+            lastCycleDurationMinutes = manualFocusDuration;
+            recordCompletedFocusCycle(lastCycleDurationMinutes, "manual");
+
+            let taskCompletedDuringCycle = false;
+            if (activeTaskIndex !== -1 && selectedTasks[activeTaskIndex] && !selectedTasks[activeTaskIndex].completed) {
                 const taskTitle = selectedTasks[activeTaskIndex].title;
+                // Use confirm dialog to ask user about task completion
                 const confirmCompletion = confirm(`Sessão manual concluída! Você finalizou a tarefa "${taskTitle}"?`);
                 if (confirmCompletion) {
                     markTaskAsCompleted();
+                    taskCompletedDuringCycle = true;
                 }
             }
-            resetTimer();
+            // Provide feedback even if no task was active or completed
+            if (!taskCompletedDuringCycle) {
+                 alert("Sessão de foco manual concluída!");
+            }
+            resetTimer(); // Reset for the next session
+
         } else { // Modo Automático
-            if (isFocusTime) {
+            if (isFocusTime) { // End of a Focus Cycle
                 playSound(focusEndSound);
+                lastCycleDurationMinutes = currentCycleFocusDuration;
+                recordCompletedFocusCycle(lastCycleDurationMinutes, "auto", true); // Record as part of auto session
                 sessionCount++;
                 focusCyclesCompletedInBlock++;
                 console.log(`[FocusSession] Focus cycle ${sessionCount} ended. Cycles in block: ${focusCyclesCompletedInBlock}`);
+
+                // Ask about task completion after focus cycle
                 let taskCompletedDuringCycle = false;
                 if (activeTaskIndex !== -1 && selectedTasks[activeTaskIndex] && !selectedTasks[activeTaskIndex].completed) {
                     const taskTitle = selectedTasks[activeTaskIndex].title;
-                    const confirmCompletion = confirm(`Ciclo de foco concluído! Você finalizou a tarefa "${taskTitle}"?`);
+                    const confirmCompletion = confirm(`Ciclo de foco (${currentCycleFocusDuration} min) concluído! Você finalizou a tarefa "${taskTitle}"?`);
                     if (confirmCompletion) {
-                        markTaskAsCompleted(); // Marca como concluída na sessão e no localStorage
+                        markTaskAsCompleted(); // This function handles moving to the next task if available
                         taskCompletedDuringCycle = true;
                     }
                 }
-                // Verifica se ainda há tempo na sessão total E tarefas selecionadas pendentes NA SESSÃO
+
+                // Award bonus points for consecutive focus cycles
+                if (sessionCount > 1 && focusCyclesCompletedInBlock > 1) {
+                    addBonusPoints(2, "Bloco de foco com múltiplas sessões");
+                }
+
+                // Check if the session should end (no more time or no pending tasks)
                 const hasMoreTime = totalSessionRemainingTime > 0;
                 const hasPendingSelectedTasks = selectedTasks.some(t => !t.completed);
                 if (!hasMoreTime || !hasPendingSelectedTasks) {
-                    console.log(`[FocusSession] Ending session. HasTime: ${hasMoreTime}, HasPendingSelected: ${hasPendingSelectedTasks}`);
-                    handleSessionEnd();
-                    return;
+                    console.log(`[FocusSession] Ending session after focus. HasTime: ${hasMoreTime}, HasPendingSelected: ${hasPendingSelectedTasks}`);
+                    handleSessionEnd(!hasMoreTime); // End session (true if ended by time)
+                    return; // Stop further processing for this cycle
                 }
+
+                // Prepare for the break
                 console.log("[FocusSession] Preparing for break...");
-                isFocusTime = false;
+                isFocusTime = false; // Switch to break time
+                // Determine break duration (long or short)
                 currentCycleBreakDuration = autoSettings.baseBreakDuration;
                 if (focusCyclesCompletedInBlock % LONG_BREAK_INTERVAL === 0) {
                     console.log("[FocusSession] Long break triggered.");
-                    currentCycleBreakDuration *= 2;
+                    currentCycleBreakDuration *= 2; // Double the base break for a long break
                 }
-                remainingTime = currentCycleBreakDuration * 60;
-                remainingTime = Math.min(remainingTime, totalSessionRemainingTime);
+                // Ensure break doesn't exceed remaining total session time
+                remainingTime = Math.min(currentCycleBreakDuration * 60, totalSessionRemainingTime);
+
                 if (remainingTime <= 0) {
                     console.log("[FocusSession] Not enough time for break. Ending session.");
-                    handleSessionEnd();
+                    handleSessionEnd(true); // End session due to lack of time
                     return;
                 }
+
                 playSound(breakStartSound);
-                updateNextSessionInfo();
-                updateTimerDisplay();
-                timer = setInterval(tick, 1000);
+                updateNextSessionInfo(); // Show break info
+                updateTimerDisplay(); // Show break timer
+                timer = setInterval(tick, 1000); // Start the break timer
                 isRunning = true;
-                console.log(`[FocusSession] Break started. Duration: ${currentCycleBreakDuration} min.`);
-            } else {
+                console.log(`[FocusSession] Break started. Duration: ${currentCycleBreakDuration} min (Actual: ${Math.floor(remainingTime/60)} min).`);
+
+            } else { // End of a Break Cycle
                 playSound(breakEndSound);
                 console.log("[FocusSession] Break ended.");
-                isFocusTime = true;
+                isFocusTime = true; // Switch back to focus time
+
+                // Reset block counter if it was a long break
                 if (currentCycleBreakDuration > autoSettings.baseBreakDuration) {
                     console.log("[FocusSession] Resetting focus cycle block counter after long break.");
                     focusCyclesCompletedInBlock = 0;
                 }
+
+                // Check if the session should end (no more time or no pending tasks)
                 const hasMoreTime = totalSessionRemainingTime > 0;
                 const hasPendingSelectedTasks = selectedTasks.some(t => !t.completed);
                 if (!hasMoreTime || !hasPendingSelectedTasks) {
-                     console.log(`[FocusSession] Ending session after break. HasTime: ${hasMoreTime}, HasPendingSelected: ${hasPendingSelectedTasks}`);
-                    handleSessionEnd();
+                    console.log(`[FocusSession] Ending session after break. HasTime: ${hasMoreTime}, HasPendingSelected: ${hasPendingSelectedTasks}`);
+                    handleSessionEnd(!hasMoreTime); // End session
                     return;
                 }
+
+                // Prepare for the next focus cycle
                 console.log("[FocusSession] Preparing for next focus cycle...");
-                // Garante que haja uma tarefa ativa não concluída NA SESSÃO
+
+                // Ensure there's an active, non-completed task
                 if (activeTaskIndex === -1 || (selectedTasks[activeTaskIndex] && selectedTasks[activeTaskIndex].completed)) {
                     const nextAvailableIdx = selectedTasks.findIndex(t => !t.completed);
                     if (nextAvailableIdx !== -1) {
-                         setActiveTask(nextAvailableIdx);
+                        setActiveTask(nextAvailableIdx); // Set the next available task
                     } else {
-                         console.log("[FocusSession] No available task found in session for next focus cycle. Ending session.");
-                         handleSessionEnd();
-                         return;
+                        // This case should have been caught earlier, but as a safeguard:
+                        console.log("[FocusSession] No available task found for next focus cycle. Ending session.");
+                        handleSessionEnd(false); // End session because no tasks left
+                        return;
                     }
                 }
-                calculateAutoDurations(); // Recalcula duração do próximo foco
-                remainingTime = currentCycleFocusDuration * 60;
-                remainingTime = Math.min(remainingTime, totalSessionRemainingTime);
-                 if (remainingTime <= 0) {
+
+                calculateAutoDurations(); // Calculate duration for the next focus cycle
+                // Ensure focus cycle doesn't exceed remaining total session time
+                remainingTime = Math.min(currentCycleFocusDuration * 60, totalSessionRemainingTime);
+
+                if (remainingTime <= 0) {
                     console.log("[FocusSession] Not enough time for next focus cycle. Ending session.");
-                    handleSessionEnd();
+                    handleSessionEnd(true); // End session due to lack of time
                     return;
                 }
+
                 playSound(focusStartSound);
-                updateNextSessionInfo();
-                updateTimerDisplay();
-                timer = setInterval(tick, 1000);
+                updateNextSessionInfo(); // Show focus info
+                updateTimerDisplay(); // Show focus timer
+                timer = setInterval(tick, 1000); // Start the focus timer
                 isRunning = true;
-                console.log(`[FocusSession] Focus cycle started. Duration: ${currentCycleFocusDuration} min.`);
+                console.log(`[FocusSession] Focus cycle started. Duration: ${currentCycleFocusDuration} min (Actual: ${Math.floor(remainingTime/60)} min).`);
             }
         }
     }
 
-    // Lida com o fim da sessão automática completa
-    function handleSessionEnd() {
-        console.log("[FocusSession] Handling session end.");
+
+    function handleSessionEnd(endedByTime) {
+        console.log(`[FocusSession] Handling session end. Ended by time: ${endedByTime}`);
         clearInterval(timer);
         isRunning = false;
-        playSound(breakEndSound);
-        if (totalSessionRemainingTime <= 0) {
-             alert("Sessão de foco automática concluída! Tempo esgotado.");
-        } else if (!selectedTasks.some(t => !t.completed)) {
-             alert("Sessão de foco automática concluída! Todas as tarefas selecionadas foram finalizadas.");
+        playSound(breakEndSound); // Play a sound indicating the end
+
+        // Award bonus points if the auto session completed its full duration
+        if (endedByTime && autoSessionStarted && timerMode === 'auto') {
+            addBonusPoints(2, "Sessão automática completada (tempo total)");
         }
-        resetTimer();
+
+        // Provide user feedback based on why the session ended
+        if (endedByTime && timerMode === 'auto') {
+            alert("Sessão de foco automática concluída! Tempo esgotado.");
+        } else if (!selectedTasks.some(t => !t.completed)) {
+            // This alert might be redundant if markTaskAsCompleted already showed one
+            // Consider removing or making it conditional
+             console.log("[FocusSession] Session ended because all selected tasks were completed.");
+             // alert("Sessão de foco automática concluída! Todas as tarefas selecionadas foram finalizadas.");
+        } else {
+             // Generic end message if not ended by time or task completion (e.g., manual cancel)
+             // This function is usually called after time runs out or tasks are done,
+             // so this branch might not be reached often in auto mode.
+             console.log("[FocusSession] Session ended.");
+        }
+
+        resetTimer(); // Reset the timer and UI for a new session
     }
 
-    // Inicia o timer
+
     function startTimer() {
         console.log("[FocusSession] Start button clicked.");
+        // Ensure there are tasks selected and at least one is pending
         if (selectedTasks.length === 0) {
             alert("Por favor, selecione pelo menos uma tarefa para iniciar.");
             return;
         }
-        // Verifica se há pelo menos uma tarefa selecionada NÃO CONCLUÍDA NA SESSÃO
         const firstPendingIndex = selectedTasks.findIndex(t => !t.completed);
         if (firstPendingIndex === -1) {
-             alert("Todas as tarefas selecionadas nesta sessão já estão concluídas. Selecione novas tarefas ou remova as concluídas.");
-             return;
+            alert("Todas as tarefas selecionadas nesta sessão já estão concluídas. Remova-as ou adicione novas tarefas pendentes.");
+            return;
         }
-        // Define a primeira tarefa pendente como ativa se nenhuma estiver ou a atual estiver concluída NA SESSÃO
+
+        // Set the first pending task as active if none is active or the current one is completed
         if (activeTaskIndex === -1 || (selectedTasks[activeTaskIndex] && selectedTasks[activeTaskIndex].completed)) {
             setActiveTask(firstPendingIndex);
         }
+
+        // Double-check if an active task was successfully set
         if (activeTaskIndex === -1) {
-             console.error("[FocusSession] Failed to set an active task before starting timer.");
-             alert("Erro ao definir tarefa ativa. Tente selecionar a tarefa novamente.");
-             return;
+            console.error("[FocusSession] Failed to set an active task before starting timer.");
+            alert("Erro ao definir tarefa ativa. Verifique as tarefas selecionadas.");
+            return;
         }
+
         console.log(`[FocusSession] Starting timer. Mode: ${timerMode}, Active Task Index: ${activeTaskIndex}`);
         isRunning = true;
+
+        // Update UI state: disable inputs, enable cancel, disable start
+        // Elements already checked
         startBtn.disabled = true;
         cancelBtn.disabled = false;
-        customTimeInput.disabled = true;
-        totalSessionTimeInput.disabled = true;
-        breakTimeInput.disabled = true;
+        if (customTimeInput) customTimeInput.disabled = true;
+        if (totalSessionTimeInput) totalSessionTimeInput.disabled = true;
+        if (breakTimeInput) breakTimeInput.disabled = true;
+
+        // Initialize timer based on mode
         if (timerMode === "manual") {
             isFocusTime = true;
             remainingTime = manualFocusDuration * 60;
-            console.log(`[FocusSession] Manual mode started. Duration: ${manualFocusDuration} min.`);
             playSound(focusStartSound);
-        } else { // Auto
+        } else { // Auto mode
             isFocusTime = true;
-            sessionCount = 0;
+            sessionCount = 0; // Reset counters for the new auto session
             focusCyclesCompletedInBlock = 0;
+            autoSessionStarted = true; // Mark auto session as started
             totalSessionRemainingTime = autoSettings.totalSessionDuration * 60;
-            calculateAutoDurations();
-            remainingTime = currentCycleFocusDuration * 60;
-            remainingTime = Math.min(remainingTime, totalSessionRemainingTime);
+            calculateAutoDurations(); // Calculate initial focus duration
+            remainingTime = Math.min(currentCycleFocusDuration * 60, totalSessionRemainingTime); // Set initial time
+
             if (remainingTime <= 0) {
-                alert("Duração total da sessão é muito curta para iniciar um ciclo de foco.");
-                cancelTimer();
+                alert("Duração total da sessão é muito curta para iniciar um ciclo de foco. Aumente o tempo total.");
+                cancelTimer(); // Cancel immediately if no time for first cycle
                 return;
             }
-             console.log(`[FocusSession] Auto mode started. Total Duration: ${autoSettings.totalSessionDuration} min, First Focus: ${currentCycleFocusDuration} min.`);
             playSound(focusStartSound);
         }
-        updateNextSessionInfo();
-        updateTimerDisplay();
-        timer = setInterval(tick, 1000);
+
+        updateNextSessionInfo(); // Update display
+        updateTimerDisplay(); // Update display
+        timer = setInterval(tick, 1000); // Start the countdown
     }
 
-    // Cancela o timer e reseta o estado
+
     function cancelTimer() {
         console.log("[FocusSession] Cancel button clicked.");
-        clearInterval(timer);
-        isRunning = false;
-        resetTimer();
+        clearInterval(timer); // Stop the timer interval
+        isRunning = false; // Set running state to false
+        // Optionally, record partial progress or prompt user? For now, just reset.
+        resetTimer(); // Reset the timer and UI to initial state
     }
 
-    // --- Controles de Modo e Input (sem alterações significativas, mantendo logs anteriores) ---
+    // --- Controles de Modo e Input ---
 
-    // Inicializa os controles de seleção de modo (Manual/Automático)
     function initModeControls() {
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (isRunning) {
-                    alert("Cancele a sessão atual para trocar de modo.");
-                    return;
-                }
-                const tabId = button.getAttribute('data-tab');
-                console.log(`[FocusSession] Tab changed to: ${tabId}`);
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                button.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-                timerMode = tabId === 'manual-tab' ? 'manual' : 'auto';
-                resetTimer();
+        const tabButtons = document.querySelectorAll(".tab-btn");
+        const tabContents = document.querySelectorAll(".tab-content");
+
+        // Check if essential mode control elements exist
+        if (!tabButtons.length || !tabContents.length) {
+             console.warn("[FocusSession] Mode tab buttons or content areas not found. Mode switching disabled.");
+             // Disable mode switching if elements are missing? Or just log warning.
+        } else {
+            tabButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    if (isRunning) {
+                        alert("Cancele a sessão atual para trocar de modo.");
+                        return;
+                    }
+                    const tabId = button.getAttribute("data-tab");
+                    const targetContent = document.getElementById(tabId);
+
+                    if (!targetContent) {
+                        console.warn(`[FocusSession] Tab content with ID "${tabId}" not found.`);
+                        return;
+                    }
+
+                    // Deactivate all tabs and content
+                    tabButtons.forEach(btn => btn.classList.remove("active"));
+                    tabContents.forEach(content => content.classList.remove("active"));
+
+                    // Activate the clicked tab and corresponding content
+                    button.classList.add("active");
+                    targetContent.classList.add("active");
+
+                    // Update timer mode and reset
+                    timerMode = tabId === "manual-tab" ? "manual" : "auto";
+                    resetTimer(); // Reset timer when switching modes
+                });
             });
-        });
-        customTimeInput.addEventListener('input', function() {
-            if (validateInput(this, 15, 240)) {
-                manualFocusDuration = parseInt(this.value);
-                if (!isRunning) {
-                    remainingTime = manualFocusDuration * 60;
-                    updateTimerDisplay();
-                    updateNextSessionInfo();
+        }
+
+
+        // Add input validation and event listeners (check if inputs exist first)
+        if (customTimeInput) {
+            customTimeInput.addEventListener("input", function() {
+                if (validateInput(this, 15, 240)) {
+                    manualFocusDuration = parseInt(this.value) || 25; // Use default if parsing fails
+                    if (!isRunning) {
+                        resetTimer(); // Reset timer to reflect new duration immediately
+                    }
                 }
-            }
-        });
-        customTimeInput.addEventListener('blur', function() {
-             if (validateInput(this, 15, 240, 25)) {
-                 manualFocusDuration = parseInt(this.value);
-                 if (!isRunning) {
-                    remainingTime = manualFocusDuration * 60;
-                    updateTimerDisplay();
-                    updateNextSessionInfo();
-                 }
-             }
-        });
-        customTimeInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') this.blur();
-        });
-        totalSessionTimeInput.addEventListener('input', function() {
-            if (validateInput(this, 20, 240)) {
-                autoSettings.totalSessionDuration = parseInt(this.value);
-                if (!isRunning) resetTimer();
-            }
-        });
-         totalSessionTimeInput.addEventListener('blur', function() {
-             if (validateInput(this, 20, 240, 60)) {
-                 autoSettings.totalSessionDuration = parseInt(this.value);
-                 if (!isRunning) resetTimer();
-             }
-        });
-        totalSessionTimeInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') this.blur();
-        });
-        breakTimeInput.addEventListener('input', function() {
-            if (validateInput(this, 5, 30)) {
-                autoSettings.baseBreakDuration = parseInt(this.value);
-                 if (!isRunning && timerMode === 'auto') updateNextSessionInfo();
-            }
-        });
-         breakTimeInput.addEventListener('blur', function() {
-             if (validateInput(this, 5, 30, 5)) {
-                 autoSettings.baseBreakDuration = parseInt(this.value);
-                  if (!isRunning && timerMode === 'auto') updateNextSessionInfo();
-             }
-        });
-        breakTimeInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') this.blur();
-        });
+            });
+            customTimeInput.addEventListener("blur", function() {
+                if (validateInput(this, 15, 240, 25)) { // Validate with default on blur
+                    manualFocusDuration = parseInt(this.value) || 25;
+                    if (!isRunning) {
+                        resetTimer();
+                    }
+                }
+            });
+            customTimeInput.addEventListener("keydown", function(event) { if (event.key === "Enter") this.blur(); });
+        }
+
+        if (totalSessionTimeInput) {
+            totalSessionTimeInput.addEventListener("input", function() {
+                if (validateInput(this, 20, 240)) {
+                    autoSettings.totalSessionDuration = parseInt(this.value) || 60;
+                    if (!isRunning) resetTimer();
+                }
+            });
+            totalSessionTimeInput.addEventListener("blur", function() {
+                if (validateInput(this, 20, 240, 60)) {
+                    autoSettings.totalSessionDuration = parseInt(this.value) || 60;
+                    if (!isRunning) resetTimer();
+                }
+            });
+            totalSessionTimeInput.addEventListener("keydown", function(event) { if (event.key === "Enter") this.blur(); });
+        }
+
+        if (breakTimeInput) {
+            breakTimeInput.addEventListener("input", function() {
+                if (validateInput(this, 5, 30)) {
+                    autoSettings.baseBreakDuration = parseInt(this.value) || 5;
+                    if (!isRunning && timerMode === "auto") updateNextSessionInfo(); // Update info if relevant
+                }
+            });
+            breakTimeInput.addEventListener("blur", function() {
+                if (validateInput(this, 5, 30, 5)) {
+                    autoSettings.baseBreakDuration = parseInt(this.value) || 5;
+                    if (!isRunning && timerMode === "auto") updateNextSessionInfo();
+                }
+            });
+            breakTimeInput.addEventListener("keydown", function(event) { if (event.key === "Enter") this.blur(); });
+        }
+
+        // Add listeners to start/cancel buttons (already checked for existence)
         startBtn.addEventListener("click", startTimer);
         cancelBtn.addEventListener("click", cancelTimer);
     }
 
-    // Função auxiliar para validar input numérico
     function validateInput(inputElement, min, max, defaultValue = null) {
         let valueStr = inputElement.value.trim();
         let value = parseInt(valueStr);
         let isValid = !isNaN(value) && value >= min && value <= max;
-        const isBlurEvent = document.activeElement !== inputElement;
+        const isBlurEvent = document.activeElement !== inputElement; // Check if it's a blur event
+
         if (isBlurEvent) {
-            if (valueStr === '' && defaultValue !== null) {
-                inputElement.value = defaultValue;
-                console.log(`[FocusSession] Input ${inputElement.id} was empty on blur, set to default: ${defaultValue}`);
-                return true;
-            } else if (!isValid && defaultValue !== null) {
-                inputElement.value = defaultValue;
-                console.log(`[FocusSession] Input ${inputElement.id} was invalid on blur, set to default: ${defaultValue}`);
-                return true;
+            // On blur, enforce range and apply default if empty or invalid
+            if (valueStr === "" && defaultValue !== null) {
+                inputElement.value = defaultValue; // Set to default if empty
+                console.log(`[FocusSession] Input ${inputElement.id} was empty, set to default: ${defaultValue}`);
+                return true; // Consider it valid as default is applied
             } else if (!isValid) {
-                 console.warn(`[FocusSession] Input ${inputElement.id} is invalid on blur and has no default.`);
-                 return false;
+                const finalValue = defaultValue !== null ? defaultValue : min; // Use default or min if invalid
+                inputElement.value = finalValue;
+                alert(`Valor inválido. Deve ser um número entre ${min} e ${max}. Restaurado para ${finalValue}.`);
+                console.log(`[FocusSession] Input ${inputElement.id} invalid (${valueStr}), set to: ${finalValue}`);
+                return true; // Value is now corrected
             }
+            // If valid and blur, no action needed, just return true
+            return true;
+        } else {
+            // On input event, allow intermediate states but prevent non-numeric and exceeding max
+            if (!/^[0-9]*$/.test(valueStr)) {
+                 // Remove non-numeric characters immediately
+                 inputElement.value = valueStr.replace(/[^0-9]/g, "");
+                 console.log(`[FocusSession] Input ${inputElement.id} non-numeric removed: ${inputElement.value}`);
+                 // Re-validate after cleaning
+                 value = parseInt(inputElement.value);
+                 isValid = !isNaN(value) && value >= min && value <= max;
+                 // Don't return false yet, allow user to continue typing
+            }
+            // Prevent typing a value greater than max
+            if (!isNaN(value) && value > max) {
+                 inputElement.value = max; // Cap at max value
+                 console.log(`[FocusSession] Input ${inputElement.id} capped at max: ${max}`);
+                 isValid = true; // It's now valid (at max)
+            }
+            // For input event, return true if potentially valid, false only if fundamentally wrong (like non-numeric initially)
+            // The goal is to guide the user without being overly restrictive during typing.
+            // The blur event handles the final validation.
+            return !isNaN(parseInt(inputElement.value)) || inputElement.value === ""; // Allow empty string during input
         }
-        // Permite digitar valores fora do range temporariamente durante o input
-        // A validação final ocorre no blur ou antes de usar o valor
-        return !isNaN(value) && value <= max; // Apenas verifica se é número e não excede max durante digitação
     }
 
-    // --- Inicializar a aplicação ---
-    initializeApp();
+
+    // --- Inicialização da Aplicação ---
+    initializeApp(); // Start the application logic
 });
+

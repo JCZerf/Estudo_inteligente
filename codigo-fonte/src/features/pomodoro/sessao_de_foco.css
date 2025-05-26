@@ -637,3 +637,13 @@
     opacity: 0.6; /* Mantém opacidade para indicar desabilitado */
 }
 
+
+
+/* Animação de Clique para Botões */
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(1px) scale(0.98); /* Leve movimento para baixo e encolhimento */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Sombra sutil para indicar pressão */
+  filter: brightness(0.95); /* Leve escurecimento */
+}
+

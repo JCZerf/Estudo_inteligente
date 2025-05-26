@@ -1,137 +1,212 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Elementos dos formulários
-  const loginForm = document.getElementById("loginForm");
-  const registerForm = document.getElementById("registerForm");
-  const showRegisterBtn = document.getElementById("showRegisterBtn");
-  const showLoginBtn = document.getElementById("showLoginBtn");    
-  
-  // Campos de login
-  const loginEmail = document.getElementById("email");
-  const loginPassword = document.getElementById("password");
-  const loginError = document.getElementById("error-message");
-  const rememberMe = document.getElementById("remember-me");
+    // Elementos dos formulários
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+    const showLoginBtn = document.getElementById("showLoginBtn");
 
-  // Verificar se há e-mail salvo no localStorage e preencher automaticamente
-  const rememberedEmail = localStorage.getItem("rememberedEmail");
-  if (rememberedEmail) {
-    loginEmail.value = rememberedEmail;
-    rememberMe.checked = true;
-  }
+    // Campos de login
+    const loginEmail = document.getElementById("email");
+    const loginPassword = document.getElementById("password");
+    const loginError = document.getElementById("error-message");
+    const rememberMe = document.getElementById("remember-me");
 
-  // Alternância entre formulários
-  if (showRegisterBtn && showLoginBtn) {
-    showRegisterBtn.addEventListener("click", showRegisterForm);
-    showLoginBtn.addEventListener("click", showLoginForm);
-  }
+    // Campos de registro
+    const registerName = document.getElementById("register-name");
+    const registerUsername = document.getElementById("register-username");
+    const registerEmail = document.getElementById("register-email");
+    const registerPassword = document.getElementById("register-password");
+    const registerConfirmPassword = document.getElementById("register-confirm-password");
+    const registerError = document.getElementById("register-error-message");
 
-  function showLoginForm() {
-    loginForm.style.display = "block";
-    registerForm.style.display = "none";
-  }
-
-  function showRegisterForm() {
-    loginForm.style.display = "none";
-    registerForm.style.display = "block";
-  }
-
-  // Mostrar/ocultar senha
-  document.querySelectorAll(".toggle-password").forEach(button => {
-    button.addEventListener("click", function () {
-      const input = this.closest(".password-wrapper").querySelector("input");
-      const icon = this.querySelector("i");
-
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.replace("fa-eye", "fa-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.replace("fa-eye-slash", "fa-eye");
-      }
-    });
-  });
-
-  // Atualizar ano no footer
-  const currentYear = document.getElementById("currentYear");
-  if (currentYear) {
-    currentYear.textContent = new Date().getFullYear();
-  }
-
-  // Evento de envio do formulário de login
-  if (loginForm) loginForm.addEventListener("submit", handleLogin);
-
-  function displayError(element, message) {
-    element.textContent = message;
-    element.style.display = "block";
-    element.style.color = "#ef233c";
-  }
-
-  function hideError(element) {
-    element.style.display = "none";
-    element.textContent = "";
-  }
-
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-
-  // Função principal de login
-  async function handleLogin(e) {
-    e.preventDefault();
-    hideError(loginError);
-
-    const credencial = loginEmail.value.trim();
-    const senha = loginPassword.value.trim();
-
-    // Validações básicas
-    if (!credencial || !senha) {
-      return displayError(loginError, "Preencha todos os campos");
+    // Verificar se há e-mail salvo no localStorage e preencher automaticamente
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    if (rememberedEmail) {
+        loginEmail.value = rememberedEmail;
+        rememberMe.checked = true;
     }
 
-    // Obter todos os usuários cadastrados
-    const usuariosCadastrados = JSON.parse(localStorage.getItem("usuarios")) || [];
-    
-    // Buscar usuário por email ou username
-    const usuarioEncontrado = usuariosCadastrados.find(usuario => {
-      return usuario.email === credencial || usuario.username === credencial;
+    // Alternância entre formulários
+    if (showRegisterBtn && showLoginBtn) {
+        showRegisterBtn.addEventListener("click", showRegisterForm);
+        showLoginBtn.addEventListener("click", showLoginForm);
+    }
+
+    function showLoginForm() {
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+        hideError(registerError); // Esconde erro do registro ao trocar
+    }
+
+    function showRegisterForm() {
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+        hideError(loginError); // Esconde erro do login ao trocar
+    }
+
+    // Mostrar/ocultar senha
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", function () {
+            const input = this.closest(".password-wrapper").querySelector("input");
+            const icon = this.querySelector("i");
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        });
     });
 
-    if (!usuarioEncontrado) {
-      return displayError(loginError, "Credenciais inválidas. Verifique e tente novamente.");
+    // Atualizar ano no footer
+    const currentYear = document.getElementById("currentYear");
+    if (currentYear) {
+        currentYear.textContent = new Date().getFullYear();
     }
 
-    // Verificar senha (em sistema real, comparar hash)
-    if (usuarioEncontrado.senha !== senha) {
-      return displayError(loginError, "Senha incorreta");
+    // --- Funções Auxiliares ---
+    function displayError(element, message) {
+        if (!element) return;
+        element.textContent = message;
+        element.style.display = "block";
+        element.style.color = "#ef233c"; // Cor de erro
     }
 
-    // Login bem-sucedido
-    handleLoginSuccess(usuarioEncontrado);
-  }
-
-  // Tratamento de login bem-sucedido
-  function handleLoginSuccess(userData) {
-    // Salvar dados do usuário logado
-    localStorage.setItem('usuarioLogado', JSON.stringify({
-      nome: userData.nome,
-      username: userData.username,
-      email: userData.email
-    }));
-
-    // Se "Lembrar de mim" estiver marcado, salvar email
-    if (rememberMe.checked) {
-      localStorage.setItem('rememberedEmail', userData.email);
-    } else {
-      localStorage.removeItem('rememberedEmail');
+    function hideError(element) {
+        if (!element) return;
+        element.style.display = "none";
+        element.textContent = "";
     }
 
-    // Redirecionar para a página inicial
-    window.location.href = "../dashboard/inicio.html";
-  }
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
 
-  // CADASTRO (mantido para referência, mas deve ser ajustado conforme mostrado anteriormente)
-  async function handleRegister(e) {
-    e.preventDefault();
-    // ... (código de cadastro mantido)
-  }
+    // --- Lógica de Login ---
+    if (loginForm) loginForm.addEventListener("submit", handleLogin);
+
+    function handleLogin(e) {
+        e.preventDefault();
+        hideError(loginError);
+        console.log("[Login] Tentativa de login...");
+
+        const credencial = loginEmail.value.trim();
+        const senha = loginPassword.value.trim();
+
+        if (!credencial || !senha) {
+            return displayError(loginError, "Preencha todos os campos.");
+        }
+
+        const usuariosCadastrados = JSON.parse(localStorage.getItem("usuarios")) || [];
+        console.log("[Login] Usuários cadastrados:", usuariosCadastrados);
+
+        const usuarioEncontrado = usuariosCadastrados.find(usuario =>
+            (usuario.email === credencial || usuario.username === credencial) && usuario.senha === senha
+        );
+
+        if (!usuarioEncontrado) {
+            console.warn("[Login] Credenciais inválidas para:", credencial);
+            return displayError(loginError, "Credenciais inválidas. Verifique e tente novamente.");
+        }
+
+        console.log("[Login] Usuário encontrado:", usuarioEncontrado);
+        handleLoginSuccess(usuarioEncontrado);
+    }
+
+    function handleLoginSuccess(userData) {
+        console.log("[Login] Login bem-sucedido para:", userData.username);
+        // **IMPORTANTE: Incluir joinDate ao salvar usuarioLogado**
+        const usuarioLogadoData = {
+            nome: userData.nome,
+            username: userData.username,
+            email: userData.email,
+            avatar: userData.avatar || "../../shared/assets/avatars/frog.png", // Inclui avatar com fallback
+            joinDate: userData.joinDate // Pega a data de cadastro original
+        };
+
+        localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogadoData));
+        console.log("[Login] Dados salvos em usuarioLogado:", usuarioLogadoData);
+
+        // Limpa dados de foco e conquistas de usuário anterior (se houver)
+        // localStorage.removeItem("userFocusStats");
+        // localStorage.removeItem("userAchievements");
+        // Nota: Decide-se manter ou limpar dependendo da lógica desejada.
+        // Por segurança, é melhor manter, a menos que explicitamente pedido para limpar.
+
+        if (rememberMe.checked) {
+            localStorage.setItem("rememberedEmail", userData.email);
+        } else {
+            localStorage.removeItem("rememberedEmail");
+        }
+
+        window.location.href = "../dashboard/inicio.html";
+    }
+
+    // --- Lógica de Cadastro ---
+    if (registerForm) registerForm.addEventListener("submit", handleRegister);
+
+    function handleRegister(e) {
+        e.preventDefault();
+        hideError(registerError);
+        console.log("[Registro] Tentativa de registro...");
+
+        const nome = registerName.value.trim();
+        const username = registerUsername.value.trim();
+        const email = registerEmail.value.trim();
+        const senha = registerPassword.value;
+        const confirmarSenha = registerConfirmPassword.value;
+
+        // Validações
+        if (!nome || !username || !email || !senha || !confirmarSenha) {
+            return displayError(registerError, "Todos os campos são obrigatórios.");
+        }
+        if (!validateEmail(email)) {
+            return displayError(registerError, "Formato de e-mail inválido.");
+        }
+        if (senha.length < 6) {
+            return displayError(registerError, "A senha deve ter pelo menos 6 caracteres.");
+        }
+        if (senha !== confirmarSenha) {
+            return displayError(registerError, "As senhas não coincidem.");
+        }
+
+        const usuariosCadastrados = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+        // Verificar se email ou username já existem
+        if (usuariosCadastrados.some(user => user.email === email)) {
+            return displayError(registerError, "Este e-mail já está cadastrado.");
+        }
+        if (usuariosCadastrados.some(user => user.username === username)) {
+            return displayError(registerError, "Este nome de usuário já está em uso.");
+        }
+
+        // **Criar novo usuário com joinDate**
+        const novoUsuario = {
+            nome: nome,
+            username: username,
+            email: email,
+            senha: senha, // Em um sistema real, armazene um hash da senha
+            avatar: "../../shared/assets/avatars/frog.png", // Avatar padrão inicial
+            joinDate: new Date().toISOString() // **ADICIONADO: Data de criação da conta**
+        };
+
+        // Adicionar novo usuário à lista
+        usuariosCadastrados.push(novoUsuario);
+
+        // Salvar lista atualizada no localStorage
+        localStorage.setItem("usuarios", JSON.stringify(usuariosCadastrados));
+        console.log("[Registro] Novo usuário cadastrado:", novoUsuario);
+        console.log("[Registro] Lista de usuários atualizada:", usuariosCadastrados);
+
+        // Opcional: Fazer login automaticamente após o registro
+        // handleLoginSuccess(novoUsuario);
+
+        // Ou apenas mostrar mensagem de sucesso e redirecionar para login
+        alert("Cadastro realizado com sucesso! Faça login para continuar.");
+        showLoginForm(); // Volta para a tela de login
+        registerForm.reset(); // Limpa o formulário de registro
+    }
 });
+

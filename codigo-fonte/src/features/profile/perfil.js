@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         AVATAR_BASE_PATH: "../../shared/assets/avatars/",
         USER_DATA_KEY: "usuarioLogado",
-        RANKING_DATA_KEY: "rankingData",
-        DEFAULT_AVATAR: "../../shared/assets/avatars/frog.png",
+        // RANKING_DATA_KEY: "rankingData", // Chave não utilizada diretamente aqui, mas pode ser relevante para consistência
+        DEFAULT_AVATAR: "../../shared/assets/avatars/frog.png", // Usar um default consistente
         DEFAULT_RANKING: "Iniciante"
     };
 
@@ -41,50 +41,59 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Funções Principais ---
 
     /**
-     * Carrega os dados do usuário e atualiza a UI
+     * Carrega os dados do usuário do localStorage e atualiza a UI
      */
     function loadUserProfile() {
+        console.log("[Perfil] Carregando perfil do usuário...");
         const storedData = localStorage.getItem(CONSTANTS.USER_DATA_KEY);
-        
+
         if (storedData) {
-            state.currentUserData = JSON.parse(storedData);
-            
-            // Garante que os campos essenciais existam
-            if (!state.currentUserData.avatar) {
-                state.currentUserData.avatar = CONSTANTS.DEFAULT_AVATAR;
-            }
-            if (!state.currentUserData.ranking) {
-                state.currentUserData.ranking = CONSTANTS.DEFAULT_RANKING;
-            }
-            if (!state.currentUserData.joinDate) {
-                state.currentUserData.joinDate = new Date().toISOString();
-                saveUserData();
-            }
-            
-            // Formata a data de cadastro
-            const joinDate = new Date(state.currentUserData.joinDate);
-            const formattedDate = joinDate.toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
+            try {
+                state.currentUserData = JSON.parse(storedData);
+                console.log("[Perfil] Dados carregados:", state.currentUserData);
 
-            // Atualiza a UI
-            DOM.profileFullname.textContent = state.currentUserData.nome || "Não informado";
-            DOM.profileEmail.textContent = state.currentUserData.email || "Não informado";
-            DOM.profileUsernameDisplay.textContent = state.currentUserData.username || "Não definido";
-            DOM.profileRanking.textContent = state.currentUserData.ranking || CONSTANTS.DEFAULT_RANKING;
-            DOM.profileJoinDate.textContent = formattedDate;
-            DOM.profileAvatarImg.src = state.currentUserData.avatar || CONSTANTS.DEFAULT_AVATAR;
-            
-            // Fallback se o avatar não carregar
-            DOM.profileAvatarImg.onerror = () => {
-                DOM.profileAvatarImg.src = CONSTANTS.DEFAULT_AVATAR;
-            };
+                // Garante que os campos essenciais existam com fallbacks
+                state.currentUserData.avatar = state.currentUserData.avatar || CONSTANTS.DEFAULT_AVATAR;
+                state.currentUserData.ranking = state.currentUserData.ranking || CONSTANTS.DEFAULT_RANKING;
+                if (!state.currentUserData.joinDate) {
+                    state.currentUserData.joinDate = new Date().toISOString();
+                    // Salva imediatamente se a data de entrada foi criada
+                    saveUserData("joinDate added");
+                }
 
-            state.originalUsername = state.currentUserData.username || "";
+                // Formata a data de cadastro
+                const joinDate = new Date(state.currentUserData.joinDate);
+                const formattedDate = joinDate.toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                });
+
+                // Atualiza a UI
+                DOM.profileFullname.textContent = state.currentUserData.nome || "Nome não informado";
+                DOM.profileEmail.textContent = state.currentUserData.email || "Email não informado";
+                DOM.profileUsernameDisplay.textContent = state.currentUserData.username || "Username não definido";
+                DOM.profileRanking.textContent = state.currentUserData.ranking; // Ranking deve vir dos dados
+                DOM.profileJoinDate.textContent = formattedDate;
+                DOM.profileAvatarImg.src = state.currentUserData.avatar;
+
+                // Fallback visual se o avatar não carregar
+                DOM.profileAvatarImg.onerror = () => {
+                    console.warn(`[Perfil] Falha ao carregar avatar: ${state.currentUserData.avatar}. Usando default.`);
+                    DOM.profileAvatarImg.src = CONSTANTS.DEFAULT_AVATAR;
+                };
+
+                state.originalUsername = state.currentUserData.username || "";
+                DOM.editUsernameBtn.disabled = false;
+                DOM.changeAvatarBtn.disabled = false;
+
+            } catch (e) {
+                console.error("[Perfil] Erro ao parsear dados do usuário:", e);
+                localStorage.removeItem(CONSTANTS.USER_DATA_KEY); // Remove dados inválidos
+                setupPlaceholderData();
+            }
         } else {
-            console.warn("Dados do usuário não encontrados no localStorage");
+            console.warn("[Perfil] Dados do usuário não encontrados no localStorage. Configurando placeholders.");
             setupPlaceholderData();
         }
 
@@ -92,39 +101,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * Configura dados placeholder quando não há usuário logado
+     * Configura dados placeholder quando não há usuário logado ou dados inválidos
      */
     function setupPlaceholderData() {
-        const placeholderDate = new Date().toLocaleDateString('pt-BR');
-        
+        const placeholderDate = new Date().toLocaleDateString("pt-BR");
+
         state.currentUserData = {
             nome: "Usuário Não Logado",
-            email: "email@exemplo.com",
-            username: "naologado",
+            email: "-",
+            username: "-",
             avatar: CONSTANTS.DEFAULT_AVATAR,
             ranking: CONSTANTS.DEFAULT_RANKING,
             joinDate: new Date().toISOString()
         };
-        
+
         DOM.profileFullname.textContent = state.currentUserData.nome;
         DOM.profileEmail.textContent = state.currentUserData.email;
         DOM.profileUsernameDisplay.textContent = state.currentUserData.username;
         DOM.profileRanking.textContent = state.currentUserData.ranking;
         DOM.profileJoinDate.textContent = placeholderDate;
         DOM.profileAvatarImg.src = CONSTANTS.DEFAULT_AVATAR;
-        
+
         DOM.editUsernameBtn.disabled = true;
         DOM.changeAvatarBtn.disabled = true;
     }
 
     /**
-     * Salva os dados do usuário no localStorage
+     * Salva os dados COMPLETOS do usuário no localStorage
+     * @param {string} source - Opcional, para debug, indica o que causou o save.
      */
-    function saveUserData() {
-        localStorage.setItem(
-            CONSTANTS.USER_DATA_KEY, 
-            JSON.stringify(state.currentUserData)
-        );
+    function saveUserData(source = "unknown") {
+        try {
+            // Garante que estamos salvando o objeto completo do estado
+            localStorage.setItem(
+                CONSTANTS.USER_DATA_KEY,
+                JSON.stringify(state.currentUserData)
+            );
+            console.log(`[Perfil] Dados do usuário salvos no localStorage. Fonte: ${source}`, state.currentUserData);
+            // Dispara um evento genérico de atualização do usuário
+            window.dispatchEvent(new CustomEvent("userUpdated", { detail: { userData: state.currentUserData } }));
+        } catch (error) {
+            console.error("[Perfil] Erro ao salvar dados do usuário:", error);
+            showAlert("Erro ao salvar dados do perfil.", "error");
+        }
     }
 
     /**
@@ -136,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         DOM.profileUsernameInput.classList.add("hidden");
         DOM.saveUsernameBtn.classList.add("hidden");
         DOM.cancelUsernameBtn.classList.add("hidden");
-        DOM.profileUsernameInput.value = state.originalUsername;
+        DOM.profileUsernameInput.value = state.originalUsername; // Reseta input ao cancelar
     }
 
     /**
@@ -148,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
         DOM.profileUsernameInput.classList.remove("hidden");
         DOM.saveUsernameBtn.classList.remove("hidden");
         DOM.cancelUsernameBtn.classList.remove("hidden");
-        DOM.profileUsernameInput.value = state.originalUsername;
+        DOM.profileUsernameInput.value = state.originalUsername; // Preenche com valor atual
         DOM.profileUsernameInput.focus();
     }
 
@@ -157,49 +176,45 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     function saveUsername() {
         const newUsername = DOM.profileUsernameInput.value.trim();
-        
+
         if (!newUsername) {
             showAlert("Nome de usuário não pode ficar vazio.", "error");
             DOM.profileUsernameInput.focus();
             return;
         }
-        
+
         if (newUsername !== state.originalUsername) {
+            console.log(`[Perfil] Atualizando username de '${state.originalUsername}' para '${newUsername}'`);
             state.currentUserData.username = newUsername;
-            saveUserData();
-            
+            saveUserData("username change"); // Salva o objeto completo
+
             DOM.profileUsernameDisplay.textContent = newUsername;
             state.originalUsername = newUsername;
-            
-            // Atualiza o ranking com o novo username
-            updateRankingData(state.currentUserData.username, {
-                username: newUsername
-            });
-            
+
             showAlert("Nome de usuário atualizado com sucesso!", "success");
-            
-            // Dispara eventos para atualizar outras partes do sistema
-            window.dispatchEvent(new CustomEvent("userUpdated"));
+            // O evento userUpdated já foi disparado por saveUserData
         }
-        
+
         switchToDisplayMode();
     }
 
     /**
      * Mostra um alerta temporário
      */
-    function showAlert(message, type = "error") {
+    function showAlert(message, type = "info") {
+        const alertContainer = document.getElementById("alert-container") || document.body;
         const alert = document.createElement("div");
-        alert.className = `alert ${type}`;
-        
-        const icon = type === "error" ? "exclamation-circle" : "check-circle";
+        alert.className = `alert alert-${type}`;
+
+        const icon = type === "error" ? "exclamation-circle" : (type === "success" ? "check-circle" : "info-circle");
         alert.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
-        
-        document.body.appendChild(alert);
-        
+
+        alertContainer.appendChild(alert);
+
+        // Auto-remove after a delay
         setTimeout(() => {
             alert.classList.add("fade-out");
-            setTimeout(() => alert.remove(), 300);
+            setTimeout(() => alert.remove(), 500); // Match animation duration
         }, 3000);
     }
 
@@ -208,152 +223,136 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     function populateAvatarModal() {
         DOM.avatarOptionsContainer.innerHTML = "";
+        // Garante que temos um avatar selecionado inicial, mesmo que seja o default
         state.selectedAvatarPath = state.currentUserData.avatar || CONSTANTS.DEFAULT_AVATAR;
+        console.log("[Perfil] Populando modal. Avatar atual/selecionado:", state.selectedAvatarPath);
 
         CONSTANTS.AVAILABLE_AVATARS.forEach(avatarFile => {
             const img = document.createElement("img");
             const fullPath = CONSTANTS.AVATAR_BASE_PATH + avatarFile;
-            
+
             img.src = fullPath;
             img.alt = `Avatar ${avatarFile.split(".")[0]}`;
             img.classList.add("avatar-option");
             img.dataset.path = fullPath;
 
+            // Marca como selecionado se for o avatar atualmente no estado
             if (fullPath === state.selectedAvatarPath) {
                 img.classList.add("selected");
             }
 
             img.addEventListener("click", () => {
-                document.querySelectorAll(".avatar-option.selected").forEach(el => {
-                    el.classList.remove("selected");
-                });
+                // Desmarca o anterior
+                const previouslySelected = DOM.avatarOptionsContainer.querySelector(".avatar-option.selected");
+                if (previouslySelected) {
+                    previouslySelected.classList.remove("selected");
+                }
+                // Marca o novo e atualiza o estado temporário
                 img.classList.add("selected");
                 state.selectedAvatarPath = img.dataset.path;
+                console.log("[Perfil] Avatar selecionado no modal:", state.selectedAvatarPath);
             });
 
             DOM.avatarOptionsContainer.appendChild(img);
         });
     }
 
-// Função para abrir o modal
-function openAvatarModal() {
-    // Primeiro remove 'hidden', depois adiciona 'show'
-    DOM.avatarSelectionModal.classList.remove("hidden");
-    // Força um recálculo do layout
-    void DOM.avatarSelectionModal.offsetWidth;
-    DOM.avatarSelectionModal.classList.add("show");
-    
-    document.body.style.overflow = "hidden";
-    populateAvatarModal();
-}
+    /**
+     * Abre o modal de seleção de avatar
+     */
+    function openAvatarModal() {
+        console.log("[Perfil] Abrindo modal de avatar...");
+        populateAvatarModal(); // Popula antes de mostrar
+        DOM.avatarSelectionModal.classList.remove("hidden");
+        // Força reflow para garantir que a transição funcione
+        void DOM.avatarSelectionModal.offsetWidth;
+        DOM.avatarSelectionModal.classList.add("show");
+        document.body.style.overflow = "hidden"; // Impede scroll do fundo
+    }
 
-// Função para fechar o modal
-function closeAvatarModal() {
-    // Primeiro remove 'show' para iniciar a animação
-    DOM.avatarSelectionModal.classList.remove("show");
-    
-    // Depois de terminar a animação, adiciona 'hidden'
-    setTimeout(() => {
-        DOM.avatarSelectionModal.classList.add("hidden");
-        document.body.style.overflow = "";
-    }, 300); // 300ms deve corresponder à duração da transição no CSS
-}
+    /**
+     * Fecha o modal de seleção de avatar
+     */
+    function closeAvatarModal() {
+        console.log("[Perfil] Fechando modal de avatar...");
+        DOM.avatarSelectionModal.classList.remove("show");
+        // Espera a transição terminar antes de esconder completamente
+        setTimeout(() => {
+            DOM.avatarSelectionModal.classList.add("hidden");
+            document.body.style.overflow = ""; // Restaura scroll
+        }, 300); // Deve corresponder à duração da transição CSS
+    }
 
     /**
      * Confirma a seleção do avatar e atualiza os dados
      */
     function confirmAvatarSelection() {
+        console.log("[Perfil] Confirmando seleção de avatar:", state.selectedAvatarPath);
+        // Verifica se um avatar foi selecionado E se é diferente do atual
         if (state.selectedAvatarPath && state.selectedAvatarPath !== state.currentUserData.avatar) {
+            console.log(`[Perfil] Atualizando avatar de '${state.currentUserData.avatar}' para '${state.selectedAvatarPath}'`);
             state.currentUserData.avatar = state.selectedAvatarPath;
-            saveUserData();
-            
+            saveUserData("avatar change"); // Salva o objeto completo
+
+            // Atualiza a imagem na página de perfil imediatamente
             DOM.profileAvatarImg.src = state.selectedAvatarPath;
-            
-            // Atualiza o avatar no ranking
-            updateRankingData(state.currentUserData.username, {
-                avatar: state.selectedAvatarPath
-            });
-            
+
             showAlert("Avatar atualizado com sucesso!", "success");
-            
-            // Dispara evento para atualizar outras partes do sistema
-            window.dispatchEvent(new CustomEvent("avatarUpdated", {
-                detail: {
-                    username: state.currentUserData.username,
-                    avatar: state.selectedAvatarPath
-                }
-            }));
+            // O evento userUpdated já foi disparado por saveUserData, que deve ser suficiente
+            // para global-user.js e ranking.js atualizarem.
+        } else {
+            console.log("[Perfil] Avatar não alterado ou nenhum selecionado.");
         }
         closeAvatarModal();
     }
 
-    /**
-     * Atualiza os dados do ranking no localStorage
-     */
-    function updateRankingData(username, updates) {
-        try {
-            const rankingData = JSON.parse(
-                localStorage.getItem(CONSTANTS.RANKING_DATA_KEY)
-            ) || [];
-            
-            const updatedRanking = rankingData.map(user => {
-                if (user.username === username) {
-                    return { ...user, ...updates };
-                }
-                return user;
-            });
-            
-            localStorage.setItem(
-                CONSTANTS.RANKING_DATA_KEY, 
-                JSON.stringify(updatedRanking)
-            );
-            
-            window.dispatchEvent(new CustomEvent("rankingUpdated"));
-            
-            console.log("Dados do ranking atualizados com sucesso");
-        } catch (error) {
-            console.error("Erro ao atualizar ranking:", error);
-        }
+    // --- Event Listeners ---
+    if (DOM.editUsernameBtn) DOM.editUsernameBtn.addEventListener("click", switchToEditMode);
+    if (DOM.saveUsernameBtn) DOM.saveUsernameBtn.addEventListener("click", saveUsername);
+    if (DOM.cancelUsernameBtn) DOM.cancelUsernameBtn.addEventListener("click", switchToDisplayMode);
+    if (DOM.changeAvatarBtn) DOM.changeAvatarBtn.addEventListener("click", openAvatarModal);
+    if (DOM.closeAvatarModalBtn) DOM.closeAvatarModalBtn.addEventListener("click", closeAvatarModal);
+    if (DOM.confirmAvatarBtn) DOM.confirmAvatarBtn.addEventListener("click", confirmAvatarSelection);
+    if (DOM.profileAvatarImg) DOM.profileAvatarImg.addEventListener("click", openAvatarModal); // Permite clicar na imagem para mudar
+
+    // Fechar modal clicando fora
+    if (DOM.avatarSelectionModal) {
+        DOM.avatarSelectionModal.addEventListener("click", (event) => {
+            if (event.target === DOM.avatarSelectionModal) {
+                closeAvatarModal();
+            }
+        });
     }
 
-    // --- Event Listeners ---
-    DOM.editUsernameBtn.addEventListener("click", switchToEditMode);
-    DOM.saveUsernameBtn.addEventListener("click", saveUsername);
-    DOM.cancelUsernameBtn.addEventListener("click", switchToDisplayMode);
-    DOM.changeAvatarBtn.addEventListener("click", openAvatarModal);
-    DOM.closeAvatarModalBtn.addEventListener("click", closeAvatarModal);
-    DOM.confirmAvatarBtn.addEventListener("click", confirmAvatarSelection);
-
-    // Adicione esta linha:
-    DOM.profileAvatarImg.addEventListener("click", openAvatarModal);
-
-    DOM.avatarSelectionModal.addEventListener("click", (event) => {
-        if (event.target === DOM.avatarSelectionModal) {
-            closeAvatarModal();
-        }
-    });
-
-    DOM.profileUsernameInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            saveUsername();
-        }
-    });
+    // Salvar username com Enter
+    if (DOM.profileUsernameInput) {
+        DOM.profileUsernameInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                saveUsername();
+            }
+        });
+    }
 
     // --- Eventos Globais ---
+    // Ouve mudanças no localStorage feitas por outras abas/janelas
     window.addEventListener("storage", (event) => {
         if (event.key === CONSTANTS.USER_DATA_KEY) {
+            console.log("[Perfil] Detectada mudança externa no localStorage. Recarregando perfil...");
             loadUserProfile();
         }
     });
 
-    window.addEventListener("userUpdated", loadUserProfile);
+    // Ouve o evento userUpdated (disparado por este próprio script ou outros)
+    // Isso garante que se outra parte do app atualizar o usuário, o perfil reflita.
+    // window.addEventListener("userUpdated", (event) => {
+    //     console.log("[Perfil] Evento userUpdated recebido. Recarregando perfil...");
+    //     loadUserProfile();
+    // });
+    // Nota: Chamar loadUserProfile() dentro do saveUserData() que dispara o evento pode causar loop.
+    // A atualização da UI já é feita nas funções saveUsername e confirmAvatarSelection.
 
     // --- Inicialização ---
     loadUserProfile();
 
-    // Debug (opcional)
-    function debugStorage() {
-        console.log("Dados do usuário:", localStorage.getItem(CONSTANTS.USER_DATA_KEY));
-        console.log("Dados do ranking:", localStorage.getItem(CONSTANTS.RANKING_DATA_KEY));
-    }
 });
+
