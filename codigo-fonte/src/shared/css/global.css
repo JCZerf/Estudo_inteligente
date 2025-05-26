@@ -4,7 +4,7 @@
  */
 
 /* Importação da fonte Poppins do Google Fonts em 3 pesos diferentes */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
 /* 
  * Variáveis CSS para o tema claro (padrão)
@@ -22,6 +22,8 @@
   --text-secondary: #666;     /* Cor para textos secundários e menos importantes */
   --border-color: #ddd;       /* Cor padrão para bordas */
   --font-size-base: 16px;     /* Tamanho base para cálculo de outros tamanhos de fonte */
+  --sidebar-width: 200px;     /* Largura da sidebar */
+  --sidebar-width-minimized: 30px; /* Largura da sidebar minimizada */
 }
 
 /* 
@@ -34,8 +36,8 @@
   --section-bg: #2d2d2d;      /* Cor de fundo para seções no modo escuro */
   --highlight-color: #4a9fe0; /* Cor de destaque ajustada para melhor visibilidade no modo escuro */
   --sidebar-active: #444;     /* Cor de fundo para item ativo na barra lateral no modo escuro */
-  --text-secondary: #aaa;     /* Cor para textos secundários no modo escuro */
-  --border-color: #444;       /* Cor para bordas no modo escuro */
+  --text-secondary: #bbb;     /* Cor para textos secundários no modo escuro (clareada de #aaa) */
+  --border-color: #555;       /* Cor para bordas no modo escuro (clareada de #444) */
 }
 
 
@@ -56,11 +58,13 @@
  * Define a fonte, cores e altura mínima para todas as páginas
  */
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: var(--text-color);
   background-color: var(--bg-color);
   min-height: 100vh;
   font-size: var(--font-size-base); /* Aplica o tamanho base de fonte */
+  position: relative; /* Necessário para o overlay */
+  overflow-x: hidden; /* Previne scroll horizontal indesejado */
 }
 
 /* 
@@ -92,7 +96,7 @@ h1, h2, h3, h4, h5, h6 {
  * Define aparência e comportamento do menu lateral presente em todas as páginas internas
  */
 .sidebar {
-  width: 220px;
+  width: var(--sidebar-width);
   background-color: var(--sidebar-bg);
   color: var(--sidebar-text);
   padding: 20px 0;
@@ -102,6 +106,28 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   z-index: 1000;
   overflow-y: auto; /* Permite rolagem quando o conteúdo é maior que a altura */
+  overflow-x: hidden; /* Esconde conteúdo que transborda horizontalmente */
+  transition: width 0.3s ease, left 0.3s ease; /* Adiciona transição para largura e posição */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Botão para minimizar/expandir sidebar em desktop */
+.sidebar-toggle-desktop {
+  display: none; /* Oculto por padrão, mostrado via media query */
+  background: var(--sidebar-active);
+  color: var(--sidebar-text);
+  border: none;
+  padding: 8px 0;
+  width: 100%;
+  cursor: pointer;
+  margin-top: auto; /* Empurra para o final da sidebar */
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-toggle-desktop:hover {
+  background-color: var(--highlight-color);
 }
 
 /* Logo dentro da barra lateral */
@@ -110,6 +136,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 auto 30px;
   display: block;
   padding: 0 20px;
+  transition: opacity 0.3s ease, max-width 0.3s ease;
 }
 
 /* Navegação dentro da barra lateral */
@@ -118,6 +145,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   gap: 8px;
   padding: 0 15px;
+  flex-grow: 1; /* Ocupa espaço disponível */
 }
 
 /* Links de navegação na barra lateral */
@@ -125,10 +153,11 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   color: var(--sidebar-text);
-  text-decoration: none;
   padding: 12px 15px;
   border-radius: 6px;
-  /* Tamanho de fonte removido para herdar do body e escalar conforme configurações */
+  white-space: nowrap; /* Impede quebra de linha do texto */
+  overflow: hidden; /* Esconde texto que transborda */
+  transition: background-color 0.3s ease, padding 0.3s ease;
 }
 
 /* Ícones nos links da barra lateral */
@@ -136,12 +165,20 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 10px;
   width: 20px;
   text-align: center;
+  flex-shrink: 0; /* Impede que o ícone encolha */
+  transition: margin 0.3s ease;
+}
+
+/* Texto dos links (para poder ocultar) */
+.sidebar nav a span {
+    opacity: 1;
+    transition: opacity 0.2s ease;
 }
 
 /* Efeito hover nos links da barra lateral */
 .sidebar nav a:hover {
   background-color: var(--sidebar-active);
-  transform: translateX(5px); /* Efeito de movimento ao passar o mouse */
+  /* Removido transform: translateX(5px); para evitar problemas com minimização */
 }
 
 /* Estilo para o link ativo na barra lateral */
@@ -149,26 +186,80 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--highlight-color);
   color: #ffffff;
   font-weight: 600;
-  border-left: 4px solid var(--sidebar-text);
-  transform: translateX(5px);
-  padding-left: 11px; /* Ajustado para compensar a borda de 4px */
+  padding-left: 15px; /* Mantém padding para alinhamento visual */
 }
+
+/* Estilos para sidebar minimizada (em telas grandes) */
+body.sidebar-minimized .sidebar {
+    width: var(--sidebar-width-minimized);
+}
+
+body.sidebar-minimized .logo-sidebar {
+    opacity: 0;
+    max-width: 0;
+    margin-bottom: 10px; /* Reduz margem quando oculto */
+    pointer-events: none; /* Impede interação com logo oculto */
+}
+
+body.sidebar-minimized .sidebar nav a {
+    justify-content: center; /* Centraliza ícone */
+    padding: 12px 0;
+}
+
+body.sidebar-minimized .sidebar nav a i {
+    margin-right: 0;
+}
+
+body.sidebar-minimized .sidebar nav a span {
+    opacity: 0;
+    width: 0;
+    pointer-events: none; /* Impede interação com texto oculto */
+}
+
+body.sidebar-minimized .sidebar nav a.active {
+    padding-left: 0; /* Remove padding extra do item ativo */
+    border-radius: 4px; /* Ajusta borda */
+}
+
+body.sidebar-minimized .main {
+    margin-left: var(--sidebar-width-minimized);
+}
+
+body.sidebar-minimized .sidebar-toggle-desktop i {
+    transform: rotate(180deg); /* Gira o ícone de chevron */
+}
+
 
 /* 
  * Estilos para o conteúdo principal
  * Define o layout básico para o conteúdo de todas as páginas
  */
 .main {
-  margin-left: 220px; /* Espaço para a barra lateral */
+  margin-left: var(--sidebar-width); /* Espaço para a barra lateral */
   padding: 30px 40px;
   min-height: 100vh;
+  transition: margin-left 0.3s ease; /* Adiciona transição */
 }
 
 /* Cabeçalho da área de conteúdo */
 .header {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 30px;
+  justify-content: space-between !important; /* Garante que user-info vá para a direita */
+  align-items: center; /* Alinha itens verticalmente */
+  margin-bottom: 5px;
+  width: 100%; /* Garante que o header ocupe toda a largura disponível */
+}
+
+/* Botão de Menu Hambúrguer (visível apenas em mobile) */
+.menu-toggle {
+  display: none; /* Oculto por padrão */
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  flex-shrink: 0; /* Impede que encolha */
 }
 
 /* Informações do usuário no cabeçalho */
@@ -177,6 +268,10 @@ h1, h2, h3, h4, h5, h6 {
   padding: 10px 20px;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex; /* Para alinhar o botão de tema */
+  align-items: center;
+  margin-left: auto; /* Força o elemento para a direita no flex container */
+  flex-shrink: 0; /* Impede que encolha */
 }
 
 /* Área de conteúdo principal */
@@ -195,6 +290,18 @@ footer {
   /* Tamanho de fonte removido para herdar do body */
 }
 
+/* Overlay para escurecer o conteúdo quando o menu estiver aberto em mobile */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Abaixo do sidebar */
+}
+
 /* 
  * Ajustes específicos para o tema escuro
  * Complementam as variáveis CSS definidas anteriormente
@@ -209,7 +316,7 @@ footer {
 }
 
 [data-theme="dark"] .banner {
-  background: #333;
+  background: var(--highlight-color); /* Alterado para azul de destaque no modo escuro */
   color: white;
 }
 
@@ -217,42 +324,96 @@ footer {
   color: #aaa;
 }
 
+[data-theme="dark"] .menu-toggle {
+    color: var(--text-color); /* Garante que o ícone do menu seja visível no tema escuro */
+}
+
+[data-theme="dark"] .sidebar-toggle-desktop {
+    background: var(--sidebar-active);
+    color: var(--sidebar-text);
+}
+
+[data-theme="dark"] .sidebar-toggle-desktop:hover {
+    background-color: var(--highlight-color);
+}
+
 /* 
  * Responsividade
  * Ajusta o layout para dispositivos móveis e telas menores
  */
+
+/* Estilos para telas grandes (onde o botão de minimizar aparece) */
+@media (min-width: 769px) {
+    .sidebar-toggle-desktop {
+        display: block; /* Mostra o botão de minimizar/expandir */
+    }
+    /* Garante que o menu mobile não apareça */
+    .menu-toggle {
+        display: none !important;
+    }
+}
+
+/* Estilos para telas pequenas (mobile) */
 @media (max-width: 768px) {
-  /* Barra lateral se torna horizontal no topo em telas pequenas */
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    padding: 15px;
+    left: calc(-1 * var(--sidebar-width)); /* Esconde a sidebar fora da tela */
+    z-index: 1001; /* Garante que fique acima do overlay */
+    width: var(--sidebar-width); /* Garante largura total quando aberto */
   }
-  
-  /* Conteúdo principal ocupa toda a largura */
+
+  .sidebar.open {
+    left: 0; /* Mostra a sidebar */
+  }
+
+  /* Garante que a minimização não afete o mobile */
+  body.sidebar-minimized .sidebar {
+      width: var(--sidebar-width);
+      left: calc(-1 * var(--sidebar-width)); /* Mantém escondido se minimizado E mobile */
+  }
+  body.sidebar-minimized .sidebar.open {
+      left: 0; /* Abre normalmente se minimizado E mobile */
+  }
+  body.sidebar-minimized .main {
+      margin-left: 0; /* Mantém margem 0 em mobile, mesmo minimizado */
+  }
+  body.sidebar-minimized .sidebar nav a span {
+      opacity: 1; /* Mostra texto no mobile */
+      width: auto;
+      pointer-events: auto;
+  }
+   body.sidebar-minimized .sidebar nav a {
+      justify-content: flex-start; /* Alinha à esquerda no mobile */
+      padding: 12px 15px;
+  }
+   body.sidebar-minimized .sidebar nav a i {
+      margin-right: 10px;
+  }
+
+
   .main {
-    margin-left: 0;
-    padding: 20px;
-    width: 100%;
+    margin-left: 0; /* Conteúdo principal ocupa toda a largura */
+    padding: 20px 15px; /* Reduz padding lateral */
   }
-  
-  /* Navegação se torna horizontal */
-  .sidebar nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+
+  .menu-toggle {
+    display: block; /* Mostra o botão de menu hambúrguer */
   }
-  
-  /* Ajuste nos links de navegação */
-  .sidebar nav a {
-    padding: 10px 15px;
-    /* Tamanho de fonte removido para herdar */
+
+  .sidebar-toggle-desktop {
+      display: none; /* Esconde o botão de minimizar/expandir desktop */
   }
-  
-  /* Centraliza o cabeçalho */
+
+  .overlay.active {
+      display: block; /* Mostra o overlay quando o menu está aberto */
+  }
+
   .header {
-    justify-content: center;
+      /* Em mobile, o user-info já deve ficar à direita devido ao space-between */
+      /* Se houver problemas, pode ser necessário ajustar a ordem dos elementos ou usar flex-grow */
+  }
+
+  .content {
+      padding: 20px; /* Reduz padding interno */
   }
 }
 
@@ -375,7 +536,7 @@ img {
   margin: 10% auto; 
   padding: 25px;
   border: 1px solid var(--border-color);
-  width: 80%; 
+  width: 90%; /* Aumenta a largura em mobile */
   max-width: 500px; /* Limite para o modal de confirmação e tarefas */
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -385,7 +546,9 @@ img {
 /* Botão de fechar modal */
 .close-modal {
   color: var(--text-secondary);
-  float: right;
+  position: absolute; /* Posiciona em relação ao modal-content */
+  top: 10px;
+  right: 15px;
   font-size: 28px;
   font-weight: bold;
   line-height: 1;
@@ -433,61 +596,91 @@ img {
   border-radius: 4px;
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-size: 1em; /* Herda e escala com o tamanho base */
+  font-size: 1em; /* Usa em para escalar */
 }
 
-/* Estilos para labels em formulários */
+/* Estilo para labels de formulário */
 .modal .form-group label,
-.setting-group label {
+.setting-label {
   display: block;
   margin-bottom: 5px;
   font-weight: 600;
 }
 
+/* Estilo para grupos de formulário */
+.modal .form-group {
+  margin-bottom: 15px;
+}
+
 /* 
  * Estilos para botões
- * Garante que botões também escalem com o tamanho de fonte base
+ * Define aparência padrão para botões primários, secundários e de perigo
  */
-.btn, button {
-    font-size: 1em; /* Herda e escala com o tamanho base */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em; /* Usa em para escalar */
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  font-weight: 600;
 }
 
-
-/* Estilos para indicadores de prioridade (bolinhas e spans) */
-.priority-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-left: 8px; /* Espaçamento à esquerda do ponto */
-  vertical-align: middle; /* Alinha verticalmente com o texto */
+/* Botão primário (cor de destaque) */
+.btn-primary {
+  background-color: var(--highlight-color);
+  color: white;
 }
 
-.priority-high,
-.priority-dot.priority-high {
-  background-color: #dc3545; /* Vermelho */
+.btn-primary:hover {
+  background-color: #125a96; /* Tom mais escuro do highlight */
 }
 
-.priority-medium,
-.priority-dot.priority-medium {
-  background-color: #ffc107; /* Amarelo */
+/* Botão secundário (cinza) */
+.btn-secondary {
+  background-color: #ccc;
+  color: #333;
 }
 
-.priority-low,
-.priority-dot.priority-low {
-  background-color: #28a745; /* Verde */
+.btn-secondary:hover {
+  background-color: #bbb;
 }
 
-/* Estilos para borda de prioridade (usado no cronograma) */
-.schedule-item.priority-border-high {
-  border-left: 4px solid #dc3545; /* Vermelho */
+/* Botão de perigo (vermelho) */
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
 }
 
-.schedule-item.priority-border-medium {
-  border-left: 4px solid #ffc107; /* Amarelo */
+.btn-danger:hover {
+  background-color: #c82333;
 }
 
-.schedule-item.priority-border-low {
-  border-left: 4px solid #28a745; /* Verde */
+/* Efeito de pressionar botão */
+.btn:active {
+  transform: scale(0.98);
 }
 
+/* Ajuste para tornar o link do usuário no header mais parecido com um botão */
+.header .user-info #userName {
+    padding: 5px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    margin-right: 10px; /* Espaço antes do botão de tema */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer; /* Indica que é clicável */
+    text-decoration: none !important; /* Remove sublinhado padrão de links */
+    color: var(--text-color); /* Garante cor do texto do tema */
+    display: inline-block; /* Necessário para padding e borda */
+}
+
+.header .user-info #userName:hover {
+    background-color: var(--bg-color); /* Leve mudança de fundo no hover */
+    border-color: var(--highlight-color);
+    text-decoration: none !important; /* Garante que não haja sublinhado no hover */
+}
+
+/* Ajuste para tornar o link do usuário no header mais parecido com um botão - Tema Escuro */
+[data-theme="dark"] .header .user-info #userName:hover {
+    background-color: var(--sidebar-active); /* Fundo mais escuro no hover */
+}

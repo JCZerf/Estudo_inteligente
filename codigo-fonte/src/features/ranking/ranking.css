@@ -401,3 +401,45 @@
     width: 100%;
   }
 }
+
+
+/* Ajustes de Contraste para Tema Escuro no Ranking */
+[data-theme="dark"] .ranking-card.top1 {
+  /* Fundo dourado mais escuro para melhor contraste com texto claro */
+  background: linear-gradient(90deg, rgba(184, 134, 11, 0.25) 0%, rgba(184, 134, 11, 0.1) 100%);
+  border-left-color: #b8860b; /* DarkGoldenrod */
+}
+
+[data-theme="dark"] .ranking-card.top2 {
+  /* Fundo prateado mais escuro */
+  background: linear-gradient(90deg, rgba(160, 160, 160, 0.2) 0%, rgba(160, 160, 160, 0.08) 100%);
+  border-left-color: #a0a0a0;
+}
+
+[data-theme="dark"] .ranking-card.top3 {
+  /* Fundo bronze mais escuro */
+  background: linear-gradient(90deg, rgba(139, 69, 19, 0.25) 0%, rgba(139, 69, 19, 0.1) 100%);
+  border-left-color: #8b4513; /* SaddleBrown */
+}
+
+/* Garante que o texto secundário também use a cor ajustada */
+[data-theme="dark"] #rankingTitle,
+[data-theme="dark"] .position,
+[data-theme="dark"] .user-score,
+[data-theme="dark"] .stat-label {
+    color: var(--text-secondary);
+}
+
+/* Ajusta cor do filtro ativo para melhor contraste */
+[data-theme="dark"] .filter-btn.active {
+  background-color: var(--highlight-color);
+  color: #111; /* Texto escuro sobre fundo claro azulado */
+  border-color: var(--highlight-color);
+}
+
+/* Ajusta cor do texto do usuário destacado */
+[data-theme="dark"] .ranking-card.your-ranking .user-name,
+[data-theme="dark"] .ranking-card.your-ranking .user-score {
+    color: var(--text-color); /* Garante texto claro no fundo destacado */
+}
+

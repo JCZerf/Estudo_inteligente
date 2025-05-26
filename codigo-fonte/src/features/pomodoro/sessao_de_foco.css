@@ -390,7 +390,7 @@
 
 .btn-task.active {
   background: var(--primary-color);
-  color: white;
+  color: white; /* Alterado para branco para contraste com fundo azul */
   border-color: var(--primary-color);
 }
 
@@ -619,3 +619,21 @@
     width: 100%;
   }
 }
+
+
+/* Ajuste para tornar o nome da tarefa azul na lista de seleção */
+.task-list .btn-task {
+    color: var(--primary-color); /* Aplica a cor de destaque ao texto da tarefa */
+}
+
+/* Garante que o estado ativo sobreponha a cor (texto branco) */
+.task-list .btn-task.active {
+    color: white;
+}
+
+/* Ajusta a cor do texto da tarefa desabilitada para manter o azul, mas com opacidade */
+.task-list .btn-task:disabled {
+    color: var(--primary-color);
+    opacity: 0.6; /* Mantém opacidade para indicar desabilitado */
+}
+
