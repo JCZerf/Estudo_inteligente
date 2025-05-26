@@ -146,7 +146,7 @@ function insertToggleElements() {
     const sidebarToggleDesktop = document.createElement("button");
     sidebarToggleDesktop.classList.add("sidebar-toggle-desktop");
     // O aria-label será definido em setupDesktopSidebarToggle
-    sidebarToggleDesktop.innerHTML = `<i class="fas fa-chevron-left"></i>`;
+    sidebarToggleDesktop.innerHTML = `<i class="fas fa-caret-left"></i>`;
 
     // Insere o botão mobile no header
     const header = document.querySelector(".header");

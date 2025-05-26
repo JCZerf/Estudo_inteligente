@@ -22,7 +22,7 @@
   --text-secondary: #666;     /* Cor para textos secundários e menos importantes */
   --border-color: #ddd;       /* Cor padrão para bordas */
   --font-size-base: 16px;     /* Tamanho base para cálculo de outros tamanhos de fonte */
-  --sidebar-width: 200px;     /* Largura da sidebar */
+  --sidebar-width: 250px;     /* Largura da sidebar */
   --sidebar-width-minimized: 30px; /* Largura da sidebar minimizada */
 }
 
@@ -112,26 +112,33 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
 }
 
-/* Botão para minimizar/expandir sidebar em desktop */
-.sidebar-toggle-desktop {
-  display: none; /* Oculto por padrão, mostrado via media query */
-  background: var(--sidebar-active);
-  color: var(--sidebar-text);
-  border: none;
-  padding: 8px 0;
-  width: 100%;
-  cursor: pointer;
-  margin-top: auto; /* Empurra para o final da sidebar */
-  font-size: 1.1em;
-  transition: background-color 0.3s ease;
-}
-
 .sidebar a {
   text-decoration: none;
 }
 
+/* Botão para minimizar/expandir sidebar em desktop */
+.sidebar-toggle-desktop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26px; 
+  height: 100vh;
+  display: flex;
+  background-color: #f5f5f5;
+  color: #000;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, left 0.3s ease;
+  z-index: 100;
+}
+
 .sidebar-toggle-desktop:hover {
-  background-color: var(--highlight-color);
+  background-color: #1871bb;
 }
 
 /* Logo dentro da barra lateral */
@@ -147,9 +154,11 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 0 15px;
-  flex-grow: 1; /* Ocupa espaço disponível */
+  gap: 12px;
+  padding: 10px 20px;
+  max-width: 220px; /* <= controla o limite de largura */
+  border-radius: 8px;
+  transition: background 0.2s;
 }
 
 /* Links de navegação na barra lateral */
