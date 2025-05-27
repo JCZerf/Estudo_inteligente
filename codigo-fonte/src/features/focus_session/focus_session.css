@@ -1025,3 +1025,72 @@ input[type=range]:disabled::-moz-range-track {
     margin-right: 5px;
 }
 
+
+
+
+/* Centralização do Relógio */
+.pomodoro-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza horizontalmente */
+}
+
+
+/* Adicionando estilos para o novo container do botão de som */
+.sound-control-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+}
+
+/* Mantendo os estilos existentes para o botão */
+.sound-toggle-btn {
+  background: var(--task-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.sound-toggle-btn:hover {
+  background: var(--secondary-color);
+  color: white;
+  border-color: var(--secondary-color);
+  transform: scale(1.1);
+}
+
+.sound-toggle-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Centralização do Relógio */
+.pomodoro-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza horizontalmente */
+  position: relative; /* Para posicionamento absoluto do botão de som */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .sound-control-container {
+    top: 10px;
+    left: 10px;
+  }
+  
+  .sound-toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+}

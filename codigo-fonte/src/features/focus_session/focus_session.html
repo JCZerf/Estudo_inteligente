@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Timer Inteligente - Estudo Inteligente</title>
+  <title data-i18n="sessaoFoco.pageTitle">Timer Inteligente - Estudo Inteligente</title>
   
   <link rel="stylesheet" href="../../shared/css/global.css" />
   <link rel="stylesheet" href="focus_session.css" />
@@ -38,28 +38,28 @@
     </header>
 
     <div class="content">
-      <h1 class="page-title"><i class="fas fa-brain" aria-hidden="true"></i> Timer Inteligente</h1>
+      <h1 class="page-title" data-i18n="sessaoFoco.titulo"><i class="fas fa-brain" aria-hidden="true"></i> Timer Inteligente</h1>
 
       <div class="focus-container">
         <section class="section task-selector" aria-labelledby="task-selector-heading">
-          <h2 id="task-selector-heading"><i class="fas fa-tasks" aria-hidden="true"></i> Escolha as tarefas</h2>
+          <h2 id="task-selector-heading" data-i18n="sessaoFoco.escolhaTarefasTitulo"><i class="fas fa-tasks" aria-hidden="true"></i> Escolha as tarefas</h2>
           
-          <div class="task-list" role="group" aria-label="Lista de tarefas para focar">
+          <div class="task-list" role="group" data-i18n-aria-label="sessaoFoco.listaTarefas" aria-label="Lista de tarefas para focar">
             <!-- Tarefas serão carregadas dinamicamente -->
-            <p>Carregando tarefas...</p>
+            <p data-i18n="sessaoFoco.carregandoTarefas">Carregando tarefas...</p>
           </div>
           
           <div class="selected-tasks-container">
             <div class="selected-tasks-header">
-              <h3>Tarefas selecionadas</h3>
+              <h3 data-i18n="sessaoFoco.tarefasSelecionadasTitulo">Tarefas selecionadas</h3>
               <span class="selected-tasks-count" id="selectedTasksCount">0/8</span>
             </div>
             
             <div class="selected-tasks-list" id="selectedTasksList">
-              <p>Nenhuma tarefa selecionada.</p>
+              <p data-i18n="sessaoFoco.nenhumaTarefaSelecionada">Nenhuma tarefa selecionada.</p>
             </div>
             
-            <div id="tasksValidation" class="time-validation" style="display: flex;">
+            <div id="tasksValidation" class="time-validation" style="display: flex;" data-i18n="sessaoFoco.selecioneUmaTarefa">
               Selecione pelo menos uma tarefa.
             </div>
           </div>
@@ -68,9 +68,9 @@
         <section class="section pomodoro-clock" aria-labelledby="pomodoro-heading">
           <h2 id="pomodoro-heading" class="sr-only">Contador Pomodoro</h2>
           
-          <div class="timer-header-controls">
-             <!-- Botão de Som (Placeholder) -->
-            <button id="sound-toggle-btn" class="btn-icon sound-toggle-btn" aria-label="Desativar sons" aria-pressed="true">
+          <div class="sound-control-container">
+             <!-- Botão de Som (Posicionado à esquerda) -->
+            <button id="sound-toggle-btn" class="btn-icon sound-toggle-btn" data-i18n-aria-label="sessaoFoco.alternarSom" aria-label="Desativar sons" aria-pressed="true">
               <i class="fas fa-volume-up" aria-hidden="true"></i>
             </button>
           </div>
@@ -86,26 +86,26 @@
 
           <div class="timer-status">
             <div class="timer-mode-indicator focus" id="timerModeIndicator">
-              <i class="fas fa-brain"></i> <span id="timerModeText">Timer Inteligente</span>
+              <i class="fas fa-brain"></i> <span id="timerModeText" data-i18n="sessaoFoco.timerInteligente">Timer Inteligente</span>
             </div>
-            <div class="timer-next-session" id="nextSessionInfo">
+            <div class="timer-next-session" id="nextSessionInfo" data-i18n="sessaoFoco.prontoIniciar">
               Pronto para iniciar.
             </div>
           </div>
 
           <!-- Removido o seletor de abas Manual/Automático -->
           <div class="timer-settings-container">
-             <h3 class="settings-title"><i class="fas fa-cogs"></i> Configurações do Timer Inteligente</h3>
+             <h3 class="settings-title" data-i18n="sessaoFoco.configTimerInteligente"><i class="fas fa-cogs"></i> Configurações do Timer Inteligente</h3>
              <div class="auto-settings-group">
                 <div class="form-row">
-                  <label for="total-session-time-slider">
+                  <label for="total-session-time-slider" data-i18n="sessaoFoco.duracaoTotalSessaoLabel">
                     <i class="fas fa-hourglass-half"></i> Duração Total da Sessão (<span id="total-session-time-value">60</span> min)
                   </label>
                   <input type="range" id="total-session-time-slider" min="20" max="240" value="60" step="5">
-                  <small class="hint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
+                  <small class="hint" data-i18n="sessaoFoco.duracaoTotalSessaoHint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
                 </div>
                 <!-- Botão para abrir o modal de personalização -->
-                <button id="customize-cycles-btn" class="btn-secondary btn-small">
+                <button id="customize-cycles-btn" class="btn-secondary btn-small" data-i18n="sessaoFoco.personalizarCiclosBtn">
                   <i class="fas fa-sliders-h"></i> Personalizar Ciclos
                 </button>
              </div>
@@ -114,10 +114,10 @@
           <!-- Removido o controle de Foco Total daqui -->
 
           <div class="timer-controls">
-            <button id="start-btn" class="btn-primary" disabled>
+            <button id="start-btn" class="btn-primary" disabled data-i18n="sessaoFoco.botaoIniciar">
               <i class="fas fa-play" aria-hidden="true"></i> Iniciar
             </button>
-            <button id="cancel-btn" class="btn-secondary" disabled>
+            <button id="cancel-btn" class="btn-secondary" disabled data-i18n="sessaoFoco.botaoCancelar">
               <i class="fas fa-stop" aria-hidden="true"></i> Cancelar
             </button>
           </div>
@@ -127,36 +127,36 @@
 
     <!-- Modal de Personalização de Ciclos -->
     <div id="customize-modal" class="modal" aria-hidden="true">
-      <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+      <div class="modal-overlay" tabindex="-1">
         <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
           <header class="modal-header">
-            <h2 id="modal-title" class="modal-title-text">
+            <h2 id="modal-title" class="modal-title-text" data-i18n="sessaoFoco.modalPersonalizar.titulo">
               Personalizar Ciclos
             </h2>
-            <button class="modal-close" aria-label="Fechar modal" data-micromodal-close><i class="fas fa-times"></i></button>
+            <button class="modal-close" data-i18n-aria-label="sessaoFoco.modalPersonalizar.fecharAriaLabel" aria-label="Fechar modal" data-micromodal-close><i class="fas fa-times"></i></button>
           </header>
           <main class="modal-content" id="modal-content-customize">
             <div class="form-row">
-              <label for="break-time">
+              <label for="break-time" data-i18n="sessaoFoco.modalPersonalizar.pausaCurtaLabel">
                 <i class="fas fa-coffee"></i> Tempo de Pausa Curta
               </label>
               <div class="number-input">
                 <input type="number" id="break-time" min="5" max="30" value="5">
                 <span class="input-suffix">min</span>
               </div>
-              <small class="hint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
+              <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.pausaCurtaHint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
             </div>
             <div class="total-focus-toggle">
               <label class="switch">
                 <input type="checkbox" id="total-focus-checkbox">
                 <span class="slider round"></span>
               </label>
-              <span>Modo Foco Total (Evitar Sair)</span>
-              <small class="hint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
+              <span data-i18n="sessaoFoco.modalPersonalizar.focoTotalLabel">Modo Foco Total (Evitar Sair)</span>
+              <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.focoTotalHint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
             </div>
           </main>
           <footer class="modal-footer">
-            <button class="btn-primary" data-micromodal-close aria-label="Fechar modal">Fechar</button>
+            <button class="btn-primary" data-micromodal-close data-i18n="sessaoFoco.modalPersonalizar.botaoFechar" data-i18n-aria-label="sessaoFoco.modalPersonalizar.fecharAriaLabel" aria-label="Fechar modal">Fechar</button>
           </footer>
         </div>
       </div>
@@ -164,7 +164,7 @@
     <!-- Fim do Modal -->
 
     <footer>
-      <p>Estudo Inteligente - &copy; <span id="currentYear"></span></p>
+      <p data-i18n="footer.texto">Estudo Inteligente - &copy; <span id="currentYear"></span></p>
     </footer>
   </main>
 
