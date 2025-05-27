@@ -20,8 +20,8 @@ function setActiveLink(links) {
     const linkPath = new URL(link.href).pathname; // Usa URL para obter o pathname corretamente
     // Verifica se o caminho atual corresponde exatamente ou se é a página inicial (index.html ou /)
     return currentPath === linkPath || 
-           (currentPath.endsWith("/") && linkPath.endsWith("/features/dashboard/inicio.html")) ||
-           (currentPath.endsWith("/index.html") && linkPath.endsWith("/features/dashboard/inicio.html"));
+           (currentPath.endsWith("/") && linkPath.endsWith("/features/dashboard/dashboard.html")) ||
+           (currentPath.endsWith("/index.html") && linkPath.endsWith("/features/dashboard/dashboard.html"));
   });
 
   if (activeLink) {
@@ -148,7 +148,6 @@ function insertToggleElements() {
     // O aria-label será definido em setupDesktopSidebarToggle
     sidebarToggleDesktop.innerHTML = `<i class="fas fa-caret-left"></i>`;
 
-    // Insere o botão mobile no header
     const header = document.querySelector(".header");
     if (header) {
         const userInfo = header.querySelector(".user-info");
@@ -163,10 +162,8 @@ function insertToggleElements() {
         document.body.prepend(menuToggle);
     }
 
-    // Insere o overlay no final do body
     document.body.appendChild(overlay);
 
-    // Insere o botão desktop no final da sidebar
     const sidebar = document.querySelector(".sidebar");
     if (sidebar) {
         sidebar.appendChild(sidebarToggleDesktop);
@@ -186,12 +183,11 @@ async function loadAndInitializeMenu() {
     return;
   }
 
-  // Determina o caminho relativo correto para menu.html (Lógica Simplificada)
   let menuPath = "";
   const currentPath = window.location.pathname;
 
   if (currentPath.includes("/features/")) {
-      // Ex: /features/dashboard/inicio.html -> ../../shared/menu.html
+      // Ex: /features/dashboard/dashboard.html -> ../../shared/menu.html
       menuPath = "../../shared/menu.html";
   } else if (currentPath.includes("/landing/")) {
       // Ex: /landing/index.html -> ../shared/menu.html
@@ -223,7 +219,6 @@ async function loadAndInitializeMenu() {
         sidebar.insertAdjacentHTML("beforeend", menuHTML);
     }
 
-    // Seleciona os links *depois* que o menu foi carregado
     const links = sidebar.querySelectorAll("nav a");
     if (links.length > 0) {
       setActiveLink(links);
@@ -232,15 +227,12 @@ async function loadAndInitializeMenu() {
       console.error("Nenhum link encontrado no menu carregado.");
     }
 
-    // Insere os elementos de toggle (botões e overlay)
     insertToggleElements();
-    // Configura os eventos para ambos os toggles
     setupMobileSidebarToggle();
     setupDesktopSidebarToggle();
 
   } catch (error) {
     console.error("Erro crítico ao carregar ou inicializar o menu global:", error);
-    // Exibe mensagem de erro na sidebar para o usuário
     sidebar.innerHTML = '<p style="color: red; padding: 20px;">Erro ao carregar o menu. Verifique o console e tente recarregar a página.</p>';
   }
 }

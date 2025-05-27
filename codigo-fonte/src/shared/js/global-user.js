@@ -17,16 +17,16 @@ document.addEventListener("DOMContentLoaded", function() {
       // Cria um link para a página de perfil
       const profileLink = document.createElement("a");
       // Ajusta o caminho dependendo de onde o script está sendo chamado
-      // Assume que está em /features/*/*.html ou /dashboard/inicio.html
+      // Assume que está em /features/*/*.html ou /dashboard/dashboard.html
       // Se estiver na raiz (landing page), o caminho seria diferente.
       // Verifica se a página atual está dentro de 'features'
       if (window.location.pathname.includes("/features/")) {
-          profileLink.href = "../../features/profile/perfil.html"; // Caminho relativo de features/* para features/perfil
+          profileLink.href = "../../features/profile/profile.html"; // Caminho relativo de features/* para features/perfil
       } else if (window.location.pathname.includes("/dashboard/")) {
-          profileLink.href = "../features/profile/perfil.html"; // Caminho relativo de dashboard para features/perfil
+          profileLink.href = "../features/profile/profile.html"; // Caminho relativo de dashboard para features/perfil
       } else {
           // Fallback para um caminho absoluto ou relativo da raiz (ajustar se necessário)
-          profileLink.href = "src/features/profile/perfil.html"; // Ajuste conforme a estrutura real
+          profileLink.href = "src/features/profile/profile.html"; // Ajuste conforme a estrutura real
       }
 
       profileLink.textContent = userData.username || "Usuário"; // Prioriza username
@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
     logoutButton.addEventListener("click", handleLogout);
   }
 
-  // Observa mudanças no localStorage (login/logout/update)
   window.addEventListener("storage", function(event) {
     if (event.key === "usuarioLogado") {
       updateUserDisplay();

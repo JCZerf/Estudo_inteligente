@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Elementos do DOM
     const rankingList = document.getElementById("rankingList");
     const filterBtns = document.querySelectorAll(".filter-btn");
     const rankingTitleElement = document.getElementById("rankingTitle");

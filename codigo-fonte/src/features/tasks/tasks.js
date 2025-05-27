@@ -10,7 +10,6 @@
 let tasks = {}; // Objeto que armazena todas as tarefas organizadas por matéria
 let currentEditTaskId = null; // Rastreia o ID da tarefa em edição
 
-// Referências aos elementos DOM principais
 const taskList = document.getElementById("taskList");
 const taskForm = document.getElementById("taskForm");
 const newTaskButton = document.getElementById("newTaskButton");
@@ -30,7 +29,7 @@ const customSubjectInput = document.getElementById("customSubject"); // Adiciona
  * Chamada durante a inicialização da página
  */
 function loadTasksFromStorage() {
-    console.log("tarefas.js: Loading tasks from storage"); // Debug
+    console.log("tasks.js: Loading tasks from storage"); // Debug
     tasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
 }
 
@@ -87,12 +86,10 @@ function renderTasks() {
     if (!taskList) return;
     taskList.innerHTML = "";
     
-    // Obtém termos de busca e filtros ativos
     const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
     const filterValue = filterSelect ? filterSelect.value : "all";
     const today = new Date().toISOString().split("T")[0];
     
-    // Processa cada matéria e suas tarefas
     Object.entries(tasks).forEach(([subject, taskItems]) => {
         // Filtra tarefas com base na busca e filtro selecionado
         const filteredTasks = taskItems.filter(task => {
@@ -126,7 +123,6 @@ function renderTasks() {
         }
     });
     
-    // Atualiza o contador de tarefas e inicializa a funcionalidade de arrastar e soltar
     updateTaskCount();
     initSortable();
 }
@@ -222,7 +218,6 @@ function createTaskElement(task, subject) {
         </button>
     `;
 
-    // Adiciona event listeners para as ações
     leftDiv.querySelector(".task-checkbox").addEventListener("click", (e) => {
         e.stopPropagation(); // Impede que o clique no checkbox abra o modal
         toggleTaskDone(task.id, subject);
@@ -294,7 +289,6 @@ function openEditTaskModal(taskId, subjectName) {
     document.querySelector(`input[name="priority"][value="${task.priority || 'medium'}"]`).checked = true;
     document.getElementById("taskDescription").value = task.description || "";
 
-    // Exibe o modal
     if (taskModal) taskModal.style.display = "block";
 }
 
@@ -307,7 +301,7 @@ function openEditTaskModal(taskId, subjectName) {
 function setFocusTask(task, subject) {
     const focusTask = { ...task, subject: subject };
     localStorage.setItem("focusTask", JSON.stringify(focusTask));
-    window.location.href = "../pomodoro/sessao_de_foco.html";
+    window.location.href = "../focus_session/focus_session.html";
 }
 
 /**
@@ -375,7 +369,6 @@ function toggleTaskDone(taskId, taskSubject) {
  */
 function handleTaskFormSubmit(event) {
     event.preventDefault();
-    // Coleta os dados do formulário
     const taskId = document.getElementById("editTaskId").value;
     const title = document.getElementById("taskTitle").value.trim();
     const subjectValue = taskSubjectSelect.value;
@@ -393,13 +386,11 @@ function handleTaskFormSubmit(event) {
     const priority = document.querySelector('input[name="priority"]:checked').value;
     const description = document.getElementById("taskDescription").value.trim();
 
-    // Validação básica
     if (!title || !subjectName) {
         alert("Por favor, preencha o título e a matéria da tarefa.");
         return;
     }
 
-    // Cria ou atualiza o objeto da tarefa
     const taskData = {
         id: taskId || `task-${Date.now()}`,
         title: title,
@@ -432,13 +423,11 @@ function handleTaskFormSubmit(event) {
         }
     }
 
-    // Adiciona a tarefa à nova categoria (ou à mesma se não mudou)
     if (!tasks[subjectName]) {
         tasks[subjectName] = [];
     }
     tasks[subjectName].push(taskData);
 
-    // Salva, fecha o modal e renderiza
     saveTasks();
     closeModal();
     renderTasks();
@@ -459,7 +448,6 @@ function closeModal() {
  */
 function saveTasks() {
     localStorage.setItem("studyTasks", JSON.stringify(tasks));
-    // Dispara evento para notificar outras partes da aplicação (ex: cronograma)
     window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
 }
 
@@ -600,7 +588,7 @@ function exportTasks() {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "estudo_inteligente_tarefas.json";
+    link.download = "estudo_inteligente_tasks.json";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -634,7 +622,6 @@ function importTasks(event) {
             console.error("Erro ao importar tarefas:", error);
             alert("Erro ao importar tarefas: " + error.message);
         }
-        // Limpa o valor do input para permitir importar o mesmo arquivo novamente
         importInput.value = ""; 
     };
     reader.readAsText(file);
@@ -661,12 +648,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loadTasksFromStorage();
     renderTasks();
 
-    // Abrir modal de nova tarefa
     if (newTaskButton) {
         newTaskButton.addEventListener("click", openNewTaskModal);
     }
 
-    // Fechar modal
     if (closeModalButton) {
         closeModalButton.addEventListener("click", closeModal);
     }
@@ -676,12 +661,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Submeter formulário de tarefa
     if (taskForm) {
         taskForm.addEventListener("submit", handleTaskFormSubmit);
     }
 
-    // Filtrar e buscar tarefas
     if (searchInput) {
         searchInput.addEventListener("input", renderTasks);
     }
@@ -689,7 +672,6 @@ document.addEventListener("DOMContentLoaded", () => {
         filterSelect.addEventListener("change", renderTasks);
     }
 
-    // Importar e exportar tarefas
     if (exportBtn) {
         exportBtn.addEventListener("click", exportTasks);
     }
@@ -697,7 +679,6 @@ document.addEventListener("DOMContentLoaded", () => {
         importInput.addEventListener("change", importTasks);
     }
 
-    // Mostrar/Ocultar campo de matéria personalizada
     if (taskSubjectSelect) {
         taskSubjectSelect.addEventListener("change", () => {
             if (taskSubjectSelect.value === "other") {

@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         AVATAR_BASE_PATH: "../../shared/assets/avatars/",
         USER_DATA_KEY: "usuarioLogado",
-        // RANKING_DATA_KEY: "rankingData", // Chave não utilizada diretamente aqui, mas pode ser relevante para consistência
         DEFAULT_AVATAR: "../../shared/assets/avatars/frog.png", // Usar um default consistente
         DEFAULT_RANKING: "Iniciante"
     };
@@ -69,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     year: "numeric"
                 });
 
-                // Atualiza a UI
                 DOM.profileFullname.textContent = state.currentUserData.nome || "Nome não informado";
                 DOM.profileEmail.textContent = state.currentUserData.email || "Email não informado";
                 DOM.profileUsernameDisplay.textContent = state.currentUserData.username || "Username não definido";
@@ -211,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         alertContainer.appendChild(alert);
 
-        // Auto-remove after a delay
+        // Remover automaticamente após um atraso
         setTimeout(() => {
             alert.classList.add("fade-out");
             setTimeout(() => alert.remove(), 500); // Match animation duration
@@ -334,7 +332,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Eventos Globais ---
-    // Ouve mudanças no localStorage feitas por outras abas/janelas
     window.addEventListener("storage", (event) => {
         if (event.key === CONSTANTS.USER_DATA_KEY) {
             console.log("[Perfil] Detectada mudança externa no localStorage. Recarregando perfil...");
@@ -344,11 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Ouve o evento userUpdated (disparado por este próprio script ou outros)
     // Isso garante que se outra parte do app atualizar o usuário, o perfil reflita.
-    // window.addEventListener("userUpdated", (event) => {
     //     console.log("[Perfil] Evento userUpdated recebido. Recarregando perfil...");
-    //     loadUserProfile();
-    // });
-    // Nota: Chamar loadUserProfile() dentro do saveUserData() que dispara o evento pode causar loop.
     // A atualização da UI já é feita nas funções saveUsername e confirmAvatarSelection.
 
     // --- Inicialização ---

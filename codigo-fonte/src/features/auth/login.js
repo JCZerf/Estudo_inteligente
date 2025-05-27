@@ -5,13 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const showRegisterBtn = document.getElementById("showRegisterBtn");
     const showLoginBtn = document.getElementById("showLoginBtn");
 
-    // Campos de login
     const loginEmail = document.getElementById("email");
     const loginPassword = document.getElementById("password");
     const loginError = document.getElementById("error-message");
     const rememberMe = document.getElementById("remember-me");
 
-    // Campos de registro
     const registerName = document.getElementById("register-name");
     const registerUsername = document.getElementById("register-username");
     const registerEmail = document.getElementById("register-email");
@@ -26,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
         rememberMe.checked = true;
     }
 
-    // Alternância entre formulários
     if (showRegisterBtn && showLoginBtn) {
         showRegisterBtn.addEventListener("click", showRegisterForm);
         showLoginBtn.addEventListener("click", showLoginForm);
@@ -44,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         hideError(loginError); // Esconde erro do login ao trocar
     }
 
-    // Mostrar/ocultar senha
     document.querySelectorAll(".toggle-password").forEach(button => {
         button.addEventListener("click", function () {
             const input = this.closest(".password-wrapper").querySelector("input");
@@ -59,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Atualizar ano no footer
     const currentYear = document.getElementById("currentYear");
     if (currentYear) {
         currentYear.textContent = new Date().getFullYear();
@@ -130,8 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("[Login] Dados salvos em usuarioLogado:", usuarioLogadoData);
 
         // Limpa dados de foco e conquistas de usuário anterior (se houver)
-        // localStorage.removeItem("userFocusStats");
-        // localStorage.removeItem("userAchievements");
         // Nota: Decide-se manter ou limpar dependendo da lógica desejada.
         // Por segurança, é melhor manter, a menos que explicitamente pedido para limpar.
 
@@ -141,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.removeItem("rememberedEmail");
         }
 
-        window.location.href = "../dashboard/inicio.html";
+        window.location.href = "../dashboard/dashboard.html";
     }
 
     // --- Lógica de Cadastro ---
@@ -158,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const senha = registerPassword.value;
         const confirmarSenha = registerConfirmPassword.value;
 
-        // Validações
         if (!nome || !username || !email || !senha || !confirmarSenha) {
             return displayError(registerError, "Todos os campos são obrigatórios.");
         }
@@ -201,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("[Registro] Lista de usuários atualizada:", usuariosCadastrados);
 
         // Opcional: Fazer login automaticamente após o registro
-        // handleLoginSuccess(novoUsuario);
 
         // Ou apenas mostrar mensagem de sucesso e redirecionar para login
         alert("Cadastro realizado com sucesso! Faça login para continuar.");

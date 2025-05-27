@@ -144,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (modalTitle) modalTitle.textContent = `Confirmar ${actionText}`;
         if (modalMessage) modalMessage.textContent = `Tem certeza que deseja ${actionText.toLowerCase()}?`;
 
-        // Exibe o modal
         elements.confirmModal.style.display = "block";
 
         // Clone o botão para evitar múltiplos listeners
@@ -168,22 +167,18 @@ document.addEventListener("DOMContentLoaded", function() {
         switch(actionId) {
             case "changeEmailBtn":
                 message = "Alteração de e-mail solicitada";
-                // Lógica para alterar e-mail aqui
                 break;
             case "changePasswordBtn":
                 message = "Alteração de senha solicitada";
-                // Lógica para alterar senha aqui
                 break;
             case "resetProgressBtn":
                 message = "Progresso redefinido com sucesso";
-                // Lógica para resetar progresso aqui
                 break;
             case "resetSettingsBtn":
                 resetToDefaultSettings();
                 return; // Já mostra toast na função
             case "deleteAccountBtn":
                 message = "Conta marcada para exclusão";
-                // Lógica para excluir conta aqui
                 break;
             default:
                 message = "Ação executada com sucesso";

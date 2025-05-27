@@ -62,11 +62,9 @@ document.addEventListener("DOMContentLoaded", function() {
     loadTotalPointsDisplay(); // Carrega a exibição de pontos totais
     initProgressoSemanaChart(); // Inicializa o gráfico de progresso semanal
     loadProximosEventos();    // Carrega os próximos eventos do calendário
-    // loadMotivationalPhrase(); // Chamada movida para o final
     document.getElementById("currentYear").textContent = new Date().getFullYear(); // Atualiza o ano no rodapé
     checkNotificationPermission(); // Verifica permissão para notificações
 
-    // Listeners para atualizar os contadores dinamicamente
     window.addEventListener("completedFocusSessionsChanged", (event) => { // CORREÇÃO: Ouvir evento correto
         updateCompletedFocusSessionsCounter(event.detail.count);
     });
@@ -373,7 +371,6 @@ function checkNotificationPermission() {
         Notification.requestPermission().then(function (permission) {
             if (permission === "granted") {
                 console.log("Permissão para notificações concedida.");
-                // new Notification("Notificações ativadas!"); // Opcional: notificar que ativou
             }
         });
     }

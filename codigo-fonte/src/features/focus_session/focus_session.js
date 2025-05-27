@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Helper function to safely get elements
+    // Função auxiliar para obter elementos com segurança
     function getElement(id) {
         const element = document.getElementById(id);
         if (!element) {
@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return element;
     }
 
-    // Elementos do DOM (com verificação)
     const startBtn = getElement("start-btn");
     const cancelBtn = getElement("cancel-btn");
     const timeDisplay = getElement("time-display");
@@ -35,22 +34,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const markersContainer = getElement("time-markers"); // Added check
     const clockCircle = getElement("clock-circle"); // Added check
 
-    // Elementos de áudio (com verificação)
     const focusStartSound = getElement("focusStartSound");
     const focusEndSound = getElement("focusEndSound");
     const breakStartSound = getElement("breakStartSound");
     const breakEndSound = getElement("breakEndSound");
 
-    // Early exit if essential elements are missing
+    // Saída antecipada se elementos essenciais estiverem faltando
     if (!startBtn || !cancelBtn || !timeDisplay || !progressCircle || !taskListDiv || !selectedTasksListDiv || !selectedTasksCountElement || !tasksValidationElement || !nextSessionElement || !timerModeElement || !timerModeText || !progressPercentageElement || !markersContainer || !clockCircle) {
         console.error("[FocusSession] Essential DOM elements are missing. Script cannot initialize properly.");
-        // Optionally display a user-friendly error message on the page
+        // Opcionalmente, exibir uma mensagem de erro amigável na página
         const errorDiv = document.createElement('div');
         errorDiv.textContent = 'Erro: Elementos essenciais para a sessão de foco não foram encontrados. Verifique o HTML.';
         errorDiv.style.color = 'red';
         errorDiv.style.padding = '10px';
         errorDiv.style.border = '1px solid red';
-        // Try to prepend to body, or append if body is not ready (though DOMContentLoaded should ensure it is)
+        // Tenta adicionar ao início do body, ou ao final se o body não estiver pronto (embora DOMContentLoaded deva garantir que esteja)
         if (document.body) {
             document.body.prepend(errorDiv);
         } else {
@@ -59,17 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
         return; // Stop script execution
     }
 
-    // Variáveis de controle do timer
     let timer;
     let isRunning = false;
     let remainingTime = 0; // Tempo restante no ciclo atual (foco ou pausa)
     let timerMode = "manual"; // 'manual' ou 'auto'
     let lastCycleDurationMinutes = 0; // Armazena a duração do último ciclo de foco concluído
 
-    // Configurações Modo Manual
     let manualFocusDuration = 25; // Duração definida pelo usuário
 
-    // Configurações e Estado Modo Automático
     let autoSettings = {
         totalSessionDuration: 60, // Duração total definida pelo usuário
         baseBreakDuration: 5,     // Duração da pausa curta definida pelo usuário
@@ -83,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let autoSessionStarted = false; // Indica se a sessão automática foi iniciada
     const LONG_BREAK_INTERVAL = 4; // Número de ciclos de foco antes de uma pausa longa
 
-    // Controle de tarefas
     let allAvailableTasks = []; // Todas as tarefas PENDENTES carregadas do sistema (FLAT ARRAY)
     let selectedTasks = []; // Tarefas selecionadas pelo usuário para a sessão
     let activeTaskIndex = -1; // Índice da tarefa ativa DENTRO de selectedTasks
@@ -944,7 +938,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // This alert might be redundant if markTaskAsCompleted already showed one
             // Consider removing or making it conditional
              console.log("[FocusSession] Session ended because all selected tasks were completed.");
-             // alert("Sessão de foco automática concluída! Todas as tarefas selecionadas foram finalizadas.");
         } else {
              // Generic end message if not ended by time or task completion (e.g., manual cancel)
              // This function is usually called after time runs out or tasks are done,

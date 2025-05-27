@@ -14,18 +14,14 @@ class GlobalStyleManager {
    * Inicializa as propriedades e recupera as preferências salvas do usuário
    */
   constructor() {
-      // Referências aos elementos DOM
       this.themeToggle = document.getElementById("themeToggle");
       this.themeIcon = this.themeToggle?.querySelector("i");
       
-      // Detecta se o sistema do usuário está configurado para tema escuro
       this.userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       
-      // Recupera as preferências salvas ou usa os padrões baseados nas configurações do sistema
       this.currentTheme = localStorage.getItem("theme") || (this.userPrefersDark ? "dark" : "light");
       this.currentFontSize = localStorage.getItem("fontSize") || "medium";
       
-      // Inicializa o gerenciador
       this.init();
   }
   
@@ -46,16 +42,13 @@ class GlobalStyleManager {
    * @param {boolean} withTransition - Se deve aplicar transição visual (true por padrão)
    */
   applyTheme(theme, withTransition = true) {
-      // Adiciona classe de transição se necessário
       if (withTransition) {
           document.body.classList.add("theme-transition");
       }
       
-      // Aplica o tema ao documento e salva no localStorage
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem("theme", theme);
       
-      // Atualiza o ícone do botão de alternar tema
       if (this.themeIcon && this.themeToggle) {
           if (theme === "dark") {
               this.themeIcon.classList.remove("fa-moon");
@@ -68,10 +61,8 @@ class GlobalStyleManager {
           }
       }
       
-      // Dispara evento personalizado para notificar outros componentes da mudança de tema
       document.dispatchEvent(new CustomEvent("themeChanged", { detail: { theme } }));
       
-      // Remove a classe de transição após o término da animação
       if (withTransition) {
           setTimeout(() => {
               document.body.classList.remove("theme-transition");
@@ -84,14 +75,11 @@ class GlobalStyleManager {
    * @param {string} size - O tamanho a ser aplicado ('small', 'medium' ou 'large')
    */
   applyFontSize(size) {
-      // Remove todas as classes de tamanho de fonte e aplica a nova
       document.body.classList.remove("font-small", "font-medium", "font-large");
       document.body.classList.add(`font-${size}`);
       
-      // Salva a preferência no localStorage
       localStorage.setItem("fontSize", size);
       
-      // Dispara evento personalizado para notificar outros componentes da mudança de tamanho
       document.dispatchEvent(new CustomEvent("fontSizeChanged", { detail: { size } }));
   }
   
@@ -100,11 +88,9 @@ class GlobalStyleManager {
    * Chamado quando o usuário clica no botão de alternar tema
    */
   toggleTheme() {
-      // Determina o tema oposto ao atual
       this.currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
       this.applyTheme(this.currentTheme);
       
-      // Adiciona efeito visual de clique no botão
       if (this.themeToggle) {
         this.themeToggle.classList.add("theme-toggle-active");
         setTimeout(() => {
@@ -131,14 +117,11 @@ class GlobalStyleManager {
   }
   
   /**
-   * Configura os event listeners para interações do usuário e mudanças do sistema
    */
   setupEventListeners() {
-      // Listener para clique no botão de tema
       if (this.themeToggle) {
         this.themeToggle.addEventListener("click", () => this.toggleTheme());
         
-        // Suporte a acessibilidade para navegação por teclado
         this.themeToggle.addEventListener("keydown", (e) => {
             if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
@@ -147,7 +130,6 @@ class GlobalStyleManager {
         });
       }
       
-      // Listener para mudanças na preferência de tema do sistema operacional
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
           // Somente altera se o usuário não tiver definido uma preferência explícita
           if (localStorage.getItem("theme") === null) {

@@ -4,7 +4,6 @@
  */
 
 document.addEventListener("DOMContentLoaded", function() {
-  // Elementos do DOM
   const registerForm = document.getElementById("registerForm");
   const nameInput = document.getElementById("name");
   const usernameInput = document.getElementById('username');
@@ -16,10 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const strengthText = document.querySelector(".strength-text");
   const submitBtn = registerForm.querySelector(".btn-primary");
 
-  // Atualiza o ano no rodapé para o ano atual
   document.getElementById("currentYear").textContent = new Date().getFullYear();
 
-  // Configura os botões de mostrar/ocultar senha
   document.querySelectorAll(".toggle-password").forEach(button => {
     button.addEventListener("click", function() {
       const input = this.closest(".password-wrapper").querySelector("input");
@@ -69,7 +66,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // Validação em tempo real
   [nameInput, emailInput, passwordInput, confirmPasswordInput].forEach(input => {
     input.addEventListener("input", function() {
       if (this.value.trim()) {
@@ -81,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // Validação de e-mail
   emailInput.addEventListener("blur", function() {
     if (this.value.trim() && !validateEmail(this.value)) {
       showError(this, "Por favor, insira um e-mail válido");
@@ -89,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
   });
 
-  // Validação e envio
   registerForm.addEventListener("submit", async function(e) {
     e.preventDefault();
     resetErrors();
@@ -133,7 +127,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // Funções auxiliares
   function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -164,7 +157,6 @@ async function validarCadastro(event) {
         return false;
     }
     
-    // Restante da lógica de cadastro...
     return true;
 }
 
