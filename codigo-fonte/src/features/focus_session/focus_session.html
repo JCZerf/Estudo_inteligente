@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sessão de Foco Inteligente - Estudo Inteligente</title>
+  <title>Timer Inteligente - Estudo Inteligente</title>
   
   <link rel="stylesheet" href="../../shared/css/global.css" />
   <link rel="stylesheet" href="focus_session.css" />
@@ -13,16 +13,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Sons pré-carregados -->
-  <audio id="focusStartSound" preload="auto" src="../../shared/assets/sounds/focus-start.mp3"></audio>
-  <audio id="focusEndSound" preload="auto" src="../../shared/assets/sounds/focus-end.mp3"></audio>
-  <audio id="breakStartSound" preload="auto" src="../../shared/assets/sounds/break-start.mp3"></audio>
-  <audio id="breakEndSound" preload="auto" src="../../shared/assets/sounds/break-end.mp3"></audio>
+  <audio id="focusStartSound" preload="auto" src="../../shared/sounds/focus-start.mp3"></audio>
+  <audio id="focusEndSound" preload="auto" src="../../shared/sounds/focus-end.mp3"></audio>
+  <audio id="breakStartSound" preload="auto" src="../../shared/sounds/break-start.mp3"></audio>
+  <audio id="breakEndSound" preload="auto" src="../../shared/sounds/break-end.mp3"></audio>
 </head>
 <body>
   <aside class="sidebar">
     <a href="../dashboard/dashboard.html" aria-label="Estudo Inteligente - Página Inicial">
       <img src="../../shared/assets/img/study-logo-white.png" alt="" class="logo-sidebar" />
     </a>
+    <!-- Menu será carregado pelo menu.js -->
   </aside>
 
   <main class="main">
@@ -37,7 +38,7 @@
     </header>
 
     <div class="content">
-      <h1 class="page-title"><i class="fas fa-clock" aria-hidden="true"></i> Sessão de Foco</h1>
+      <h1 class="page-title"><i class="fas fa-brain" aria-hidden="true"></i> Timer Inteligente</h1>
 
       <div class="focus-container">
         <section class="section task-selector" aria-labelledby="task-selector-heading">
@@ -45,6 +46,7 @@
           
           <div class="task-list" role="group" aria-label="Lista de tarefas para focar">
             <!-- Tarefas serão carregadas dinamicamente -->
+            <p>Carregando tarefas...</p>
           </div>
           
           <div class="selected-tasks-container">
@@ -54,11 +56,11 @@
             </div>
             
             <div class="selected-tasks-list" id="selectedTasksList">
-              <!-- Tarefas selecionadas aparecerão aqui -->
+              <p>Nenhuma tarefa selecionada.</p>
             </div>
             
-            <div id="tasksValidation" class="time-validation" style="display: none;">
-              <!-- Mensagem de validação -->
+            <div id="tasksValidation" class="time-validation" style="display: flex;">
+              Selecione pelo menos uma tarefa.
             </div>
           </div>
         </section>
@@ -66,6 +68,13 @@
         <section class="section pomodoro-clock" aria-labelledby="pomodoro-heading">
           <h2 id="pomodoro-heading" class="sr-only">Contador Pomodoro</h2>
           
+          <div class="timer-header-controls">
+             <!-- Botão de Som (Placeholder) -->
+            <button id="sound-toggle-btn" class="btn-icon sound-toggle-btn" aria-label="Desativar sons" aria-pressed="true">
+              <i class="fas fa-volume-up" aria-hidden="true"></i>
+            </button>
+          </div>
+
           <div class="timer-container">
             <div class="clock-circle" id="clock-circle">
               <div class="time-markers" id="time-markers"></div>
@@ -77,80 +86,82 @@
 
           <div class="timer-status">
             <div class="timer-mode-indicator focus" id="timerModeIndicator">
-              <i class="fas fa-brain"></i> <span id="timerModeText">Modo Foco</span>
+              <i class="fas fa-brain"></i> <span id="timerModeText">Timer Inteligente</span>
             </div>
             <div class="timer-next-session" id="nextSessionInfo">
-              Próxima pausa em: 25:00
+              Pronto para iniciar.
             </div>
           </div>
 
-          <div class="windows-style-selector">
-            <div class="selector-tabs">
-              <button class="tab-btn active" data-tab="manual-tab">
-                <i class="fas fa-hand-pointer"></i> Manual
-              </button>
-              <button class="tab-btn" data-tab="auto-tab">
-                <i class="fas fa-robot"></i> Automático
-              </button>
-            </div>
-            
-            <div class="selector-content">
-              <div id="manual-tab" class="tab-content active">
-                <div class="time-input-group">
-                  <label for="custom-time-input">
-                    <i class="fas fa-clock"></i> Duração do Foco
+          <!-- Removido o seletor de abas Manual/Automático -->
+          <div class="timer-settings-container">
+             <h3 class="settings-title"><i class="fas fa-cogs"></i> Configurações do Timer Inteligente</h3>
+             <div class="auto-settings-group">
+                <div class="form-row">
+                  <label for="total-session-time-slider">
+                    <i class="fas fa-hourglass-half"></i> Duração Total da Sessão (<span id="total-session-time-value">60</span> min)
                   </label>
-                  <div class="time-input-container">
-                    <input type="number" id="custom-time-input" min="15" max="240" value="25">
-                    <span class="input-suffix">minutos</span>
-                  </div>
-                  <small class="hint">Digite um valor entre 15 e 240 minutos</small>
+                  <input type="range" id="total-session-time-slider" min="20" max="240" value="60" step="5">
+                  <small class="hint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
                 </div>
-              </div>
-              
-              <div id="auto-tab" class="tab-content">
-                <div class="auto-settings-group">
-                  <div class="form-row">
-                    <label for="total-session-time">
-                      <i class="fas fa-hourglass-half"></i> Duração Total da Sessão
-                    </label>
-                    <div class="number-input">
-                      <!-- ID alterado de focus-time para total-session-time -->
-                      <input type="number" id="total-session-time" min="20" max="240" value="60">
-                      <span class="input-suffix">min</span>
-                    </div>
-                     <small class="hint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
-                  </div>
-                  
-                  <div class="form-row">
-                    <label for="break-time">
-                      <i class="fas fa-coffee"></i> Tempo de Pausa Curta
-                    </label>
-                    <div class="number-input">
-                      <input type="number" id="break-time" min="5" max="30" value="5">
-                      <span class="input-suffix">min</span>
-                    </div>
-                     <small class="hint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
-                  </div>
-                  
-                  <!-- Checkbox removido -->
-                  
-                </div>
-              </div>
-            </div>
+                <!-- Botão para abrir o modal de personalização -->
+                <button id="customize-cycles-btn" class="btn-secondary btn-small">
+                  <i class="fas fa-sliders-h"></i> Personalizar Ciclos
+                </button>
+             </div>
           </div>
+
+          <!-- Removido o controle de Foco Total daqui -->
 
           <div class="timer-controls">
-            <button id="start-btn" class="btn-primary">
+            <button id="start-btn" class="btn-primary" disabled>
               <i class="fas fa-play" aria-hidden="true"></i> Iniciar
             </button>
-            <button id="cancel-btn" class="btn-secondary">
+            <button id="cancel-btn" class="btn-secondary" disabled>
               <i class="fas fa-stop" aria-hidden="true"></i> Cancelar
             </button>
           </div>
         </section>
       </div>
     </div>
+
+    <!-- Modal de Personalização de Ciclos -->
+    <div id="customize-modal" class="modal" aria-hidden="true">
+      <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <header class="modal-header">
+            <h2 id="modal-title" class="modal-title-text">
+              Personalizar Ciclos
+            </h2>
+            <button class="modal-close" aria-label="Fechar modal" data-micromodal-close><i class="fas fa-times"></i></button>
+          </header>
+          <main class="modal-content" id="modal-content-customize">
+            <div class="form-row">
+              <label for="break-time">
+                <i class="fas fa-coffee"></i> Tempo de Pausa Curta
+              </label>
+              <div class="number-input">
+                <input type="number" id="break-time" min="5" max="30" value="5">
+                <span class="input-suffix">min</span>
+              </div>
+              <small class="hint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
+            </div>
+            <div class="total-focus-toggle">
+              <label class="switch">
+                <input type="checkbox" id="total-focus-checkbox">
+                <span class="slider round"></span>
+              </label>
+              <span>Modo Foco Total (Evitar Sair)</span>
+              <small class="hint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
+            </div>
+          </main>
+          <footer class="modal-footer">
+            <button class="btn-primary" data-micromodal-close aria-label="Fechar modal">Fechar</button>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- Fim do Modal -->
 
     <footer>
       <p>Estudo Inteligente - &copy; <span id="currentYear"></span></p>
@@ -163,10 +174,7 @@
   <script src="../../shared/js/global-user.js"></script>
   <script>
     document.getElementById("currentYear").textContent = new Date().getFullYear();
-    // Adicionar lógica para carregar tarefas do localStorage ou API aqui
-    // Exemplo básico:
-    // const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    // renderAvailableTasks(tasks);
   </script>
 </body>
 </html>
+
