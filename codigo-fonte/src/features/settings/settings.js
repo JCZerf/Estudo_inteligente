@@ -191,22 +191,31 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Personalização: Modo Escuro (como antes, usando globalStyleManager se disponível)
-    if (elements.darkModeToggle && window.globalStyleManager) {
+    // --- Personalização: Modo Escuro ---
+    // Gerencia a alternância entre temas claro e escuro
+    if (elements.darkModeToggle) {
+        // Sincroniza o estado inicial do toggle com o tema atual
         elements.darkModeToggle.checked = globalStyleManager.currentTheme === "dark";
+
+        // Listener para alterações do usuário no toggle
         elements.darkModeToggle.addEventListener("change", function() {
             globalStyleManager.toggleTheme();
         });
+
+        // Atualiza o toggle quando o tema mudar em outro lugar do sistema
         document.addEventListener("themeChanged", function(e) {
             if (elements.darkModeToggle) {
                 elements.darkModeToggle.checked = e.detail.theme === "dark";
             }
         });
     }
-
-    // Personalização: Tamanho do Texto (como antes, usando globalStyleManager se disponível)
-    if (elements.fontSizeSelect && window.globalStyleManager) {
+  // --- Personalização: Tamanho do Texto ---
+    // Gerencia as configurações de tamanho de fonte
+    if (elements.fontSizeSelect) {
+        // Define o valor inicial baseado na configuração atual
         elements.fontSizeSelect.value = globalStyleManager.currentFontSize;
+        
+        // Listener para alterações no tamanho da fonte
         elements.fontSizeSelect.addEventListener("change", function() {
             globalStyleManager.applyFontSize(this.value);
             showToast(`Tamanho da fonte alterado para ${this.options[this.selectedIndex].text}`);

@@ -24,6 +24,10 @@
   --font-size-base: 16px;     /* Tamanho base para cálculo de outros tamanhos de fonte */
   --sidebar-width: 250px;     /* Largura da sidebar */
   --sidebar-width-minimized: 30px; /* Largura da sidebar minimizada */
+  --danger-color: #e74c3c;    /* Cor para ações perigosas */
+  --warning-color: #f39c12;   /* Cor para avisos */
+  --success-color: #2ecc71;   /* Cor para sucesso */
+  --info-color: #3498db;      /* Cor para informações */
 }
 
 /* 
@@ -38,6 +42,10 @@
   --sidebar-active: #444;     /* Cor de fundo para item ativo na barra lateral no modo escuro */
   --text-secondary: #bbb;     /* Cor para textos secundários no modo escuro (clareada de #aaa) */
   --border-color: #555;       /* Cor para bordas no modo escuro (clareada de #444) */
+  --danger-color: #ff6b6b;    /* Cor de perigo mais clara para tema escuro */
+  --warning-color: #feca57;   /* Cor de aviso mais clara */
+  --success-color: #55efc4;   /* Cor de sucesso mais clara */
+  --info-color: #74b9ff;      /* Cor de informação mais clara */
 }
 
 
@@ -49,7 +57,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+  /* Removida transição global daqui para aplicar mais especificamente */
 }
 
 /* 
@@ -64,6 +72,7 @@ body {
   font-size: var(--font-size-base); /* Aplica o tamanho base de fonte */
   position: relative; /* Necessário para o overlay */
   overflow-x: hidden; /* Previne scroll horizontal indesejado */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transição apenas para body */
 }
 
 /* 
@@ -88,7 +97,13 @@ body.font-large {
  */
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
+    margin-bottom: 0.75em; /* Adiciona margem inferior padrão */
+    transition: color 0.3s ease;
 }
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.17em; }
 
 /* 
  * Estilos da barra lateral (sidebar)
@@ -106,7 +121,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1000;
   overflow-y: auto; /* Permite rolagem quando o conteúdo é maior que a altura */
   overflow-x: hidden; /* Esconde conteúdo que transborda horizontalmente */
-  transition: width 0.3s ease, left 0.3s ease; /* Adiciona transição para largura e posição */
+  transition: width 0.3s ease, left 0.3s ease, background-color 0.3s ease; /* Adiciona transição para largura e posição */
   display: flex;
   flex-direction: column;
 }
@@ -123,8 +138,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 26px; 
   height: 100vh;
   display: flex;
-  background-color: #f5f5f5;
-  color: #000;
+  background-color: var(--section-bg); /* Usa variável */
+  color: var(--text-color); /* Usa variável */
   border: none;
   display: flex;
   align-items: center;
@@ -132,12 +147,13 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 16px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, left 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease, left 0.3s ease, color 0.3s ease;
   z-index: 100;
 }
 
 .sidebar-toggle-desktop:hover {
-  background-color: #1871bb;
+  background-color: var(--highlight-color);
+  color: white;
 }
 
 /* Logo dentro da barra lateral */
@@ -169,7 +185,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 6px;
   white-space: nowrap; /* Impede quebra de linha do texto */
   overflow: hidden; /* Esconde texto que transborda */
-  transition: background-color 0.3s ease, padding 0.3s ease;
+  transition: background-color 0.3s ease, padding 0.3s ease, color 0.3s ease;
 }
 
 /* Ícones nos links da barra lateral */
@@ -190,7 +206,6 @@ h1, h2, h3, h4, h5, h6 {
 /* Efeito hover nos links da barra lateral */
 .sidebar nav a:hover {
   background-color: var(--sidebar-active);
-  /* Removido transform: translateX(5px); para evitar problemas com minimização */
 }
 
 /* Estilo para o link ativo na barra lateral */
@@ -258,7 +273,7 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
   display: flex;
   justify-content: space-between !important; /* Garante que user-info vá para a direita */
   align-items: center; /* Alinha itens verticalmente */
-  margin-bottom: 5px;
+  margin-bottom: 20px; /* Aumenta um pouco a margem */
   width: 100%; /* Garante que o header ocupe toda a largura disponível */
 }
 
@@ -272,6 +287,7 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
   cursor: pointer;
   padding: 5px;
   flex-shrink: 0; /* Impede que encolha */
+  transition: color 0.3s ease;
 }
 
 /* Informações do usuário no cabeçalho */
@@ -284,6 +300,7 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
   align-items: center;
   margin-left: auto; /* Força o elemento para a direita no flex container */
   flex-shrink: 0; /* Impede que encolha */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Área de conteúdo principal */
@@ -292,14 +309,15 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Rodapé das páginas */
 footer {
   margin-top: 40px;
   text-align: center;
-  color: #666;
-  /* Tamanho de fonte removido para herdar do body */
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 /* Overlay para escurecer o conteúdo quando o menu estiver aberto em mobile */
@@ -312,41 +330,13 @@ footer {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999; /* Abaixo do sidebar */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* 
- * Ajustes específicos para o tema escuro
- * Complementam as variáveis CSS definidas anteriormente
- */
-[data-theme="dark"] .section h1,
-[data-theme="dark"] .section h3 {
-  color: var(--highlight-color);
-}
-
-[data-theme="dark"] .highlight {
-  color: var(--highlight-color);
-}
-
-[data-theme="dark"] .banner {
-  background: var(--highlight-color); /* Alterado para azul de destaque no modo escuro */
-  color: white;
-}
-
-[data-theme="dark"] footer {
-  color: #aaa;
-}
-
-[data-theme="dark"] .menu-toggle {
-    color: var(--text-color); /* Garante que o ícone do menu seja visível no tema escuro */
-}
-
-[data-theme="dark"] .sidebar-toggle-desktop {
-    background: var(--sidebar-active);
-    color: var(--sidebar-text);
-}
-
-[data-theme="dark"] .sidebar-toggle-desktop:hover {
-    background-color: var(--highlight-color);
+.overlay.active {
+    display: block; /* Mostra o overlay quando o menu está aberto */
+    opacity: 1;
 }
 
 /* 
@@ -357,7 +347,7 @@ footer {
 /* Estilos para telas grandes (onde o botão de minimizar aparece) */
 @media (min-width: 769px) {
     .sidebar-toggle-desktop {
-        display: block; /* Mostra o botão de minimizar/expandir */
+        display: flex; /* Mostra o botão de minimizar/expandir */
     }
     /* Garante que o menu mobile não apareça */
     .menu-toggle {
@@ -415,13 +405,8 @@ footer {
       display: none; /* Esconde o botão de minimizar/expandir desktop */
   }
 
-  .overlay.active {
-      display: block; /* Mostra o overlay quando o menu está aberto */
-  }
-
   .header {
-      /* Em mobile, o user-info já deve ficar à direita devido ao space-between */
-      /* Se houver problemas, pode ser necessário ajustar a ordem dos elementos ou usar flex-grow */
+      margin-bottom: 15px;
   }
 
   .content {
@@ -439,8 +424,12 @@ footer {
   cursor: pointer;
   font-size: 1.2em; /* Usa em para escalar com a fonte base */
   margin-left: 15px;
-  padding: 5px;
+  padding: 8px; /* Aumenta área de clique */
   border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  display: flex; /* Para centralizar o ícone */
+  align-items: center;
+  justify-content: center;
 }
 
 /* Efeito hover no botão de tema */
@@ -453,6 +442,11 @@ footer {
   background-color: rgba(255,255,255,0.1);
 }
 
+/* Classe para destacar o botão de tema quando ativo */
+.theme-toggle-active {
+  transform:scale(1.1) rotate(15deg);
+}
+
 /* 
  * Estilos para seções de conteúdo
  * Define a aparência padrão dos cards e seções em todas as páginas
@@ -460,9 +454,10 @@ footer {
 .section {
   margin-bottom: 30px;
   background-color: var(--section-bg);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 25px;
+  border-radius: 12px; /* Mais arredondado */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Estilo para texto destacado */
@@ -470,18 +465,20 @@ footer {
   font-size: 1.5em; /* Usa em para escalar */
   font-weight: bold;
   color: var(--highlight-color);
+  transition: color 0.3s ease;
 }
 
 /* Estilo para banners de destaque */
 .banner {
-  background: black;
+  background: var(--highlight-color); /* Usa cor de destaque */
   color: white;
-  padding: 15px;
+  padding: 15px 20px;
   text-align: center;
-  font-size: 1.125em; /* Usa em para escalar */
-  margin: 20px 0;
+  font-size: 1.1em; /* Usa em para escalar */
+  margin: 25px 0;
   border-radius: 8px;
-  animation: pulse 2s infinite; /* Aplica animação de pulsação */
+  animation: pulse 2s infinite ease-in-out; /* Aplica animação de pulsação */
+  transition: background-color 0.3s ease;
 }
 
 /* 
@@ -489,9 +486,9 @@ footer {
  * Animação de pulsação usada em banners e alertas
  */
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--highlight-color), 0.4); }
+  70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(var(--highlight-color), 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--highlight-color), 0); }
 }
 
 /* 
@@ -505,16 +502,6 @@ footer {
              box-shadow 0.3s ease;
 }
 
-/* Transição para o botão de tema */
-#themeToggle {
-  transition: transform 0.3s ease;
-}
-
-/* Classe para destacar o botão de tema quando ativo */
-.theme-toggle-active {
-  transform:scale(1.1);
-}
-
 /* 
  * Estilos para imagens
  * Garante que imagens sejam responsivas e mantenham proporção
@@ -522,64 +509,252 @@ footer {
 img {
   max-width: 100%;
   height: auto;
-  object-fit: cover; /* Mantém proporção da imagem */
+  display: block; /* Remove espaço extra abaixo da imagem */
 }
 
 /* 
- * Estilos para modais
- * Define a aparência e comportamento dos modais usados em todo o aplicativo
+ * Estilos para Modais (Refinados) 
  */
+
+/* Keyframes para animação de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95) translateY(10px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
 .modal {
   display: none; 
   position: fixed; 
-  z-index: 1001; 
+  z-index: 1050; /* Acima da maioria dos elementos */
   left: 0;
   top: 0;
   width: 100%; 
   height: 100%; 
-  overflow: auto; 
-  background-color: rgba(0,0,0,0.6); /* Fundo semi-transparente */
+  overflow-y: auto; /* Permite rolagem se o modal for muito alto */
+  background-color: rgba(0,0,0,0.65); /* Fundo mais escuro */
+  animation: fadeIn 0.3s ease forwards; /* Animação de fade-in */
+  padding: 20px; /* Espaçamento para evitar que o conteúdo cole nas bordas */
+}
+
+/* Estilo para quando o modal está sendo exibido (adicionado via JS) */
+.modal.show {
+  display: flex; /* Usa flex para centralizar verticalmente */
+  align-items: center;
+  justify-content: center;
 }
 
 /* Conteúdo do modal */
 .modal-content {
   background-color: var(--section-bg);
   color: var(--text-color);
-  margin: 10% auto; 
-  padding: 25px;
-  border: 1px solid var(--border-color);
-  width: 90%; /* Aumenta a largura em mobile */
-  max-width: 500px; /* Limite para o modal de confirmação e tarefas */
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  margin: auto; /* Centraliza horizontalmente */
+  padding: 30px; /* Mais padding interno */
+  border: none; /* Remove borda padrão */
+  width: 90%; 
+  max-width: 550px; /* Limite padrão */
+  border-radius: 12px; /* Mais arredondado */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Sombra mais pronunciada */
   position: relative;
+  animation: scaleUp 0.3s ease forwards; /* Animação de entrada */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cabeçalho do Modal (Opcional, mas bom para estrutura) */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.modal-header h3 {
+  margin-bottom: 0; /* Remove margem padrão do h3 */
+  color: var(--highlight-color);
+  font-size: 1.3em;
 }
 
 /* Botão de fechar modal */
 .close-modal {
   color: var(--text-secondary);
-  position: absolute; /* Posiciona em relação ao modal-content */
-  top: 10px;
-  right: 15px;
-  font-size: 28px;
+  background: none;
+  border: none;
+  font-size: 32px; /* Maior */
   font-weight: bold;
   line-height: 1;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-/* Efeito hover no botão de fechar */
+/* Efeito hover/focus no botão de fechar */
 .close-modal:hover,
 .close-modal:focus {
-  color: var(--highlight-color);
+  color: var(--danger-color); /* Vermelho para indicar fechamento */
+  transform: scale(1.1);
   text-decoration: none;
-  cursor: pointer;
+  outline: none;
+}
+
+/* Corpo do Modal */
+.modal-body {
+  margin-bottom: 25px;
+}
+
+.modal-body p {
+  line-height: 1.6;
+  margin-bottom: 1em;
 }
 
 /* Container para botões no modal */
 .modal-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 12px; /* Mais espaço */
     margin-top: 20px;
+}
+
+/* 
+ * Estilos para campos de formulário em modais e configurações
+ */
+.modal .form-group,
+.settings-section .form-group { /* Aplica também a forms em settings */
+  margin-bottom: 20px; /* Mais espaço entre grupos */
+}
+
+.modal .form-group label,
+.settings-section .form-group label {
+  display: block;
+  margin-bottom: 8px; /* Mais espaço label/input */
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.modal .form-input,
+.modal .form-select,
+.modal .form-textarea,
+.settings-section .setting-select, /* Inclui selects das settings */
+.settings-section .setting-time,   /* Inclui time das settings */
+.settings-section input[type="text"], /* Inputs gerais nas settings */
+.settings-section input[type="email"],
+.settings-section input[type="password"] {
+  width: 100%;
+  padding: 12px 15px; /* Mais padding */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-color); /* Fundo sutilmente diferente */
+  color: var(--text-color);
+  font-size: 1em;
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
+}
+
+.modal .form-input:focus,
+.modal .form-select:focus,
+.modal .form-textarea:focus,
+.settings-section .setting-select:focus,
+.settings-section .setting-time:focus,
+.settings-section input:focus {
+  outline: none;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 3px rgba(var(--highlight-color-rgb, 24, 113, 187), 0.2); /* Adiciona um brilho no foco */
+}
+
+/* Ajuste para placeholder */
+.modal ::placeholder,
+.settings-section ::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Estilos para botões genéricos */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex; /* Para alinhar ícones */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  filter: brightness(95%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn:active {
+  transform: scale(0.98);
+  filter: brightness(90%);
+}
+
+/* Botão Primário (Ação principal) */
+.btn-primary {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+/* Botão Secundário (Cancelar, Voltar) */
+.btn-secondary {
+  background-color: var(--section-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-color);
+  border-color: var(--text-secondary);
+  color: var(--text-color);
+}
+
+/* Botão de Perigo (Excluir, Resetar) */
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Botão de Aviso (Alterar Senha/Email na Zona de Risco) */
+.btn-warning {
+  background-color: var(--warning-color);
+  color: #333; /* Cor escura para contraste com amarelo */
+}
+[data-theme="dark"] .btn-warning {
+  color: #111; /* Garante contraste no tema escuro */
+}
+
+/* Responsividade para Modais */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+
+  .modal-header h3 {
+    font-size: 1.15em;
+  }
+
+  .modal-buttons {
+    flex-direction: column; /* Empilha botões */
+    gap: 10px;
+  }
+
+  .modal-buttons .btn {
+    width: 100%; /* Botões ocupam largura total */
+  }
 }
 
 /* 
@@ -591,108 +766,59 @@ img {
 }
 
 /* 
- * Estilos para campos de formulário em modais e configurações
- * Define aparência consistente para inputs, selects e textareas
+ * Estilos para o Toast Notification (Refinado)
  */
-.modal .form-group input[type="text"],
-.modal .form-group input[type="date"],
-.modal .form-group input[type="time"],
-.modal .form-group textarea,
-.modal .form-group select,
-.setting-select,
-.setting-time {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-size: 1em; /* Usa em para escalar */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px); /* Começa fora da tela */
+    padding: 12px 24px;
+    background-color: rgba(51, 51, 51, 0.95); /* Fundo com transparência */
+    color: white;
+    border-radius: 8px;
+    z-index: 1060; /* Acima dos modais */
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px); /* Efeito de vidro fosco (suporte variado) */
+    font-size: 0.95em;
 }
 
-/* Estilo para labels de formulário */
-.modal .form-group label,
-.setting-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* Move para a posição final */
 }
 
-/* Estilo para grupos de formulário */
-.modal .form-group {
-  margin-bottom: 15px;
+/* Cores específicas para tipos de Toast */
+.toast.success {
+    background-color: rgba(46, 204, 113, 0.9); /* Verde */
+}
+.toast.error {
+    background-color: rgba(231, 76, 60, 0.9); /* Vermelho */
+}
+.toast.info {
+    background-color: rgba(52, 152, 219, 0.9); /* Azul */
 }
 
-/* 
- * Estilos para botões
- * Define aparência padrão para botões primários, secundários e de perigo
- */
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em; /* Usa em para escalar */
-  transition: background-color 0.3s ease, transform 0.1s ease;
-  font-weight: 600;
+/* Adiciona ícones aos toasts (requer Font Awesome) */
+.toast::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 5px;
+}
+.toast.success::before { content: "\f058"; } /* check-circle */
+.toast.error::before { content: "\f071"; } /* exclamation-triangle */
+.toast.info::before { content: "\f05a"; } /* info-circle */
+
+/* Adiciona :root --highlight-color-rgb para o box-shadow do focus */
+:root {
+  --highlight-color-rgb: 24, 113, 187; /* RGB do #1871bb */
+}
+[data-theme="dark"] {
+  --highlight-color-rgb: 74, 159, 224; /* RGB do #4a9fe0 */
 }
 
-/* Botão primário (cor de destaque) */
-.btn-primary {
-  background-color: var(--highlight-color);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #125a96; /* Tom mais escuro do highlight */
-}
-
-/* Botão secundário (cinza) */
-.btn-secondary {
-  background-color: #ccc;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #bbb;
-}
-
-/* Botão de perigo (vermelho) */
-.btn-danger {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
-}
-
-/* Efeito de pressionar botão */
-.btn:active {
-  transform: scale(0.98);
-}
-
-/* Ajuste para tornar o link do usuário no header mais parecido com um botão */
-.header .user-info #userName {
-    padding: 5px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    margin-right: 10px; /* Espaço antes do botão de tema */
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    cursor: pointer; /* Indica que é clicável */
-    text-decoration: none !important; /* Remove sublinhado padrão de links */
-    color: var(--text-color); /* Garante cor do texto do tema */
-    display: inline-block; /* Necessário para padding e borda */
-}
-
-.header .user-info #userName:hover {
-    background-color: var(--bg-color); /* Leve mudança de fundo no hover */
-    border-color: var(--highlight-color);
-    text-decoration: none !important; /* Garante que não haja sublinhado no hover */
-}
-
-/* Ajuste para tornar o link do usuário no header mais parecido com um botão - Tema Escuro */
-[data-theme="dark"] .header .user-info #userName:hover {
-    background-color: var(--sidebar-active); /* Fundo mais escuro no hover */
-}
