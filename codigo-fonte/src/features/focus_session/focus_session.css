@@ -638,15 +638,17 @@ input:checked + .slider:before {
 
 .progress-text {
   position: absolute;
-  right: 6px; /* Ajustado */
+  left: 50%; /* Centralizado horizontalmente */
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%); /* Centraliza em ambos os eixos */
   color: white;
   font-size: 0.7rem;
   font-weight: bold;
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   mix-blend-mode: overlay;
   transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
 }
 
 .selected-task .remove-task-icon {

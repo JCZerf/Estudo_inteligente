@@ -98,9 +98,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let soundEnabled = true; // Sons estão ativados?
     let totalFocusModeEnabled = false; // Modo Foco Total está ativo?
     let expectedEndTime = null; // Timestamp de quando o ciclo atual deve terminar (para persistência)
+    let lastUpdateTime = null; // NOVO: Timestamp da última atualização do timer
+    let oneMinuteWarningTriggered = false; // NOVO: Flag para controlar o aviso de 1 minuto
 
     const LONG_BREAK_INTERVAL = 4; // Ciclos de foco antes de uma pausa longa
     const MAX_TASKS = 8;
+    const ONE_MINUTE_WARNING = 60; // NOVO: Constante para aviso de 1 minuto (em segundos)
 
     // --- Configurações do Timer Inteligente (Persistidas) ---
     let timerSettings = {
@@ -304,7 +307,8 @@ document.addEventListener("DOMContentLoaded", function () {
             activeTaskIndex: activeTaskIndex,
             selectedTasks: selectedTasks, // Salva o estado das tarefas selecionadas (incluindo progresso)
             expectedEndTime: expectedEndTime, // Salva o timestamp esperado para o fim
-            lastCycleDurationMinutes: lastCycleDurationMinutes
+            lastCycleDurationMinutes: lastCycleDurationMinutes,
+            oneMinuteWarningTriggered: oneMinuteWarningTriggered // NOVO: Salva o estado do aviso de 1 minuto
         };
         try {
             localStorage.setItem("timerState", JSON.stringify(state));
@@ -334,7 +338,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const now = Date.now();
         const expectedEnd = state.expectedEndTime;
-        const timePassedSinceSave = (now - expectedEnd + state.remainingTime * 1000) / 1000; // Tempo que passou desde que foi salvo
         const calculatedRemaining = Math.max(0, Math.round((expectedEnd - now) / 1000));
 
         console.log(`[FocusSession] Restoring timer state. Expected End: ${new Date(expectedEnd).toLocaleTimeString()}, Now: ${new Date(now).toLocaleTimeString()}, Calculated Remaining: ${calculatedRemaining}`);
@@ -349,25 +352,19 @@ document.addEventListener("DOMContentLoaded", function () {
         activeTaskIndex = typeof state.activeTaskIndex === 'number' ? state.activeTaskIndex : -1;
         selectedTasks = Array.isArray(state.selectedTasks) ? state.selectedTasks : [];
         lastCycleDurationMinutes = state.lastCycleDurationMinutes || 0;
+        oneMinuteWarningTriggered = state.oneMinuteWarningTriggered || false; // NOVO: Restaura o estado do aviso de 1 minuto
 
-        // Ajusta o tempo restante
+        // Ajusta o tempo restante com base no timestamp absoluto
         remainingTime = calculatedRemaining;
+        expectedEndTime = expectedEnd; // Mantém o timestamp original
 
         // Se o tempo acabou enquanto estava fora
         if (remainingTime <= 0) {
             console.log("[FocusSession] Timer cycle ended while page was inactive.");
             // Simula o fim do ciclo para registrar pontos, trocar tarefa, etc.
-            // Precisamos saber qual era a duração original do ciclo que terminou
-            const originalCycleDuration = state.isFocusTime ? state.lastCycleDurationMinutes : (state.focusCyclesCompletedInBlock % LONG_BREAK_INTERVAL === 0 ? timerSettings.baseBreakDuration * 2 : timerSettings.baseBreakDuration);
-            // Ajusta o tempo total restante da sessão
-            totalSessionRemainingTime = Math.max(0, totalSessionRemainingTime - timePassedSinceSave + calculatedRemaining);
             handleCycleEnd(true); // Chama handleCycleEnd indicando que terminou (true para simular fim natural)
             return true; // Estado restaurado, mas ciclo terminou
         }
-
-        // Se ainda há tempo, continua o timer
-        expectedEndTime = Date.now() + remainingTime * 1000; // Recalcula expectedEndTime
-        totalSessionRemainingTime = Math.max(0, totalSessionRemainingTime - timePassedSinceSave + calculatedRemaining); // Ajusta tempo total
 
         // Atualiza UI e reinicia o intervalo
         renderSelectedTasks(); // Renderiza tarefas com progresso salvo
@@ -381,8 +378,10 @@ document.addEventListener("DOMContentLoaded", function () {
         totalFocusCheckbox.disabled = true; // Desabilita durante a execução
         customizeCyclesBtn.disabled = true; // Desabilita botão do modal durante a execução
 
-        timer = setInterval(tick, 1000);
-        console.log("[FocusSession] Timer state restored and resumed.");
+        // Inicia o timer com a nova abordagem baseada em timestamp
+        lastUpdateTime = Date.now(); // NOVO: Inicializa o timestamp da última atualização
+        timer = setInterval(tickAbsolute, 100); // NOVO: Usa o novo método de tick com intervalo mais curto para maior precisão
+        console.log("[FocusSession] Timer state restored and resumed with absolute timing.");
         return true; // Estado restaurado com sucesso
     }
 
@@ -396,6 +395,7 @@ document.addEventListener("DOMContentLoaded", function () {
         initActionButtons();
         initModalListeners(); // Inicializa listeners do modal
         initBeforeUnloadListener();
+        initVisibilityChangeListener(); // NOVO: Inicializa listener para mudanças de visibilidade
 
         // Adiciona listener para o evento tasksUpdated para sincronizar tarefas concluídas
         window.addEventListener("tasksUpdated", handleTasksUpdated);
@@ -405,6 +405,40 @@ document.addEventListener("DOMContentLoaded", function () {
             resetTimer();
         }
         console.log("[FocusSession] App initialized.");
+    }
+
+    // NOVO: Listener para mudanças de visibilidade da página
+    function initVisibilityChangeListener() {
+        document.addEventListener("visibilitychange", function() {
+            if (isRunning) {
+                if (document.visibilityState === "visible") {
+                    console.log("[FocusSession] Page became visible. Updating timer state...");
+                    // Quando a página volta a ficar visível, atualiza o tempo restante com base no timestamp absoluto
+                    if (expectedEndTime) {
+                        const now = Date.now();
+                        remainingTime = Math.max(0, Math.round((expectedEndTime - now) / 1000));
+                        
+                        // Se o tempo acabou enquanto estava em segundo plano
+                        if (remainingTime <= 0) {
+                            console.log("[FocusSession] Timer cycle ended while page was hidden.");
+                            clearInterval(timer);
+                            handleCycleEnd(true);
+                        } else {
+                            // Atualiza a interface
+                            updateTimerDisplay();
+                            updateActiveTaskProgress();
+                            
+                            // Verifica se precisa disparar o aviso de 1 minuto
+                            if (isFocusTime && remainingTime <= ONE_MINUTE_WARNING && !oneMinuteWarningTriggered) {
+                                playSound("focusEnd"); // Toca o som de aviso
+                                oneMinuteWarningTriggered = true;
+                            }
+                        }
+                    }
+                    lastUpdateTime = Date.now(); // Reinicia o timestamp da última atualização
+                }
+            }
+        });
     }
 
     // --- Manipulação de Tarefas ---
@@ -722,7 +756,7 @@ document.addEventListener("DOMContentLoaded", function () {
         startBtn.disabled = !canStart;
     }
 
-    // --- Lógica do Timer (Adaptada para modo único) ---
+    // --- Lógica do Timer (Adaptada para modo único e tempo absoluto) ---
 
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
@@ -786,6 +820,8 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStarted = false;
         lastCycleDurationMinutes = 0;
         expectedEndTime = null;
+        lastUpdateTime = null;
+        oneMinuteWarningTriggered = false; // NOVO: Reseta o aviso de 1 minuto
 
         totalSessionRemainingTime = timerSettings.totalSessionDuration * 60;
         calculateAutoDurations();
@@ -829,18 +865,35 @@ document.addEventListener("DOMContentLoaded", function () {
         // Break duration é calculado no fim do ciclo de foco
     }
 
-    function tick() {
-        if (remainingTime <= 0) {
-            handleCycleEnd();
-        } else {
-            remainingTime--;
-            if (sessionStarted) {
-                totalSessionRemainingTime--;
+    // NOVO: Função de tick baseada em timestamp absoluto
+    function tickAbsolute() {
+        const now = Date.now();
+        
+        // Calcula o tempo restante com base no timestamp absoluto
+        if (expectedEndTime) {
+            remainingTime = Math.max(0, Math.round((expectedEndTime - now) / 1000));
+            
+            // Verifica se é hora de tocar o som de aviso (1 minuto antes do fim do foco)
+            if (isFocusTime && remainingTime <= ONE_MINUTE_WARNING && !oneMinuteWarningTriggered) {
+                playSound("focusEnd"); // Toca o som de aviso
+                oneMinuteWarningTriggered = true;
+                console.log("[FocusSession] One minute warning triggered!");
             }
+            
+            // Atualiza a interface a cada tick para garantir animação suave
             updateTimerDisplay();
             updateActiveTaskProgress();
-            expectedEndTime = Date.now() + remainingTime * 1000; // Atualiza expectedEndTime a cada tick para precisão
-            saveTimerState(); // Salva estado a cada tick para persistência
+            
+            // Salva o estado periodicamente (a cada 5 segundos)
+            if (now % 5000 < 100) {
+                saveTimerState();
+            }
+            
+            // Verifica se o ciclo terminou
+            if (remainingTime <= 0) {
+                clearInterval(timer);
+                handleCycleEnd();
+            }
         }
     }
 
@@ -855,12 +908,16 @@ document.addEventListener("DOMContentLoaded", function () {
         isRunning = true;
         sessionStarted = true;
         isFocusTime = true;
+        oneMinuteWarningTriggered = false; // NOVO: Reseta o aviso de 1 minuto
 
         // Configura o primeiro ciclo de foco
         calculateAutoDurations();
         remainingTime = currentCycleFocusDuration * 60;
         lastCycleDurationMinutes = currentCycleFocusDuration;
+        
+        // NOVO: Configura timestamps para timing absoluto
         expectedEndTime = Date.now() + remainingTime * 1000;
+        lastUpdateTime = Date.now();
 
         // Atualiza UI
         updateTimerDisplay();
@@ -872,11 +929,11 @@ document.addEventListener("DOMContentLoaded", function () {
         totalFocusCheckbox.disabled = true;
         customizeCyclesBtn.disabled = true; // Desabilita botão do modal
 
-        // Inicia o timer
-        timer = setInterval(tick, 1000);
+        // Inicia o timer com a nova abordagem baseada em timestamp
+        timer = setInterval(tickAbsolute, 100); // Intervalo mais curto para maior precisão
         playSound("focusStart");
         saveTimerState();
-        console.log(`[FocusSession] Timer started. Focus duration: ${currentCycleFocusDuration} min. Total session time: ${timerSettings.totalSessionDuration} min.`);
+        console.log(`[FocusSession] Timer started with absolute timing. Focus duration: ${currentCycleFocusDuration} min. Total session time: ${timerSettings.totalSessionDuration} min.`);
     }
 
     function cancelTimer() {
@@ -900,8 +957,8 @@ document.addEventListener("DOMContentLoaded", function () {
             focusCyclesCompletedInBlock++;
             recordCompletedFocusCycle(lastCycleDurationMinutes);
 
-            // Pergunta se quer marcar a tarefa como concluída
-            if (activeTaskIndex !== -1 && !autoTriggered) {
+            // MODIFICADO: Sempre pergunta se quer marcar a tarefa como concluída, independente da tarefa
+            if (activeTaskIndex !== -1) {
                 const activeTask = selectedTasks[activeTaskIndex];
                 if (activeTask && !activeTask.completed && confirm(`Deseja marcar a tarefa "${activeTask.title}" como concluída?`)) {
                     markTaskAsCompleted();
@@ -922,6 +979,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Configura o próximo ciclo (PAUSA)
             isFocusTime = false;
+            oneMinuteWarningTriggered = false; // NOVO: Reseta o aviso de 1 minuto para o próximo ciclo
             const isLongBreak = focusCyclesCompletedInBlock % LONG_BREAK_INTERVAL === 0;
             currentCycleBreakDuration = isLongBreak ? timerSettings.baseBreakDuration * 2 : timerSettings.baseBreakDuration;
             remainingTime = currentCycleBreakDuration * 60;
@@ -932,6 +990,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Configura o próximo ciclo (FOCO)
             isFocusTime = true;
+            oneMinuteWarningTriggered = false; // NOVO: Reseta o aviso de 1 minuto para o próximo ciclo
             calculateAutoDurations();
             remainingTime = currentCycleFocusDuration * 60;
             lastCycleDurationMinutes = currentCycleFocusDuration;
@@ -945,11 +1004,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // Atualiza UI e reinicia o timer
+        // NOVO: Configura timestamps para timing absoluto
         expectedEndTime = Date.now() + remainingTime * 1000;
+        lastUpdateTime = Date.now();
+
+        // Atualiza UI e reinicia o timer
         updateTimerDisplay();
         updateNextSessionInfo();
-        timer = setInterval(tick, 1000);
+        timer = setInterval(tickAbsolute, 100); // Intervalo mais curto para maior precisão
         saveTimerState();
     }
 
