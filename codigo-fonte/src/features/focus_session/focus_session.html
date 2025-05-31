@@ -27,13 +27,17 @@
   </aside>
 
   <main class="main">
+    <!-- Cabeçalho com informações do usuário e botão de tema -->
     <header class="header">
       <div class="user-info">
-        <span id="userName">Usuário</span>
-        <button id="themeToggle" aria-label="Alternar tema claro e escuro">
-          <i class="fas fa-moon" aria-hidden="true"></i>
-          <span class="sr-only">Alternar tema</span>
-        </button>
+       <div class="user-box">
+          <span id="userName">Usuário</span>
+        </div>
+        <div class="theme-box">
+         <button id="themeToggle" aria-label="Alternar tema claro e escuro">
+           <i class="fas fa-moon" aria-hidden="true"></i>
+         </button>
+      </div>
       </div>
     </header>
 
@@ -101,7 +105,7 @@
                   <label for="total-session-time-slider" data-i18n="sessaoFoco.duracaoTotalSessaoLabel">
                     <i class="fas fa-hourglass-half"></i> Duração Total da Sessão (<span id="total-session-time-value">60</span> min)
                   </label>
-                  <input type="range" id="total-session-time-slider" min="15" max="240" value="60" step="5">
+                  <input type="range" id="total-session-time-slider" min="20" max="240" value="60" step="5">
                   <small class="hint" data-i18n="sessaoFoco.duracaoTotalSessaoHint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
                 </div>
                 <!-- Botão para abrir o modal de personalização -->
@@ -110,8 +114,6 @@
                 </button>
              </div>
           </div>
-
-          <!-- Removido o controle de Foco Total daqui -->
 
           <div class="timer-controls">
             <button id="start-btn" class="btn-primary" disabled data-i18n="sessaoFoco.botaoIniciar">
@@ -146,34 +148,14 @@
               </div>
               <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.pausaCurtaHint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
             </div>
-            
-            <hr class="modal-divider">
-
-            <div class="form-row">
-              <label class="switch-label" for="enable-custom-focus-time">
-                <label class="switch">
-                  <input type="checkbox" id="enable-custom-focus-time">
-                  <span class="slider round"></span>
-                </label>
-                <span data-i18n="sessaoFoco.modalPersonalizar.definirTempoFocoLabel">Definir Tempo de Foco Manualmente</span>
-              </label>
-              <div class="number-input" id="custom-focus-time-container" style="display: none;"> <!-- Oculto por padrão -->
-                <input type="number" id="custom-focus-time" min="15" max="50" value="25">
-                <span class="input-suffix">min</span>
-              </div>
-              <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.definirTempoFocoHint">Escolha entre 15 e 50 minutos. Se desativado, usa o cálculo inteligente.</small>
-            </div>
-
-            <hr class="modal-divider">
-
             <div class="total-focus-toggle">
               <label class="switch">
                 <input type="checkbox" id="total-focus-checkbox">
                 <span class="slider round"></span>
               </label>
               <span data-i18n="sessaoFoco.modalPersonalizar.focoTotalLabel">Modo Foco Total (Evitar Sair)</span>
+              <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.focoTotalHint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
             </div>
-            <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.focoTotalHint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
           </main>
           <footer class="modal-footer">
             <button class="btn-primary" data-micromodal-close data-i18n="sessaoFoco.modalPersonalizar.botaoFechar" data-i18n-aria-label="sessaoFoco.modalPersonalizar.fecharAriaLabel" aria-label="Fechar modal">Fechar</button>

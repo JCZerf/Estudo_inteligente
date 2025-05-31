@@ -27,18 +27,20 @@
         <!-- Menu de navegação principal (Carregado dinamicamente por menu.js) -->
   </div>
 
-  <!-- Conteúdo principal da página -->
-  <div class="main">
+  <main class="main">
     <!-- Cabeçalho com informações do usuário e botão de tema -->
-    <div class="header">
+    <header class="header">
       <div class="user-info">
-        <span id="userName">Usuário</span>
-        <!-- Botão para alternar entre tema claro e escuro -->
-        <button id="themeToggle" aria-label="Alternar tema">
-          <i class="fas fa-moon"></i>
-        </button>
+       <div class="user-box">
+          <span id="userName">Usuário</span>
+        </div>
+        <div class="theme-box">
+         <button id="themeToggle" aria-label="Alternar tema claro e escuro">
+           <i class="fas fa-moon" aria-hidden="true"></i>
+         </button>
       </div>
-    </div>
+      </div>
+    </header>
 
     <!-- Container principal de conteúdo -->
     <div class="content">

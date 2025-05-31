@@ -54,6 +54,21 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+
+  document.addEventListener('DOMContentLoaded', function() {
+  const logoutLink = document.querySelector('a[data-i18n="sidebar.sair"]');
+  
+  if (logoutLink) {
+    logoutLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      const confirmExit = confirm("Você realmente deseja sair?");
+      if (confirmExit) {
+        window.location.href = this.getAttribute('data-logout-url');
+      }
+    });
+  }
+});
+
   // Função para logout
   function handleLogout() {
     localStorage.removeItem("usuarioLogado");
@@ -65,6 +80,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     window.location.href = indexPath; // Redireciona para a landing page
   }
+
+
+  document.addEventListener("click", function (event) {
+    const target = event.target.closest(".logout-button");
+    if (target) {
+      event.preventDefault();
+      const url = target.getAttribute("data-logout-url");
+      const confirmar = confirm("Tem certeza que deseja sair?");
+      if (confirmar) {
+        window.location.href = url;
+      }
+    }
+  });
+
 
   // Atualiza a exibição quando a página carrega
   updateUserDisplay();

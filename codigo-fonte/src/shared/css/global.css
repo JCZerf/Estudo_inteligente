@@ -271,7 +271,7 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
 /* Cabeçalho da área de conteúdo */
 .header {
   display: flex;
-  justify-content: space-between !important; /* Garante que user-info vá para a direita */
+  justify-content: flex-end !important; /* Garante que user-info vá para a direita */
   align-items: center; /* Alinha itens verticalmente */
   margin-bottom: 20px; /* Aumenta um pouco a margem */
   width: 100%; /* Garante que o header ocupe toda a largura disponível */
@@ -292,15 +292,62 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
 
 /* Informações do usuário no cabeçalho */
 .user-info {
-  background-color: var(--section-bg);
-  padding: 10px 20px;
-  border-radius: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex; /* Para alinhar o botão de tema */
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  margin-left: auto; /* Força o elemento para a direita no flex container */
-  flex-shrink: 0; /* Impede que encolha */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  gap: 12px;
+}
+
+/* Ambas as caixas com altura padrão */
+.user-box,
+.theme-box {
+  background-color: var(--bg-card);
+  color: var(--text-color);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Nome do usuário com padding horizontal */
+.user-box {
+  padding: 0 24px;
+}
+
+/* Ícone em caixa fixa */
+.theme-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* formato circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-box:hover, .user-box:hover {
+  background-color: #f0f0f0; /* cinza claro ao passar o mouse */
+}
+
+/* Ícone FontAwesome */
+#themeToggle  {
+  font-size: 1.2rem;
+  position: relative;
+  top: 1px; /* ajuste fino vertical */
+  right: 7px; /* pode ajustar horizontal se quiser */
+  cursor: pointer;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove qualquer efeito no hover do botão */
+#themeToggle:hover,
+#themeToggle:focus,
+#themeToggle:active {
+  background: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* Área de conteúdo principal */
@@ -816,9 +863,57 @@ img {
 
 /* Adiciona :root --highlight-color-rgb para o box-shadow do focus */
 :root {
-  --highlight-color-rgb: 24, 113, 187; /* RGB do #1871bb */
-}
-[data-theme="dark"] {
-  --highlight-color-rgb: 74, 159, 224; /* RGB do #4a9fe0 */
+  --bg-card: #ffffff; /* fundo padrão no modo claro */
+  --text-color: #000000;
 }
 
+[data-theme="dark"] {
+  --bg-card: #2a2a2a; /* cinza escuro que aparece no seu print */
+  --text-color: #ffffff;
+}
+
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.modal-buttons button {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#confirmLogout {
+  background-color: #e53935;
+  color: white;
+}
+
+#cancelLogout {
+  background-color: #4CAF50;
+  color: white;
+}
