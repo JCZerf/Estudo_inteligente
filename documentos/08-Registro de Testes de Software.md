@@ -19,10 +19,7 @@ ___
 | Resultados obtidos | Temas exibidos na ordem planejada |
 | Responsável pela execução do caso de Teste | Sávio |
 
-<img src="https://github.com/user-attachments/assets/46b31411-59da-41be-aeec-0d2d0a4f7c9a" width="800"/>
 <img src="https://github.com/user-attachments/assets/56b94473-1cb0-46ab-8719-7224f3fa32df" width="800"/>
-
-
 ___
 |Caso de Teste    | CT-03 - Validar fluxo completo de criação |
 |:---|:---|
