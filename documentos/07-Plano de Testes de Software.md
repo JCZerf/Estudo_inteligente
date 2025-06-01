@@ -263,4 +263,30 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <td>Documentos podem ser importadas, finalizados e extraidos </td>
   <td>Guilherme Lodron</td>
  </tr>
+</table> 
+
+<table>
+ <tr>
+  <th>Caso de testes</th>
+  <th>Requisitos associados</th>
+  <th>Objetivo do teste</th>
+  <th>Passos</th>
+  <th>Critérios de êxito</th>
+  <th>Responsável</th>
+ </tr>
+ <tr>
+  <td>CT-13 – Cadastrar uma conta</td>
+  <td><ul><li>RF-01: Cadastro de conta</li></ul></td>
+  <td>Realizar o cadastro de uma conta</td>
+  <td>
+    <ol>
+      <li>Clicar em "Criar uma conta"</li>
+      <li>Preencher as informações solicitadas</li>
+      <li>Clicar em "Criar uma conta"</li>
+    </ol>
+  </td>
+  <td>Conta criada com sucesso</td>
+  <td>Hellen</td>
+ </tr>
 </table>
+
