@@ -275,7 +275,7 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <th>Responsável</th>
  </tr>
  <tr>
-  <td>CT-13 – Cadastrar uma conta</td>
+  <td>CT-14 – Cadastrar uma conta</td>
   <td><ul><li>RF-01: Cadastro de conta</li></ul></td>
   <td>Realizar o cadastro de uma conta</td>
   <td>
