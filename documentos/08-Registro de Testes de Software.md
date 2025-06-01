@@ -44,7 +44,7 @@ ___
 | Resultados obtidos | Tarefa vinculada ao tempo registrado |
 | Responsável pela execução do caso de Teste | Juliano |
 
-https://github.com/user-attachments/assets/47219bcc-2495-482f-98f8-e7b0c201ad79
+https://github.com/user-attachments/assets/862d1c9c-4b79-4ca6-a1cd-2c6c084a6094
 ___ 
 
 |Caso de Teste    | CT-06 - Testar precisão temporal |
