@@ -70,7 +70,7 @@ ___
 | Resultados obtidos | Mudança imediata de cores |
 | Responsável pela execução do caso de Teste | Juliano |
 
-https://github.com/user-attachments/assets/901e15cb-f2db-4062-b24b-7adab997fdf8
+https://github.com/user-attachments/assets/c9e2cbd0-b8bf-4872-a5e3-4e73f809d308
 ___ 
 
 |Caso de Teste    | CT- 10 - Testar ajuste de texto |
