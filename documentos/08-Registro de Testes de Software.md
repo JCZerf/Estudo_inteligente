@@ -11,8 +11,7 @@ ___
 | Resultados obtidos | Redirecionamento correto para cada página |
 | Responsável pela execução do caso de Teste | José Carlos |
 
-![redirecionamento-dos-links-principais](https://github.com/user-attachments/assets/8d7c3926-7000-4a8c-8c7c-2673577a24cc)
-
+![redirecionamento-dos-links](https://github.com/user-attachments/assets/7acaadfd-7329-445b-a326-ecbb3850f50d)
 ___ 
 
 |Caso de Teste    | CT-02 - Confirmar distribuição correta de temas |
