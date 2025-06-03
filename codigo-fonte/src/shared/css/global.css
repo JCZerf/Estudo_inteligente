@@ -577,15 +577,12 @@ img {
 .modal {
   display: none; 
   position: fixed; 
-  z-index: 1050; /* Acima da maioria dos elementos */
   left: 0;
   top: 0;
   width: 100%; 
   height: 100%; 
-  overflow-y: auto; /* Permite rolagem se o modal for muito alto */
-  background-color: rgba(0,0,0,0.65); /* Fundo mais escuro */
+  background-color: rgba(129, 31, 31, 0.65); /* Fundo mais escuro */
   animation: fadeIn 0.3s ease forwards; /* Animação de fade-in */
-  padding: 20px; /* Espaçamento para evitar que o conteúdo cole nas bordas */
 }
 
 /* Estilo para quando o modal está sendo exibido (adicionado via JS) */

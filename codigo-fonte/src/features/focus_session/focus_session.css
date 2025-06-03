@@ -937,7 +937,7 @@ input[type=range]:disabled::-moz-range-track {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background:  rgb(255, 255, 255, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -952,7 +952,7 @@ input[type=range]:disabled::-moz-range-track {
   max-height: 90vh;
   border-radius: 8px;
   overflow-y: auto;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
   animation: slide-down 0.3s ease-out;
 }
 

@@ -98,6 +98,7 @@
           </div>
 
           <!-- Removido o seletor de abas Manual/Automático -->
+        
           <div class="timer-settings-container">
              <h3 class="settings-title" data-i18n="sessaoFoco.configTimerInteligente"><i class="fas fa-cogs"></i> Configurações do Timer Inteligente</h3>
              <div class="auto-settings-group">
@@ -114,6 +115,7 @@
                 </button>
              </div>
           </div>
+       
 
           <div class="timer-controls">
             <button id="start-btn" class="btn-primary" disabled data-i18n="sessaoFoco.botaoIniciar">
@@ -148,14 +150,34 @@
               </div>
               <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.pausaCurtaHint">Entre 5 e 30 minutos. Será dobrado a cada 4 focos.</small>
             </div>
+            
+            <hr class="modal-divider">
+
+            <div class="form-row">
+              <label class="switch-label" for="enable-custom-focus-time">
+                <label class="switch">
+                  <input type="checkbox" id="enable-custom-focus-time">
+                  <span class="slider round"></span>
+                </label>
+                <span data-i18n="sessaoFoco.modalPersonalizar.definirTempoFocoLabel">Definir Tempo de Foco Manualmente</span>
+              </label>
+              <div class="number-input" id="custom-focus-time-container" style="display: none;"> <!-- Oculto por padrão -->
+                <input type="number" id="custom-focus-time" min="15" max="50" value="25">
+                <span class="input-suffix">min</span>
+              </div>
+              <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.definirTempoFocoHint">Escolha entre 15 e 50 minutos. Se desativado, usa o cálculo inteligente.</small>
+            </div>
+
+            <hr class="modal-divider">
+
             <div class="total-focus-toggle">
               <label class="switch">
                 <input type="checkbox" id="total-focus-checkbox">
                 <span class="slider round"></span>
               </label>
               <span data-i18n="sessaoFoco.modalPersonalizar.focoTotalLabel">Modo Foco Total (Evitar Sair)</span>
-              <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.focoTotalHint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
             </div>
+            <small class="hint" data-i18n="sessaoFoco.modalPersonalizar.focoTotalHint">Ative para receber um aviso ao tentar sair da página durante o foco.</small>
           </main>
           <footer class="modal-footer">
             <button class="btn-primary" data-micromodal-close data-i18n="sessaoFoco.modalPersonalizar.botaoFechar" data-i18n-aria-label="sessaoFoco.modalPersonalizar.fecharAriaLabel" aria-label="Fechar modal">Fechar</button>
