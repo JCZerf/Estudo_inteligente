@@ -28,7 +28,7 @@ ___
 | Resultados obtidos | Tarefa visível imediatamente após cadastro |
 | Responsável pela execução do caso de Teste | José Carlos |
 
-![fluxo-completo-de-criao](https://github.com/user-attachments/assets/da6b7d74-f305-4618-8ed9-f0f424deac6c)
+![fluxo-completo-de-criacao](https://github.com/user-attachments/assets/fdc0fed4-9913-4067-9d85-f47cfa4be553)
 
 ___
 
