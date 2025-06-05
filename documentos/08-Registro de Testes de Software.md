@@ -89,6 +89,31 @@ ___
 ![funcionamento-das-guias-de-estudos](https://github.com/user-attachments/assets/424ea51d-3c74-4407-a670-85bb9f11007d) 
 ___
 
+|Caso de Teste    | CT- 12 - Funcionamento da adição, conclusão e exclusão de atividades |
+|:---|:---|
+| Resultados obtidos | Atividades podem ser adicionadas, concluídas e excluídas  |
+| Responsável pela execução do caso de Teste | Guilherme Lodron |
+
+![funcionamento-da-adicao-conclusao-e-exclusao](https://github.com/user-attachments/assets/ec705909-01df-4dd0-b573-23fae9c992d7) 
+___
+
+|Caso de Teste    | CT- 13 - Funcionamento da importação e extração de documentos na area de tarefas |
+|:---|:---|
+| Resultados obtidos | Documentos podem ser importadas, finalizados e extraidos |
+| Responsável pela execução do caso de Teste | Guilherme Lodron |
+
+___
+
+|Caso de Teste    | CT- 14 - Realizar o cadastro de uma conta |
+|:---|:---|
+| Resultados obtidos | Conta criada com sucesso |
+| Responsável pela execução do caso de Teste | Hellen | 
+
+https://github.com/user-attachments/assets/f612556f-fef0-4e52-9a53-624d82fbf976
+
+
+
+
 
 
 
