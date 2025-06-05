@@ -28,8 +28,7 @@ ___
 | Resultados obtidos | Tarefa visível imediatamente após cadastro |
 | Responsável pela execução do caso de Teste | José Carlos |
 
-![fluxo-completo-de-criacao](https://github.com/user-attachments/assets/fdc0fed4-9913-4067-9d85-f47cfa4be553)
-
+![fluxo-completo-de-criacao](https://github.com/user-attachments/assets/fdc0fed4-9913-4067-9d85-f47cfa4be553) 
 ___
 
 |Caso de Teste    | CT-04 - Testar modificações e remoção |
@@ -37,7 +36,7 @@ ___
 | Resultados obtidos | Alterações persistidas e exclusão efetiva |
 | Responsável pela execução do caso de Teste | Sávio |
 
-![modificaes-e-remoção](https://github.com/user-attachments/assets/2545d8c7-e5df-49bc-bac9-7f2e987380c0)
+![testar-modificacoes-e-remocao](https://github.com/user-attachments/assets/b0c5bcf0-a375-48a3-8566-5b3ca12e510f) 
 ___ 
 
 |Caso de Teste    | CT-05 - Validar associação entre tarefa e timer |
