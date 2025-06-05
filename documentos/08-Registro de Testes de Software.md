@@ -78,7 +78,7 @@ ___
 | Resultados obtidos | Mudança imediata no tamanho da fonte  |
 | Responsável pela execução do caso de Teste | Hellen |
 
-![ajuste-de-texto](https://github.com/user-attachments/assets/204f4d55-f7cb-4112-a028-ba439d044785)
+![testar-alternancia-visual](https://github.com/user-attachments/assets/42396907-ee6a-4efb-958d-e570ae926d19) 
 ___ 
 
 |Caso de Teste    | CT- 11 - Funcionamento das guias de estudo |
