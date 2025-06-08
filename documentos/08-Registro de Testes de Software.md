@@ -52,7 +52,7 @@ ___
 | Resultados obtidos | Contagem precisa até zero com alerta |
 | Responsável pela execução do caso de Teste | Sávio |
 
-https://github.com/user-attachments/assets/b70a12e9-90b5-48e9-a6ba-20ed2baacf36
+https://github.com/user-attachments/assets/69dd32e8-0635-4bfd-8a2a-faa9c4f3b59c
 
 ___ 
 
