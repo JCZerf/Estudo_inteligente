@@ -97,14 +97,7 @@ ___
 ![funcionamento-da-adicao-conclusao-e-exclusao](https://github.com/user-attachments/assets/ec705909-01df-4dd0-b573-23fae9c992d7) 
 ___
 
-|Caso de Teste    | CT- 13 - Funcionamento da importação e extração de documentos na area de tarefas |
-|:---|:---|
-| Resultados obtidos | Documentos podem ser importadas, finalizados e extraidos |
-| Responsável pela execução do caso de Teste | Guilherme Lodron |
-
-___
-
-|Caso de Teste    | CT- 14 - Realizar o cadastro de uma conta |
+|Caso de Teste    | CT- 13 - Realizar o cadastro de uma conta |
 |:---|:---|
 | Resultados obtidos | Conta criada com sucesso |
 | Responsável pela execução do caso de Teste | Hellen | 
