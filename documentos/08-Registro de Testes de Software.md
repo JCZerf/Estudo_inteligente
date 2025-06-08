@@ -70,6 +70,10 @@ ___
 | Resultados obtidos | Mudança imediata de cores |
 | Responsável pela execução do caso de Teste | Juliano |
 
+
+
+https://github.com/user-attachments/assets/1401b2ef-0787-45da-a0cd-77e04a403975
+
 https://github.com/user-attachments/assets/c9e2cbd0-b8bf-4872-a5e3-4e73f809d308
 ___ 
 
