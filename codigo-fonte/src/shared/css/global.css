@@ -13,6 +13,7 @@
  */
 :root {
   --bg-color: #f5f5f5;        /* Cor de fundo principal do aplicativo */
+  --bg-card: #ffffff;
   --text-color: #333;         /* Cor padrão para textos */
   --section-bg: #fff;         /* Cor de fundo para seções e cards */
   --highlight-color: #1871bb; /* Cor de destaque para elementos importantes e ações */
@@ -36,6 +37,7 @@
  */
 [data-theme="dark"] {
   --bg-color: #1a1a1a;        /* Cor de fundo escura para o modo noturno */
+  --bg-card: #1f1f1f;
   --text-color: #f0f0f0;      /* Cor de texto mais clara para contraste no modo escuro */
   --section-bg: #2d2d2d;      /* Cor de fundo para seções no modo escuro */
   --highlight-color: #4a9fe0; /* Cor de destaque ajustada para melhor visibilidade no modo escuro */
@@ -290,6 +292,7 @@ body.sidebar-minimized .sidebar-toggle-desktop i {
   transition: color 0.3s ease;
 }
 
+/* Informações do usuário no cabeçalho */
 /* Informações do usuário no cabeçalho */
 .user-info {
   display: flex;
@@ -577,12 +580,15 @@ img {
 .modal {
   display: none; 
   position: fixed; 
+  z-index: 1050; /* Acima da maioria dos elementos */
   left: 0;
   top: 0;
   width: 100%; 
   height: 100%; 
-  background-color: rgba(129, 31, 31, 0.65); /* Fundo mais escuro */
+  overflow-y: auto; /* Permite rolagem se o modal for muito alto */
+  background-color: rgba(0,0,0,0.65); /* Fundo mais escuro */
   animation: fadeIn 0.3s ease forwards; /* Animação de fade-in */
+  padding: 20px; /* Espaçamento para evitar que o conteúdo cole nas bordas */
 }
 
 /* Estilo para quando o modal está sendo exibido (adicionado via JS) */
@@ -860,57 +866,9 @@ img {
 
 /* Adiciona :root --highlight-color-rgb para o box-shadow do focus */
 :root {
-  --bg-card: #ffffff; /* fundo padrão no modo claro */
-  --text-color: #000000;
+  --highlight-color-rgb: 24, 113, 187; /* RGB do #1871bb */
 }
-
 [data-theme="dark"] {
-  --bg-card: #2a2a2a; /* cinza escuro que aparece no seu print */
-  --text-color: #ffffff;
+  --highlight-color-rgb: 74, 159, 224; /* RGB do #4a9fe0 */
 }
 
-
-
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.modal {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  max-width: 300px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
-}
-
-.modal-buttons button {
-  padding: 0.5rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#confirmLogout {
-  background-color: #e53935;
-  color: white;
-}
-
-#cancelLogout {
-  background-color: #4CAF50;
-  color: white;
-}

@@ -26,6 +26,7 @@
     <!-- Menu será carregado pelo menu.js -->
   </aside>
 
+  <!-- Conteúdo principal da página -->
   <main class="main">
     <!-- Cabeçalho com informações do usuário e botão de tema -->
     <header class="header">
@@ -40,7 +41,7 @@
       </div>
       </div>
     </header>
-
+    
     <div class="content">
       <h1 class="page-title" data-i18n="sessaoFoco.titulo"><i class="fas fa-brain" aria-hidden="true"></i> Timer Inteligente</h1>
 
@@ -98,7 +99,6 @@
           </div>
 
           <!-- Removido o seletor de abas Manual/Automático -->
-        
           <div class="timer-settings-container">
              <h3 class="settings-title" data-i18n="sessaoFoco.configTimerInteligente"><i class="fas fa-cogs"></i> Configurações do Timer Inteligente</h3>
              <div class="auto-settings-group">
@@ -106,7 +106,7 @@
                   <label for="total-session-time-slider" data-i18n="sessaoFoco.duracaoTotalSessaoLabel">
                     <i class="fas fa-hourglass-half"></i> Duração Total da Sessão (<span id="total-session-time-value">60</span> min)
                   </label>
-                  <input type="range" id="total-session-time-slider" min="20" max="240" value="60" step="5">
+                  <input type="range" id="total-session-time-slider" min="15" max="240" value="60" step="5">
                   <small class="hint" data-i18n="sessaoFoco.duracaoTotalSessaoHint">O sistema dividirá em ciclos de foco e pausa (mín 20 min).</small>
                 </div>
                 <!-- Botão para abrir o modal de personalização -->
@@ -115,7 +115,8 @@
                 </button>
              </div>
           </div>
-       
+
+          <!-- Removido o controle de Foco Total daqui -->
 
           <div class="timer-controls">
             <button id="start-btn" class="btn-primary" disabled data-i18n="sessaoFoco.botaoIniciar">

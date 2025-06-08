@@ -54,8 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-
-  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
   const logoutLink = document.querySelector('a[data-i18n="sidebar.sair"]');
   
   if (logoutLink) {
@@ -68,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
-
   // Função para logout
   function handleLogout() {
     localStorage.removeItem("usuarioLogado");
@@ -81,8 +79,10 @@ document.addEventListener("DOMContentLoaded", function() {
     window.location.href = indexPath; // Redireciona para a landing page
   }
 
+  // Atualiza a exibição quando a página carrega
+  updateUserDisplay();
 
-  document.addEventListener("click", function (event) {
+    document.addEventListener("click", function (event) {
     const target = event.target.closest(".logout-button");
     if (target) {
       event.preventDefault();
@@ -93,10 +93,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
   });
-
-
-  // Atualiza a exibição quando a página carrega
-  updateUserDisplay();
 
   // Adiciona evento de logout
   if (logoutButton) {
