@@ -39,7 +39,7 @@ Com foco na inclusão e acessibilidade, o software apresenta recursos para pesso
 
 # Hospedagem
 
-* Insira o endereço eletrônico público de acesso ao conteúdo publicado. 
+* [Endereço eletrônico público de acesso ao conteúdo publicado. ](https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/)
 
 # Código-Fonte
 
