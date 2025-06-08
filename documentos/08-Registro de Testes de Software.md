@@ -60,6 +60,9 @@ ___
 |:---|:---|
 | Resultados obtidos | Progresso contínuo até 100% |
 | Responsável pela execução do caso de Teste | José Carlos |
+
+https://github.com/user-attachments/assets/29defa76-6017-4af9-abfe-f36c9de3374a
+
 ___ 
 
 |Caso de Teste    | CT-08 - Validar acumulação correta |
