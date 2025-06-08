@@ -63,6 +63,9 @@ ___
 |:---|:---|
 | Resultados obtidos | Somente sessões completas contabilizadas |
 | Responsável pela execução do caso de Teste | Sávio |
+
+https://github.com/user-attachments/assets/17e82fcb-7968-4f0e-9bc1-91cd03dde030
+
 ___ 
 
 |Caso de Teste    | CT-09 - Testar alternância visual |
