@@ -1,8 +1,8 @@
 # Registro de Testes de Software
 
-Relatório com as evidências dos testes de software realizados na aplicação pela equipe, baseado no plano de testes pré-definido.
+Pré-requisitos: Projeto de Interface, Plano de Testes de Software
 
-Os resultados dos testes funcionais realizados na aplicação são descritos a seguir. [Utilize a estrutura abaixo para cada caso de teste executado]
+Os testes funcionais realizados na aplicação web são descritos a seguir.
 
 ___ 
 
