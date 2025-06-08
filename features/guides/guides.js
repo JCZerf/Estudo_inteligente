@@ -4,7 +4,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Elementos da interface
   const filterButtons = document.querySelectorAll('.filter-btn');
   const guideCards = document.querySelectorAll('.guide-card');
   const searchInput = document.querySelector('.search-box input');
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
           filterButtons.forEach(btn => btn.classList.remove('active'));
           // Adiciona a classe 'active' ao botão clicado
           button.classList.add('active');
-          // Aplica o filtro
           filterGuides();
       });
   });
@@ -75,6 +73,5 @@ document.addEventListener('DOMContentLoaded', function() {
    */
   document.addEventListener('themeChanged', function(e) {
       console.log('Tema alterado para:', e.detail.theme);
-      // Espaço para adicionar lógica específica de tema se necessário
   });
 });

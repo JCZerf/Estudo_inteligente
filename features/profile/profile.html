@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="perfil.pageTitle">Perfil Premium - Estudo Inteligente</title>
+    <link rel="stylesheet" href="../../shared/css/global.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="shortcut icon" href="../../shared/assets/img/study-logo-white.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="../dashboard/dashboard.html" aria-label="Estudo Inteligente - Página Inicial">
+            <img src="../../shared/assets/img/study-logo-white.png" alt="" class="logo-sidebar">
+        </a>
+    </aside>
+
+  <!-- Conteúdo principal da página -->
+  <main class="main">
+    <!-- Cabeçalho com informações do usuário e botão de tema -->
+    <header class="header">
+      <div class="user-info">
+       <div class="user-box">
+          <span id="userName">Usuário</span>
+        </div>
+        <div class="theme-box">
+         <button id="themeToggle" aria-label="Alternar tema claro e escuro">
+           <i class="fas fa-moon" aria-hidden="true"></i>
+         </button>
+      </div>
+      </div>
+    </header>
+
+        <header id="menu-container"></header>
+
+        <main class="profile-container">
+            <div class="profile-header">
+                <h1 data-i18n="perfil.titulo"><i class="fas fa-user-crown"></i> Meu Perfil</h1>
+                <div class="profile-status">
+                    <span class="status-badge" data-i18n="perfil.contaAtiva"><i class="fas fa-gem"></i> Conta Ativa</span>
+                </div>
+            </div>
+
+            <section class="profile-details">
+                <div class="profile-avatar-section">
+                    <div class="avatar-wrapper">
+                        <img id="profile-avatar-img" src="" data-i18n-alt="perfil.avatarAlt" alt="Avatar do Usuário" class="profile-avatar">
+                        <div class="avatar-badge"><i class="fas fa-check"></i></div>
+                    </div>
+                    <button id="change-avatar-btn" class="btn btn-secondary" data-i18n="perfil.alterarAvatarBtn">
+                        <i class="fas fa-camera"></i> Alterar Avatar
+                    </button>
+                </div>
+
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label data-i18n="perfil.nomeCompletoLabel"><i class="fas fa-id-card"></i> Nome Completo:</label>
+                        <span id="profile-fullname"></span>
+                    </div>
+                    <div class="info-item">
+                        <label data-i18n="perfil.emailLabel"><i class="fas fa-envelope"></i> Email:</label>
+                        <span id="profile-email"></span>
+                    </div>
+                    <div class="info-item editable-item">
+                        <label data-i18n="perfil.usernameLabel"><i class="fas fa-user-tag"></i> Nome de Usuário:</label>
+                        <span id="profile-username-display"></span>
+                        <input type="text" id="profile-username-input" class="hidden" data-i18n-placeholder="perfil.usernamePlaceholder" placeholder="Digite seu novo nome de usuário">
+                        <button id="edit-username-btn" class="btn-icon" data-i18n-aria-label="perfil.editarUsernameAriaLabel" aria-label="Editar nome de usuário"><i class="fas fa-pencil-alt"></i></button>
+                        <button id="save-username-btn" class="btn btn-primary hidden" data-i18n="perfil.salvarBtn">Salvar</button>
+                        <button id="cancel-username-btn" class="btn btn-secondary hidden" data-i18n="perfil.cancelarBtn">Cancelar</button>
+                    </div>
+                    <div class="info-item">
+                        <label data-i18n="perfil.rankingLabel"><i class="fas fa-trophy"></i> Ranking:</label>
+                        <span id="profile-ranking" class="ranking-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <label data-i18n="perfil.membroDesdeLabel"><i class="fas fa-calendar-alt"></i> Membro desde:</label>
+                        <span id="profile-joindate"></span>
+                    </div>
+                </div>
+            </section>
+
+            <div id="avatar-selection-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-btn" id="close-avatar-modal" data-i18n-aria-label="perfil.modalAvatar.fecharAriaLabel" aria-label="Fechar modal de avatar">&times;</span>
+                    <h2 data-i18n="perfil.modalAvatar.titulo"><i class="fas fa-user-astronaut"></i>Escolha seu Avatar</h2>
+                    <div id="avatar-options" class="avatar-grid">
+                        <!-- Avatares serão carregados aqui pelo JS -->
+                    </div>
+                    <button id="confirm-avatar-btn" class="btn btn-primary" data-i18n="perfil.modalAvatar.confirmarBtn">
+                        <i class="fas fa-check"></i> Confirmar Avatar
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p data-i18n="footer.texto">Estudo Inteligente - &copy; <span id="currentYear"></span></p>
+        </footer>
+
+        <script src="../../shared/js/menu.js"></script>
+        <script src="../../shared/js/global-user.js"></script>
+        <script src="../../shared/js/theme.js"></script>
+        <script src="profile.js"></script>
+        <script>
+            document.getElementById("currentYear").textContent = new Date().getFullYear();
+        </script>
+    </div>
+</body>
+</html>

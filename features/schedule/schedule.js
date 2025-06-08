@@ -258,7 +258,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                 }
                             }
                             
-                            // Recarrega para refletir as mudanças
                             this.loadScheduleAndTasks();
                             cleanUp();
                         };
@@ -553,7 +552,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
                 
-                // Recarrega para refletir as mudanças
                 this.loadScheduleAndTasks();
                 cleanUp();
             };
@@ -738,7 +736,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (mediumPriorityInput) mediumPriorityInput.checked = true;
             }
             
-            // Exibe o modal
             if (this.elements.modal) this.elements.modal.style.display = "block";
         },
         

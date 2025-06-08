@@ -1,7 +1,8 @@
 /**
- * MENU GLOBAL
- * Este arquivo contém as funções para gerenciar o menu de navegação lateral presente em todas as páginas
- * Responsável por carregar o menu dinamicamente, destacar o item de menu ativo e adicionar comportamentos de acessibilidade
+ * MENU GLOBAL E SIDEBAR RESPONSIVO
+ * Este arquivo contém as funções para gerenciar o menu de navegação lateral,
+ * destacar o item ativo, adicionar acessibilidade e controlar a abertura/fechamento
+ * da sidebar em dispositivos móveis e a minimização em desktops.
  */
 
 /**
@@ -9,36 +10,31 @@
  * @param {NodeListOf<HTMLAnchorElement>} links - Lista de links do menu
  */
 function setActiveLink(links) {
-  // Remove todas as classes 'active' primeiro para garantir que apenas um item fique destacado
   links.forEach(link => {
-    link.classList.remove('active');
-    link.removeAttribute('aria-current');
+    link.classList.remove("active");
+    link.removeAttribute("aria-current");
   });
 
-  // Obtém o caminho atual da URL para comparação (usando caminhos absolutos)
   const currentPath = window.location.pathname;
-
-  // Encontra o link correspondente à página atual
   const activeLink = Array.from(links).find(link => {
-    // Assume que os hrefs em menu.html são absolutos (ex: /features/dashboard/inicio.html)
-    const linkPath = link.getAttribute('href');
-    // Verifica se o caminho atual termina com o caminho do link (para cobrir casos como /features/dashboard/ e /features/dashboard/inicio.html)
-    // Ou se são exatamente iguais
-    return currentPath === linkPath || (currentPath.endsWith('/') && currentPath + 'inicio.html' === linkPath) || currentPath.endsWith(linkPath);
+    const linkPath = new URL(link.href).pathname; // Usa URL para obter o pathname corretamente
+    // Verifica se o caminho atual corresponde exatamente ou se é a página inicial (index.html ou /)
+    return currentPath === linkPath || 
+           (currentPath.endsWith("/") && linkPath.endsWith("/features/dashboard/dashboard.html")) ||
+           (currentPath.endsWith("/index.html") && linkPath.endsWith("/features/dashboard/dashboard.html"));
   });
 
-  // Adiciona a classe 'active' e atributo de acessibilidade se encontrou correspondência
   if (activeLink) {
-    activeLink.classList.add('active');
-    activeLink.setAttribute('aria-current', 'page'); // Atributo para acessibilidade
+    activeLink.classList.add("active");
+    activeLink.setAttribute("aria-current", "page");
   } else {
-    // Fallback: Tenta encontrar pela última parte do path se a correspondência exata falhar
-    const currentPageFile = currentPath.split('/').pop();
+    // Fallback para casos onde o path não bate exatamente (ex: subpáginas não no menu)
+    const currentPageFile = currentPath.split("/").pop();
     if (currentPageFile) {
-        const fallbackLink = Array.from(links).find(link => link.getAttribute('href').endsWith(currentPageFile));
+        const fallbackLink = Array.from(links).find(link => link.getAttribute("href").endsWith(currentPageFile));
         if (fallbackLink) {
-            fallbackLink.classList.add('active');
-            fallbackLink.setAttribute('aria-current', 'page');
+            fallbackLink.classList.add("active");
+            fallbackLink.setAttribute("aria-current", "page");
         }
     }
   }
@@ -49,10 +45,9 @@ function setActiveLink(links) {
  * @param {NodeListOf<HTMLAnchorElement>} links - Lista de links do menu
  */
 function addAccessibilityListeners(links) {
-  // Permite ativar links usando tecla Enter ou Espaço
   links.forEach(link => {
-    link.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
+    link.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         link.click();
       }
@@ -61,80 +56,184 @@ function addAccessibilityListeners(links) {
 }
 
 /**
+ * Controla a abertura e fechamento da sidebar em telas móveis.
+ */
+function setupMobileSidebarToggle() {
+    const sidebar = document.querySelector(".sidebar");
+    const menuToggle = document.querySelector(".menu-toggle");
+    const overlay = document.querySelector(".overlay");
+
+    if (!sidebar || !menuToggle || !overlay) {
+        console.warn("Elementos do toggle da sidebar móvel não encontrados.");
+        return;
+    }
+
+    menuToggle.addEventListener("click", () => {
+        const isOpen = sidebar.classList.contains("open");
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+        menuToggle.setAttribute("aria-expanded", !isOpen);
+        if (!isOpen) {
+            const firstLink = sidebar.querySelector("nav a");
+            if (firstLink) firstLink.focus();
+        }
+    });
+
+    overlay.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+        menuToggle.setAttribute("aria-expanded", "false");
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.focus();
+        }
+    });
+}
+
+/**
+ * Controla a minimização/expansão da sidebar em telas grandes.
+ */
+function setupDesktopSidebarToggle() {
+    const sidebar = document.querySelector(".sidebar");
+    const toggleButton = document.querySelector(".sidebar-toggle-desktop");
+    const body = document.body;
+
+    if (!sidebar || !toggleButton) {
+        console.warn("Elementos do toggle da sidebar desktop não encontrados.");
+        return;
+    }
+
+    // Verifica estado inicial no localStorage
+    const isMinimized = localStorage.getItem("sidebarMinimized") === "true";
+    if (isMinimized) {
+        body.classList.add("sidebar-minimized");
+    }
+
+    toggleButton.addEventListener("click", () => {
+        body.classList.toggle("sidebar-minimized");
+        const minimized = body.classList.contains("sidebar-minimized");
+        localStorage.setItem("sidebarMinimized", minimized);
+        // Atualiza aria-label para acessibilidade
+        toggleButton.setAttribute("aria-label", minimized ? "Expandir menu lateral" : "Minimizar menu lateral");
+    });
+
+    // Define aria-label inicial
+    toggleButton.setAttribute("aria-label", body.classList.contains("sidebar-minimized") ? "Expandir menu lateral" : "Minimizar menu lateral");
+}
+
+
+/**
+ * Cria e insere os elementos HTML necessários para os toggles da sidebar.
+ */
+function insertToggleElements() {
+    // Cria o botão de toggle mobile (hambúrguer)
+    const menuToggle = document.createElement("button");
+    menuToggle.classList.add("menu-toggle");
+    menuToggle.setAttribute("aria-label", "Abrir menu");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.innerHTML = `<i class="fas fa-bars"></i>`;
+
+    // Cria o overlay para mobile
+    const overlay = document.createElement("div");
+    overlay.classList.add("overlay");
+
+    // Cria o botão de toggle desktop (minimizar/expandir)
+    const sidebarToggleDesktop = document.createElement("button");
+    sidebarToggleDesktop.classList.add("sidebar-toggle-desktop");
+    // O aria-label será definido em setupDesktopSidebarToggle
+    sidebarToggleDesktop.innerHTML = `<i class="fas fa-caret-left"></i>`;
+
+    const header = document.querySelector(".header");
+    if (header) {
+        const userInfo = header.querySelector(".user-info");
+        if (userInfo) {
+            header.insertBefore(menuToggle, userInfo);
+        } else {
+            header.prepend(menuToggle);
+        }
+    } else {
+        console.warn("Elemento .header não encontrado para inserir o botão de menu mobile.");
+        // Fallback: Insere no início do body se o header não for encontrado
+        document.body.prepend(menuToggle);
+    }
+
+    document.body.appendChild(overlay);
+
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar) {
+        sidebar.appendChild(sidebarToggleDesktop);
+    } else {
+        console.warn("Elemento .sidebar não encontrado para inserir o botão de toggle desktop.");
+    }
+}
+
+
+/**
  * Carrega o menu HTML global e inicializa sua funcionalidade
  */
 async function loadAndInitializeMenu() {
-  const sidebar = document.querySelector('.sidebar');
+  const sidebar = document.querySelector(".sidebar");
   if (!sidebar) {
-    console.error('Elemento <aside class="sidebar"> não encontrado.');
+    console.error("Elemento <aside class=\"sidebar\"> não encontrado.");
     return;
   }
 
+  let menuPath = "";
+  const currentPath = window.location.pathname;
+
+  if (currentPath.includes("/features/")) {
+      // Ex: /features/dashboard/dashboard.html -> ../../shared/menu.html
+      menuPath = "../../shared/menu.html";
+  } else if (currentPath.includes("/landing/")) {
+      // Ex: /landing/index.html -> ../shared/menu.html
+      menuPath = "../shared/menu.html";
+  } else {
+      // Assume que está na raiz ou estrutura desconhecida
+      // Ex: /index.html ou / -> ./shared/menu.html
+      menuPath = "./shared/menu.html";
+  }
+
+  console.log(`Tentando carregar menu de: ${menuPath} (baseado em ${currentPath})`);
+
   try {
-    // Tenta buscar a partir da raiz '/shared/menu.html'
-    let menuPath = '/shared/menu.html';
-    let response = await fetch(menuPath);
-
-    // Se falhar (ex: rodando localmente via file:// ou estrutura diferente), tenta relativo
-    if (!response.ok) {
-        console.warn(`Falha ao buscar ${menuPath}, tentando caminho relativo...`);
-        // Tenta adivinhar o caminho relativo baseado na localização atual
-        const pathSegments = window.location.pathname.split('/').filter(Boolean);
-        // Ajuste a profundidade conforme a estrutura real. Ex: 'features' está 1 nível abaixo da raiz.
-        const depth = pathSegments.includes('features') ? 2 : pathSegments.includes('landing') ? 1 : 0; 
-        const relativePrefix = '../'.repeat(depth);
-        menuPath = `${relativePrefix}shared/menu.html`;
-        if (!menuPath.startsWith('../') && !menuPath.startsWith('/')) { // Garante que não fique algo como 'shared/menu.html' se depth=0
-             menuPath = './shared/menu.html'; // Assume que está na raiz
-        }
-        if (depth === 0 && window.location.pathname.includes('/landing/')) { // Caso especial para landing page na raiz
-             menuPath = './shared/menu.html';
-        }
-        // Correção para garantir que o caminho relativo funcione corretamente
-        // Se a página atual está em /features/X/page.html, o caminho para /shared/menu.html é ../../shared/menu.html
-        // Se a página atual está em /landing/index.html, o caminho para /shared/menu.html é ../shared/menu.html
-        const currentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-        if (currentDir.includes('/features/')) {
-            menuPath = '../../shared/menu.html';
-        } else if (currentDir.includes('/landing/')) {
-            menuPath = '../shared/menu.html';
-        } else {
-            // Assume raiz ou outra estrutura - ajuste se necessário
-            menuPath = './shared/menu.html'; 
-        }
-
-        console.log(`Tentando caminho relativo: ${menuPath}`);
-        response = await fetch(menuPath);
-    }
+    const response = await fetch(menuPath);
 
     if (!response.ok) {
-        throw new Error(`Falha ao buscar menu: ${response.statusText} em ${menuPath}`);
+        // Lança erro mais detalhado
+        throw new Error(`Falha ao buscar menu: ${response.status} ${response.statusText} em ${menuPath}`);
     }
 
     const menuHTML = await response.text();
 
-    // Insere o HTML do menu dentro da sidebar
-    // Encontra o logo para inserir o menu depois dele, garantindo a ordem
-    const logoLink = sidebar.querySelector('a[href*="inicio.html"]'); // Ajuste o seletor se o link do logo mudar
+    // Insere o HTML do menu dentro da sidebar, após o logo se ele existir
+    const logoLink = sidebar.querySelector(".logo-sidebar");
     if (logoLink) {
-        logoLink.insertAdjacentHTML('afterend', menuHTML);
+        logoLink.insertAdjacentHTML("afterend", menuHTML);
     } else {
-        // Se não encontrar logo, adiciona no início ou fim da sidebar (menos ideal)
-        console.warn('Logo não encontrado na sidebar, adicionando menu no final.');
-        sidebar.insertAdjacentHTML('beforeend', menuHTML);
+        // Fallback se não houver logo
+        sidebar.insertAdjacentHTML("beforeend", menuHTML);
     }
 
-    // Seleciona os links *depois* que o menu foi carregado
-    const links = sidebar.querySelectorAll('nav a');
+    const links = sidebar.querySelectorAll("nav a");
     if (links.length > 0) {
       setActiveLink(links);
       addAccessibilityListeners(links);
     } else {
-      console.error('Nenhum link encontrado no menu carregado.');
+      console.error("Nenhum link encontrado no menu carregado.");
     }
 
+    insertToggleElements();
+    setupMobileSidebarToggle();
+    setupDesktopSidebarToggle();
+
   } catch (error) {
-    console.error('Erro ao carregar o menu global:', error);
+    console.error("Erro crítico ao carregar ou inicializar o menu global:", error);
+    sidebar.innerHTML = '<p style="color: red; padding: 20px;">Erro ao carregar o menu. Verifique o console e tente recarregar a página.</p>';
   }
 }
 
@@ -142,5 +241,5 @@ async function loadAndInitializeMenu() {
  * Evento executado quando o DOM é completamente carregado
  * Carrega o menu global e configura seus comportamentos
  */
-document.addEventListener('DOMContentLoaded', loadAndInitializeMenu);
+document.addEventListener("DOMContentLoaded", loadAndInitializeMenu);
 

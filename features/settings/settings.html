@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Metadados básicos da página -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="configuracoes.pageTitle">Configurações | Estudo Inteligente</title>
+  
+  <!-- Importação de bibliotecas externas e estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="../../shared/css/global.css">
+  <link rel="stylesheet" href="settings.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Barra lateral de navegação (Sidebar) -->
+  <div class="sidebar">
+    <!-- Logo com link para a página inicial -->
+    <a href="../dashboard/dashboard.html">
+      <img src="../../shared/assets/img/study-logo-white.png" alt="Estudo Inteligente" class="logo-sidebar">
+    </a>
+    
+        <!-- Menu de navegação principal (Carregado dinamicamente por menu.js) -->
+  </div>
+  
+  <!-- Conteúdo principal da página -->
+  <main class="main">
+    <!-- Cabeçalho com informações do usuário e botão de tema -->
+    <header class="header">
+      <div class="user-info">
+       <div class="user-box">
+          <span id="userName">Usuário</span>
+        </div>
+        <div class="theme-box">
+         <button id="themeToggle" aria-label="Alternar tema claro e escuro">
+           <i class="fas fa-moon" aria-hidden="true"></i>
+         </button>
+      </div>
+      </div>
+    </header>
+
+    <!-- Container principal de conteúdo -->
+    <div class="content">
+      <h1 data-i18n="configuracoes.titulo">Configurações</h1>
+
+      <!-- Seção de Conta -->
+      <div class="settings-section">
+        <h2 data-i18n="configuracoes.minhaConta.titulo"><i class="fas fa-user-circle"></i> Minha Conta</h2>
+        <div class="setting-item">
+          <p data-i18n="configuracoes.minhaConta.descricao">Gerencie suas informações de perfil, como nome de usuário e avatar.</p>
+          <a href="../profile/profile.html" class="btn btn-primary">
+            <i class="fas fa-id-card"></i> <span data-i18n="configuracoes.minhaConta.acessarPerfil">Acessar Perfil</span>
+          </a>
+        </div>
+      </div>
+
+
+      <!-- Seção de configurações de notificações -->
+      <div class="settings-section">
+        <h2 data-i18n="configuracoes.notificacoes.titulo"><i class="fas fa-bell"></i> Preferências de Notificações</h2>
+        
+        <!-- Toggle para ativar ou desativar notificações -->
+        <div class="setting-item">
+          <label class="switch">
+            <input type="checkbox" id="notificationToggle" checked>
+            <span class="slider round"></span>
+          </label>
+          <span data-i18n="configuracoes.notificacoes.ativar">Ativar notificações</span>
+        </div>
+        
+        <!-- Configurações adicionais de notificações -->
+        <div class="setting-row">
+          <!-- Seleção de frequência de notificações -->
+          <div class="setting-group">
+            <label for="notificationFrequency" data-i18n="configuracoes.notificacoes.frequencia">Frequência:</label>
+            <select id="notificationFrequency" class="setting-select" aria-label="Frequência de notificações">
+              <option value="daily" data-i18n="configuracoes.notificacoes.diaria">Diária</option>
+              <option value="weekly" data-i18n="configuracoes.notificacoes.semanal">Semanal</option>
+              <option value="monthly" data-i18n="configuracoes.notificacoes.mensal">Mensal</option>
+            </select>
+          </div>
+          
+          <!-- Seleção de horário para notificações -->
+          <div class="setting-group">
+            <label for="notificationTime" data-i18n="configuracoes.notificacoes.horario">Horário:</label>
+            <input type="time" id="notificationTime" class="setting-time" value="18:00" aria-label="Horário de notificações">
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de personalização da interface -->
+      <div class="settings-section">
+        <h2 data-i18n="configuracoes.personalizacao.titulo"><i class="fas fa-paint-brush"></i> Personalização</h2>
+        
+        <!-- Toggle para ativar/desativar modo escuro -->
+        <div class="setting-item">
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider round"></span>
+          </label>
+          <span data-i18n="configuracoes.personalizacao.modoEscuro">Modo Escuro</span>
+        </div>
+        
+        <!-- Configurações adicionais de personalização -->
+        <div class="setting-row">
+          <!-- Seleção de tamanho de fonte -->
+          <div class="setting-group">
+            <label for="fontSizeSelect" data-i18n="configuracoes.personalizacao.tamanhoTexto">Tamanho do texto:</label>
+            <select id="fontSizeSelect" class="setting-select" aria-label="Tamanho do texto">
+              <option value="small" data-i18n="configuracoes.personalizacao.pequeno">Pequeno</option>
+              <option value="medium" selected data-i18n="configuracoes.personalizacao.medio">Médio</option>
+              <option value="large" data-i18n="configuracoes.personalizacao.grande">Grande</option>
+            </select>
+          </div>
+          
+          <!-- Seleção de idioma -->
+          <div class="setting-group">
+            <label for="languageSelect" data-i18n="configuracoes.personalizacao.idioma">Idioma:</label>
+            <select id="languageSelect" class="setting-select" aria-label="Idioma da aplicação">
+              <option value="pt" selected data-i18n="configuracoes.personalizacao.portugues">Português (BR)</option>
+              <option value="en" data-i18n="configuracoes.personalizacao.ingles">Inglês</option>
+              <option value="es" data-i18n="configuracoes.personalizacao.espanhol">Espanhol</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de sincronização de dados -->
+      <div class="settings-section">
+        <h2 data-i18n="configuracoes.sincronizacao.titulo"><i class="fas fa-sync-alt"></i> Sincronização</h2>
+        
+        <!-- Toggle para ativar/desativar sincronização automática -->
+        <div class="setting-item">
+          <label class="switch">
+            <input type="checkbox" id="syncToggle" checked>
+            <span class="slider round"></span>
+          </label>
+          <span data-i18n="configuracoes.sincronizacao.automatica">Sincronização automática</span>
+        </div>
+      </div>
+
+      <!-- Seção de ações críticas e perigosas -->
+      <div class="settings-section danger-zone">
+        <h2 data-i18n="configuracoes.zonaRisco.titulo"><i class="fas fa-exclamation-triangle"></i> Zona de Risco</h2>
+        
+        <!-- Aviso sobre ações irreversíveis -->
+        <div class="danger-notice">
+          <i class="fas fa-exclamation-circle"></i>
+          <p data-i18n="configuracoes.zonaRisco.aviso">Ações nesta seção são irreversíveis. Por favor, proceda com cautela.</p>
+        </div>
+        
+        <!-- Container para ações perigosas -->
+        <div class="danger-actions">
+          <!-- Grupo de ações para alterar credenciais -->
+          <div class="danger-action">
+            <h3 data-i18n="configuracoes.zonaRisco.alterarCredenciais">Alterar Credenciais</h3>
+            <div class="action-buttons">
+              <button id="changeEmailBtn" class="btn btn-warning">
+                <i class="fas fa-envelope"></i> <span data-i18n="configuracoes.zonaRisco.alterarEmail">Alterar E-mail</span>
+              </button>
+              <button id="changePasswordBtn" class="btn btn-warning">
+                <i class="fas fa-lock"></i> <span data-i18n="configuracoes.zonaRisco.alterarSenha">Alterar Senha</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Grupo de ações para redefinir dados -->
+          <div class="danger-action">
+            <h3 data-i18n="configuracoes.zonaRisco.redefinirDados">Redefinir Dados</h3>
+            <div class="action-buttons">
+              <button id="resetProgressBtn" class="btn btn-warning">
+                <i class="fas fa-undo"></i> <span data-i18n="configuracoes.zonaRisco.redefinirProgresso">Redefinir Progresso</span>
+              </button>
+              <button id="resetSettingsBtn" class="btn btn-warning">
+                <i class="fas fa-cog"></i> <span data-i18n="configuracoes.zonaRisco.restaurarConfiguracoes">Restaurar Configurações</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Ação crítica de exclusão de conta -->
+          <div class="danger-action critical">
+            <h3 data-i18n="configuracoes.zonaRisco.acaoCritica">Ação Crítica</h3>
+            <button id="deleteAccountBtn" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i> <span data-i18n="configuracoes.zonaRisco.excluirConta">Excluir Conta Permanentemente</span>
+            </button>
+            <p class="warning-text" data-i18n="configuracoes.zonaRisco.avisoExclusao">Esta ação removerá todos os seus dados do sistema e não pode ser desfeita.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Rodapé da página -->
+    <footer>
+      <p data-i18n="footer.texto">Estudo Inteligente - <span id="currentYear">2025</span></p>
+    </footer>
+  </div>
+
+  <!-- Modal de Confirmação para ações importantes -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 id="modalTitle" data-i18n="modal.confirmarAcao">Confirmar Ação</h3>
+      <p id="modalMessage" data-i18n="modal.mensagemConfirmacao">Tem certeza que deseja realizar esta ação?</p>
+      <div class="modal-buttons">
+        <button id="modalConfirm" class="btn btn-danger" data-i18n="modal.confirmar">Confirmar</button>
+        <button id="modalCancel" class="btn btn-secondary" data-i18n="modal.cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Alterar E-mail -->
+  <div id="changeEmailModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 data-i18n="modal.alterarEmail.titulo">Alterar E-mail</h3>
+      <div class="modal-form">
+        <div class="form-group">
+          <label for="currentEmail" data-i18n="modal.alterarEmail.emailAtual">E-mail Atual:</label>
+          <input type="email" id="currentEmail" class="form-input" readonly>
+        </div>
+        <div class="form-group">
+          <label for="newEmail" data-i18n="modal.alterarEmail.novoEmail">Novo E-mail:</label>
+          <input type="email" id="newEmail" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="emailPassword" data-i18n="modal.alterarEmail.senha">Senha para confirmar:</label>
+          <input type="password" id="emailPassword" class="form-input" required>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="saveEmailBtn" class="btn btn-primary" data-i18n="modal.salvar">Salvar</button>
+        <button id="cancelEmailBtn" class="btn btn-secondary" data-i18n="modal.cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Alterar Senha -->
+  <div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 data-i18n="modal.alterarSenha.titulo">Alterar Senha</h3>
+      <div class="modal-form">
+        <div class="form-group">
+          <label for="currentPassword" data-i18n="modal.alterarSenha.senhaAtual">Senha Atual:</label>
+          <input type="password" id="currentPassword" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="newPassword" data-i18n="modal.alterarSenha.novaSenha">Nova Senha:</label>
+          <input type="password" id="newPassword" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword" data-i18n="modal.alterarSenha.confirmarSenha">Confirmar Nova Senha:</label>
+          <input type="password" id="confirmPassword" class="form-input" required>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="savePasswordBtn" class="btn btn-primary" data-i18n="modal.salvar">Salvar</button>
+        <button id="cancelPasswordBtn" class="btn btn-secondary" data-i18n="modal.cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Redefinir Progresso -->
+  <div id="resetProgressModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 data-i18n="modal.redefinirProgresso.titulo">Redefinir Progresso</h3>
+      <p data-i18n="modal.redefinirProgresso.aviso">Esta ação apagará todos os seus pontos, horas e sessões de foco concluídas. Esta ação não pode ser desfeita.</p>
+      <div class="modal-form">
+        <div class="form-group">
+          <label for="resetProgressPassword" data-i18n="modal.redefinirProgresso.senha">Digite sua senha para confirmar:</label>
+          <input type="password" id="resetProgressPassword" class="form-input" required>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="confirmResetProgressBtn" class="btn btn-danger" data-i18n="modal.redefinirProgresso.confirmar">Redefinir Progresso</button>
+        <button id="cancelResetProgressBtn" class="btn btn-secondary" data-i18n="modal.cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Excluir Conta -->
+  <div id="deleteAccountModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 data-i18n="modal.excluirConta.titulo">Excluir Conta Permanentemente</h3>
+      <p data-i18n="modal.excluirConta.aviso">Esta ação excluirá permanentemente sua conta e todos os dados associados. Esta ação não pode ser desfeita.</p>
+      <div class="modal-form">
+        <div class="form-group">
+          <label for="deleteAccountPassword" data-i18n="modal.excluirConta.senha">Digite sua senha para confirmar:</label>
+          <input type="password" id="deleteAccountPassword" class="form-input" required>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="confirmDeleteAccountBtn" class="btn btn-danger" data-i18n="modal.excluirConta.confirmar">Excluir Permanentemente</button>
+        <button id="cancelDeleteAccountBtn" class="btn btn-secondary" data-i18n="modal.cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificação tipo Toast para feedback ao usuário -->
+  <div id="toastNotification" class="toast" aria-live="polite"></div>
+
+  <!-- Scripts JavaScript -->
+  <script src="../../shared/js/menu.js"></script>
+  <script src="../../shared/js/theme.js"></script>
+  <script src="../../shared/js/i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="../../shared/js/global-user.js"></script>
+  <script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

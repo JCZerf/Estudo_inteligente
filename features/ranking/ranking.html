@@ -10,19 +10,24 @@
 </head>
 <body>
   <aside class="sidebar">
-    <a href="../dashboard/inicio.html" aria-label="Estudo Inteligente - Página Inicial">
-      <img src="../../shared/assets/img/logoestudobranco.png" alt="" class="logo-sidebar">
+    <a href="../dashboard/dashboard.html" aria-label="Estudo Inteligente - Página Inicial">
+      <img src="../../shared/assets/img/study-logo-white.png" alt="" class="logo-sidebar">
     </a>
   </aside>
 
+  <!-- Conteúdo principal da página -->
   <main class="main">
+    <!-- Cabeçalho com informações do usuário e botão de tema -->
     <header class="header">
       <div class="user-info">
-        <span id="userName">Carregando...</span>
-        <button id="themeToggle" aria-label="Alternar tema claro e escuro">
-          <i class="fas fa-moon" aria-hidden="true"></i>
-          <span class="sr-only">Alternar tema</span>
-        </button>
+       <div class="user-box">
+          <span id="userName">Usuário</span>
+        </div>
+        <div class="theme-box">
+         <button id="themeToggle" aria-label="Alternar tema claro e escuro">
+           <i class="fas fa-moon" aria-hidden="true"></i>
+         </button>
+      </div>
       </div>
     </header>
 
@@ -33,7 +38,7 @@
           <div class="filter-buttons">
             <button class="filter-btn active" data-filter="points"><i class="fas fa-star"></i> Pontos</button>
             <button class="filter-btn" data-filter="hours"><i class="fas fa-clock"></i> Horas</button>
-            <button class="filter-btn" data-filter="tasks"><i class="fas fa-check-double"></i> Tarefas</button>
+            <button class="filter-btn" data-filter="focusSessions"><i class="fas fa-brain"></i> Sessões</button> <!-- ALTERADO -->
           </div>
         </div>
 

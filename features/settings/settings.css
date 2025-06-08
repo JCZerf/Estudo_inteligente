@@ -319,3 +319,37 @@ input:checked + .slider:before {
         width: 100%;
     }
 }
+
+
+
+/* Ajuste para tornar o botão "Acessar Perfil" azul */
+/* Aplica a cor de destaque aos botões padrão dentro das actions, 
+   mas permite overrides para botões de perigo (.btn-danger) */
+.settings-section .action-buttons button:not(.btn-danger) {
+    background-color: var(--highlight-color);
+    color: white; /* Assumindo que branco contrasta bem com a cor de destaque */
+    border: 1px solid var(--highlight-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, filter 0.3s ease;
+}
+
+.settings-section .action-buttons button:not(.btn-danger):hover {
+    filter: brightness(90%); /* Escurece um pouco no hover */
+    border-color: var(--highlight-color);
+}
+
+/* Garante contraste no tema escuro se a cor de destaque for clara (ajuste se necessário) */
+/* [data-theme="dark"] .settings-section .action-buttons button:not(.btn-danger) {
+    color: #111; 
+} */
+
+/* Mantém botões de perigo com sua cor específica */
+.settings-section .action-buttons button.btn-danger {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
+}
+
+.settings-section .action-buttons button.btn-danger:hover {
+    filter: brightness(90%);
+}
+
