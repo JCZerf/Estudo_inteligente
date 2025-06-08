@@ -1,6 +1,6 @@
 # Registro de Testes de Software
 
-Pré-requisitos: Projeto de Interface, Plano de Testes de Software
+Pré-requisitos: [Projeto de Interface](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/blob/main/documentos/04-Projeto%20de%20Interface.md), [Plano de Testes de Software](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/blob/main/documentos/07-Plano%20de%20Testes%20de%20Software.md)
 
 Os testes funcionais realizados na aplicação web são descritos a seguir.
 
