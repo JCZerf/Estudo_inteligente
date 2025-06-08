@@ -256,26 +256,7 @@ Os testes funcionais a serem realizados na aplicação são descritos a seguir.
   <th>Responsável</th>
  </tr>
  <tr>
-  <td>CT-13 – Extrair e Adicionar documentos da propria maquina na seção de tarefas</td>
-  <td><ul><li>RF-03: tarefas persolanizadas</li></ul></td>
-  <td>Funcionamento da importação e extração de documentos na area de tarefas </td>
-  <td><ol><li>Acessar tarefas</li><li>Adicionar documento</li><li>exportar documentos</li></ol></td>
-  <td>Documentos podem ser importadas, finalizados e extraidos </td>
-  <td>Guilherme Lodron</td>
- </tr>
-</table> 
-
-<table>
- <tr>
-  <th>Caso de testes</th>
-  <th>Requisitos associados</th>
-  <th>Objetivo do teste</th>
-  <th>Passos</th>
-  <th>Critérios de êxito</th>
-  <th>Responsável</th>
- </tr>
- <tr>
-  <td>CT-14 – Cadastrar uma conta</td>
+  <td>CT-13 – Cadastrar uma conta</td>
   <td><ul><li>RF-01: Cadastro de conta</li></ul></td>
   <td>Realizar o cadastro de uma conta</td>
   <td>
