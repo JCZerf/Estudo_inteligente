@@ -477,10 +477,30 @@ function renameSubject(oldName, newName) {
  * @param {string} title - Título da tarefa
  */
 function showDeleteConfirmation(taskId, subject, title) {
-    if (confirm(`Tem certeza que deseja excluir a tarefa "${title}"?`)) {
-        deleteTask(taskId, subject);
-    }
+  const modal = document.getElementById("confirmDeleteModal");
+  const message = document.getElementById("confirmDeleteMessage");
+  const confirmBtn = document.getElementById("confirmDeleteBtn");
+  const cancelBtn = document.getElementById("cancelDeleteBtn");
+
+  // Define a mensagem com o título da tarefa
+  message.innerHTML = `Tem certeza que deseja excluir a tarefa <strong>"${title}"</strong>?`;
+
+  // Exibe o modal
+  modal.style.display = "flex";
+
+  // Confirmação
+  confirmBtn.onclick = () => {
+    modal.style.display = "none";
+    deleteTask(taskId, subject);
+  };
+
+  // Cancelamento
+  cancelBtn.onclick = () => {
+    modal.style.display = "none";
+  };
 }
+
+
 
 /**
  * Exclui uma tarefa

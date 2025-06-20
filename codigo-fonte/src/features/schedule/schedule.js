@@ -1018,18 +1018,14 @@ document.getElementById("eventForm").addEventListener("submit", function (event)
   }
 
   // ❌ Data anterior: bloqueia
+   // Validação: data no passado
   if (dataSelecionada < dataAtual) {
-    event.preventDefault(); // ✅ Muito importante
-    const modal = document.getElementById("errorModal");
-    const message = document.getElementById("errorModalMessage");
-    const close = document.getElementById("errorModalClose");
-
-    message.innerText = "⚠️ Não é possível criar uma atividade com data anterior à data atual.";
-    modal.style.display = "block";
-    close.onclick = () => {
-      modal.style.display = "none";
+    event.preventDefault();
+    document.getElementById("errorModal").style.display = "block";
+    document.getElementById("errorModalClose").onclick = () => {
+    document.getElementById("errorModal").style.display = "none";
     };
-    return false;
+    return;
   }
 
   // ⚠️ Data muito futura

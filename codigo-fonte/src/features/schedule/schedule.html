@@ -205,36 +205,44 @@
         </div>
         
         <!-- Botão para salvar a atividade -->
-        <button type="submit" class="btn btn-primary" id="saveActivityButton">Salvar Atividade</button>
+        <button type="submit" class="btn btn-primary">Salvar Atividade</button>
       </form>
     </div>
   </div>
   
-  <!-- Modal de Erro para Data Inválida -->
-  <div class="modal" id="errorModal">
-    <div class="modal-content" style="max-width: 400px;">
-      <h3 id="errorModalTitle">Data Inválida</h3>
-      <p id="errorModalMessage">⚠️ Não é possível criar uma atividade com data anterior à data atual.</p>
-      <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-        <button class="btn btn-primary" id="errorModalClose">Entendi</button>
-      </div>
+    <!-- Modal de Erro para Data Inválida -->
+            <div class="modal" id="errorModal">
+                <div class="modal-content" style="max-width: 400px;">
+                <h3 id="errorModalTitle">Data Inválida</h3>
+                <p id="errorModalMessage">⚠️ Não é possível criar uma tarefa com data anterior à data atual.</p>
+                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-primary" id="errorModalClose">Entendi</button>
+                </div>
+            </div>
     </div>
-  </div>
 
-  <!-- Modal de Confirmação para ações importantes -->
-  <div class="modal" id="confirmModal">
-    <div class="modal-content" style="max-width: 400px;">
-      <!-- Título e mensagem dinâmicos -->
-      <h3 id="confirmModalTitle">Confirmar ação</h3>
-      <p id="confirmModalMessage">Tem certeza?</p>
-      
-      <!-- Botões de confirmação e cancelamento -->
-      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" id="confirmModalCancel">Cancelar</button>
-        <button class="btn btn-primary" id="confirmModalConfirm">Confirmar</button>
-      </div>
+    <!-- Modal de Erro para Data Inválida -->
+            <div class="modal" id="errorModal">
+                <div class="modal-content" style="max-width: 400px;">
+                <h3 id="errorModalTitle">Data Inválida</h3>
+                <p id="errorModalMessage">⚠️ Não é possível criar uma tarefa com data anterior à data atual.</p>
+                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-primary" id="errorModalClose">Entendi</button>
+                </div>
+            </div>
     </div>
-  </div>
+
+    <!-- Modal de Confirmação -->
+            <div class="modal" id="confirmModal">
+                <div class="modal-content" style="max-width: 400px;">
+                <h3 id="confirmModalTitle">Confirmar ação</h3>
+                <p id="confirmModalMessage">Tem certeza?</p>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-secondary" id="confirmModalCancel">Cancelar</button>
+                <button class="btn btn-primary" id="confirmModalConfirm">Confirmar</button>
+                </div>
+                </div>
+            </div>
 
   <!-- Scripts JavaScript -->
   <script src="schedule.js"></script>
