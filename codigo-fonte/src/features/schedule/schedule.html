@@ -68,19 +68,22 @@
         <div class="schedule-table">
           <!-- Cabeçalho da tabela com dias da semana -->
           <div class="row header-row">
-            <div class="cell time-cell">Horário</div>
-            <div class="cell day-cell">Segunda</div>
-            <div class="cell day-cell">Terça</div>
-            <div class="cell day-cell">Quarta</div>
-            <div class="cell day-cell">Quinta</div>
-            <div class="cell day-cell">Sexta</div>
-            <div class="cell day-cell weekend">Sábado</div>
-            <div class="cell day-cell weekend">Domingo</div>
-          </div>
+          <div class="cell time-cell">Horário</div>
+          <div class="cell day-cell"><div>Segunda<br><span class="day-date" id="date-0"></span></div></div>
+          <div class="cell day-cell"><div>Terça<br><span class="day-date" id="date-1"></span></div></div>
+          <div class="cell day-cell"><div>Quarta<br><span class="day-date" id="date-2"></span></div></div>
+          <div class="cell day-cell"><div>Quinta<br><span class="day-date" id="date-3"></span></div></div>
+          <div class="cell day-cell"><div>Sexta<br><span class="day-date" id="date-4"></span></div></div>
+          <div class="cell day-cell weekend"><div>Sábado<br><span class="day-date" id="date-5"></span></div></div>
+          <div class="cell day-cell weekend"><div>Domingo<br><span class="day-date" id="date-6"></span></div></div>
+</div>
+
           <!-- As linhas de horário serão geradas dinamicamente pelo JavaScript -->
         </div>
       </div>
-      
+
+    
+
       <!-- Rodapé do cronograma com legenda e botão de impressão -->
       <div class="schedule-footer">
         <!-- Legenda para os tipos de atividades -->
@@ -204,6 +207,17 @@
         <!-- Botão para salvar a atividade -->
         <button type="submit" class="btn btn-primary" id="saveActivityButton">Salvar Atividade</button>
       </form>
+    </div>
+  </div>
+  
+  <!-- Modal de Erro para Data Inválida -->
+  <div class="modal" id="errorModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <h3 id="errorModalTitle">Data Inválida</h3>
+      <p id="errorModalMessage">⚠️ Não é possível criar uma atividade com data anterior à data atual.</p>
+      <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+        <button class="btn btn-primary" id="errorModalClose">Entendi</button>
+      </div>
     </div>
   </div>
 

@@ -397,7 +397,7 @@
 .modal {
   display: none;                 /* Oculto por padrão, exibido via JavaScript */
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
@@ -684,6 +684,25 @@
   margin-right: 5px;
   vertical-align: middle;
 }
+
+
+/* Data da Semana */
+
+.day-date {
+  color: #f0f0f0;
+  display: block;
+  margin-top: 4px;
+}
+
+.cell.day-cell {
+  text-align: center;
+}
+.cell.day-cell .day-date {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+}
+
 
 /* Cores dos indicadores - usando as cores padrão */
 .modal .priority-options .priority-high { background-color: var(--priority-high-color); }

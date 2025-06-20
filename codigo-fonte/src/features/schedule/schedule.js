@@ -947,9 +947,116 @@ const printStyles = `
 }
 `;
 
+function gerarDatasSemana(baseDate = new Date()) {
+  const dias = [];
+  const diaSemana = baseDate.getDay(); // 0 = domingo, 1 = segunda, etc.
+  const diferenca = diaSemana === 0 ? -6 : 1 - diaSemana;
+  const segunda = new Date(baseDate);
+  segunda.setDate(baseDate.getDate() + diferenca);
+
+  for (let i = 0; i < 7; i++) {
+    const data = new Date(segunda);
+    data.setDate(segunda.getDate() + i);
+    dias.push(data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+  }
+
+  return dias;
+}
+
+function atualizarDatasCabecalho(baseDate = new Date()) {
+  const datas = gerarDatasSemana(baseDate);
+  datas.forEach((data, index) => {
+    const span = document.getElementById(`date-${index}`);
+    if (span) span.textContent = data;
+  });
+
+  // Também atualiza o título da semana
+  const primeira = datas[0];
+  const ultima = datas[6];
+  document.getElementById("currentWeek").textContent = `Semana ${primeira} – ${ultima}`;
+}
+
+let dataBaseAtual = new Date();
+
+document.getElementById("prevWeek").addEventListener("click", () => {
+  dataBaseAtual.setDate(dataBaseAtual.getDate() - 7);
+  atualizarDatasCabecalho(dataBaseAtual);
+});
+
+document.getElementById("nextWeek").addEventListener("click", () => {
+  dataBaseAtual.setDate(dataBaseAtual.getDate() + 7);
+  atualizarDatasCabecalho(dataBaseAtual);
+});
+
+// Inicializa ao carregar
+document.addEventListener("DOMContentLoaded", () => {
+  atualizarDatasCabecalho(dataBaseAtual);
+});
+
+
 // Adiciona estilos de impressão à página
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = printStyles;
 document.head.appendChild(styleSheet);
+
+// Validação de data
+
+let confirmandoDataFutura = false;
+
+document.getElementById("eventForm").addEventListener("submit", function (event) {
+  const inputData = document.getElementById("eventDate");
+  const dataSelecionada = new Date(inputData.value);
+  const dataAtual = new Date();
+  dataAtual.setHours(0, 0, 0, 0);
+  dataSelecionada.setHours(0, 0, 0, 0);
+
+  // ⚠️ Se for confirmação de data futura, passa e reseta flag
+  if (confirmandoDataFutura) {
+    confirmandoDataFutura = false;
+    return true;
+  }
+
+  // ❌ Data anterior: bloqueia
+  if (dataSelecionada < dataAtual) {
+    event.preventDefault(); // ✅ Muito importante
+    const modal = document.getElementById("errorModal");
+    const message = document.getElementById("errorModalMessage");
+    const close = document.getElementById("errorModalClose");
+
+    message.innerText = "⚠️ Não é possível criar uma atividade com data anterior à data atual.";
+    modal.style.display = "block";
+    close.onclick = () => {
+      modal.style.display = "none";
+    };
+    return false;
+  }
+
+  // ⚠️ Data muito futura
+  const doisAnosDepois = new Date();
+  doisAnosDepois.setFullYear(dataAtual.getFullYear() + 2);
+  if (dataSelecionada > doisAnosDepois) {
+    event.preventDefault(); // ✅ Bloqueia envio por padrão
+
+    document.getElementById("confirmModalTitle").innerText = "Confirmar Data";
+    document.getElementById("confirmModalMessage").innerText =
+      "🕒 A data está mais de 2 anos à frente. Tem certeza que deseja criar essa tarefa?";
+    document.getElementById("confirmModal").style.display = "block";
+
+    document.getElementById("confirmModalConfirm").onclick = () => {
+      document.getElementById("confirmModal").style.display = "none";
+      confirmandoDataFutura = true;
+      document.getElementById("eventForm").requestSubmit(); // ✅ Reenvia corretamente
+    };
+
+    document.getElementById("confirmModalCancel").onclick = () => {
+      document.getElementById("confirmModal").style.display = "none";
+    };
+
+    return false;
+  }
+
+  return true;
+});
+
 

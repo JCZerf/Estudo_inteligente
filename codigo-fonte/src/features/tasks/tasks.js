@@ -690,3 +690,112 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
+let ignorarConfirmacao = false;
+
+function handleTaskFormSubmit(event) {
+  const inputData = document.getElementById('taskDueDate');
+  const dataSelecionada = new Date(inputData.value + "T00:00:00");
+  const dataAtual = new Date();
+  dataAtual.setHours(0, 0, 0, 0);
+
+  // Validação: data no passado
+  if (dataSelecionada < dataAtual) {
+    event.preventDefault();
+    document.getElementById("errorModal").style.display = "block";
+    document.getElementById("errorModalClose").onclick = () => {
+    document.getElementById("errorModal").style.display = "none";
+    };
+    return;
+  }
+
+  // Validação: mais de 2 anos à frente
+  const doisAnosDepois = new Date();
+  doisAnosDepois.setFullYear(dataAtual.getFullYear() + 2);
+
+  if (dataSelecionada > doisAnosDepois && !ignorarConfirmacao) {
+    event.preventDefault();
+    document.getElementById("confirmModalTitle").innerText = "Confirmar Data";
+    document.getElementById("confirmModalMessage").innerText =
+      "🕒 A data está mais de 2 anos à frente. Tem certeza que deseja criar essa tarefa?";
+    document.getElementById("confirmModal").style.display = "block";
+
+    document.getElementById("confirmModalConfirm").onclick = () => {
+      document.getElementById("confirmModal").style.display = "none";
+      ignorarConfirmacao = true;
+      document.getElementById("taskForm").requestSubmit();
+    };
+
+    document.getElementById("confirmModalCancel").onclick = () => {
+      document.getElementById("confirmModal").style.display = "none";
+    };
+    return;
+  }
+
+  // 🔁 Resetamos a flag para a próxima submissão
+  ignorarConfirmacao = false;
+
+  // Continua com o salvamento da tarefa normalmente
+  event.preventDefault();
+
+  const taskId = document.getElementById("editTaskId").value;
+  const title = document.getElementById("taskTitle").value.trim();
+  const subjectValue = taskSubjectSelect.value;
+  let subjectName = "";
+
+  if (subjectValue === "other") {
+    subjectName = customSubjectInput.value.trim();
+    if (!subjectName) {
+      alert("Por favor, digite o nome da matéria personalizada.");
+      return;
+    }
+  } else {
+    subjectName = getSubjectName(subjectValue);
+  }
+
+  const priority = document.querySelector('input[name="priority"]:checked').value;
+  const description = document.getElementById("taskDescription").value.trim();
+
+  if (!title || !subjectName) {
+    alert("Por favor, preencha o título e a matéria da tarefa.");
+    return;
+  }
+
+  const taskData = {
+    id: taskId || `task-${Date.now()}`,
+    title,
+    due: inputData.value,
+    priority,
+    description,
+    done: false
+  };
+
+  if (taskId) {
+    let originalSubject = null;
+    for (const subj in tasks) {
+      const index = tasks[subj].findIndex(t => t.id === taskId);
+      if (index !== -1) {
+        originalSubject = subj;
+        taskData.done = tasks[subj][index].done;
+        tasks[subj].splice(index, 1);
+        if (tasks[subj].length === 0) delete tasks[subj];
+        break;
+      }
+    }
+    if (!originalSubject) {
+      console.error("Erro ao editar: Tarefa original não encontrada.");
+      return;
+    }
+  }
+
+  if (!tasks[subjectName]) tasks[subjectName] = [];
+  tasks[subjectName].push(taskData);
+
+  saveTasks();
+  closeModal();
+  renderTasks();
+  showToast(taskId ? "Tarefa atualizada com sucesso!" : "Tarefa adicionada com sucesso!");
+
+  // 🔁 Reseta após salvar para que as próximas tarefas sejam verificadas novamente
+  ignorarConfirmacao = false;
+}
