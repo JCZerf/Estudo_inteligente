@@ -188,7 +188,7 @@
     background: var(--task-bg, #fff);
     padding: 15px 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -398,9 +398,17 @@
  * Indicadores de prioridade
  * Define as cores para os diferentes níveis de prioridade
  */
-.priority-high { background-color: var(--priority-high, #e74c3c); }
-.priority-medium { background-color: var(--priority-medium, #f39c12); }
-.priority-low { background-color: var(--priority-low, #2ecc71); }
+.priority-high {
+    background-color: var(--priority-high, #e74c3c);
+}
+
+.priority-medium {
+    background-color: var(--priority-medium, #f39c12);
+}
+
+.priority-low {
+    background-color: var(--priority-low, #2ecc71);
+}
 
 /* 
  * Opções de prioridade
@@ -408,6 +416,7 @@
  */
 .priority-options {
     display: flex;
+    justify-content: center;
     gap: 15px;
     margin-top: 5px;
 }
@@ -464,7 +473,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* 
@@ -478,7 +487,7 @@
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     animation: modalFadeIn 0.3s;
 }
 
@@ -487,8 +496,15 @@
  * Define a transição de aparecimento do modal
  */
 @keyframes modalFadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* 
@@ -539,6 +555,7 @@
 .form-group select,
 .form-group textarea {
     width: 100%;
+    text-align: center;
     padding: 10px;
     border: 1px solid var(--border-color, #ddd);
     border-radius: 5px;
@@ -579,7 +596,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -597,7 +614,7 @@
     border-radius: 10px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     animation: modalFadeIn 0.3s;
 }
 
@@ -675,7 +692,7 @@
     color: white;
     padding: 12px 24px;
     border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     opacity: 0;
     transition: opacity 0.3s, transform 0.3s;
     z-index: 1000;
@@ -729,48 +746,48 @@
  * Exibe as observações ao passar o mouse sobre eventos e tarefas
  */
 .tooltip-container {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 .tooltip-text {
-  visibility: hidden;
-  position: absolute;
-  z-index: 10;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--modal-bg, white);
-  color: var(--text-color, #333);
-  text-align: center;
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  width: max-content;
-  max-width: 250px;
-  font-size: 13px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  border: 1px solid var(--border-color, #ddd);
-  white-space: normal;
-  word-wrap: break-word;
+    visibility: hidden;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--modal-bg, white);
+    color: var(--text-color, #333);
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: max-content;
+    max-width: 250px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px solid var(--border-color, #ddd);
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 .tooltip-container:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Seta do tooltip */
 .tooltip-text::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--modal-bg, white) transparent transparent transparent;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--modal-bg, white) transparent transparent transparent;
 }
 
 /* 
@@ -837,54 +854,56 @@
  * Ajusta o layout para telas menores
  */
 @media (max-width: 768px) {
+
     /* Reorganiza o cabeçalho em coluna */
     .tasks-header {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     /* Ajusta os controles para ocupar toda a largura */
     .tasks-controls {
         flex-direction: column;
         width: 100%;
     }
-    
+
     /* Ajusta a caixa de busca para ocupar toda a largura */
     .search-box {
         max-width: 100%;
         width: 100%;
     }
-    
+
     /* Ajusta o seletor de filtro para ocupar toda a largura */
     .filter-select {
         width: 100%;
     }
-    
+
     /* Ajusta os botões para ocupar toda a largura */
     .btn {
         width: 100%;
         justify-content: center;
     }
-    
+
     /* Reorganiza o layout das tarefas para melhor visualização em telas pequenas */
     .task {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-    
+
     /* Ajusta as ações da tarefa para alinhar à esquerda */
     .task-actions {
         width: 100%;
         justify-content: flex-end;
     }
-    
+
     /* Ajusta o modal para telas menores */
-    .modal-content, .confirm-content {
+    .modal-content,
+    .confirm-content {
         width: 95%;
         margin: 5% auto;
     }
-    
+
     /* Ajusta o tooltip para telas menores */
     .tooltip-text {
         max-width: 200px;
@@ -896,23 +915,25 @@
  * Ajustes adicionais para smartphones
  */
 @media (max-width: 480px) {
+
     /* Reduz o padding das tarefas */
     .task {
         padding: 12px 15px;
     }
-    
+
     /* Reduz o tamanho da fonte */
     .task-left span {
         font-size: 0.9rem;
     }
-    
+
     /* Ajusta o espaçamento dos botões de ação */
     .task-actions {
         gap: 5px;
     }
-    
+
     /* Reduz o tamanho dos botões de ação */
-    .btn-focus, .btn-delete {
+    .btn-focus,
+    .btn-delete {
         width: 28px;
         height: 28px;
         font-size: 0.9rem;
@@ -924,14 +945,16 @@
 .task-priority-indicator {
     display: flex;
     align-items: center;
-    gap: 5px; /* Espaço entre a bolinha e o texto */
+    gap: 5px;
+    /* Espaço entre a bolinha e o texto */
     padding: 2px 6px;
     border-radius: 12px;
     background-color: var(--secondary-bg, #f5f7fa);
     border: 1px solid var(--border-color, #ddd);
     font-size: 0.8rem;
     color: var(--text-secondary, #666);
-    margin-right: 10px; /* Espaço antes do título da tarefa */
+    margin-right: 10px;
+    /* Espaço antes do título da tarefa */
 }
 
 .priority-dot {
@@ -946,8 +969,8 @@
 }
 
 /* Remove o estilo antigo de prioridade que era só a bolinha */
-.task-left > span[class^="priority-"] {
-    display: none; 
+.task-left>span[class^="priority-"] {
+    display: none;
 }
 
 /* Ajuste para garantir que a tarefa ocupe a largura */
@@ -964,15 +987,18 @@
     border-left: 4px solid var(--subject-color, #008cff);
     color: var(--task-text, #008cff);
     margin-bottom: 10px;
-    width: 100%; /* Garante que ocupe toda as largura do container */
-    box-sizing: border-box; /* Inclui padding e border na largura total */
+    width: 100%;
+    /* Garante que ocupe toda as largura do container */
+    box-sizing: border-box;
+    /* Inclui padding e border na largura total */
 }
 
 /* Ajustes para o indicador de prioridade na tela inicial (inline) */
 #listaTarefasAgendadasInicio li {
     display: flex;
     align-items: center;
-    gap: 8px; /* Espaçamento entre os elementos */
+    gap: 8px;
+    /* Espaçamento entre os elementos */
     margin-bottom: 8px;
     padding: 5px 0;
     border-bottom: 1px dashed var(--border-color, #eee);
@@ -983,7 +1009,8 @@
 }
 
 .task-priority-indicator-inline {
-    display: inline-flex; /* Para ficar na mesma linha */
+    display: inline-flex;
+    /* Para ficar na mesma linha */
     align-items: center;
     gap: 4px;
     font-size: 0.8rem;
@@ -992,7 +1019,8 @@
     background-color: var(--secondary-bg, #f5f7fa);
     border: 1px solid var(--border-color, #ddd);
     color: var(--text-secondary, #666);
-    white-space: nowrap; /* Evita quebra de linha */
+    white-space: nowrap;
+    /* Evita quebra de linha */
 }
 
 .priority-text-inline {
@@ -1000,7 +1028,8 @@
 }
 
 .task-title-inline {
-    flex-grow: 1; /* Ocupa espaço disponível */
+    flex-grow: 1;
+    /* Ocupa espaço disponível */
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1014,22 +1043,23 @@
 }
 
 .modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  min-width: 300px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 300px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
-
