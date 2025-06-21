@@ -14,18 +14,18 @@ function getTaskSubjectNameForCron(value) {
             }
         }
     }
-    
+
     // Mapeamento de fallback caso o select não esteja disponível
     const subjects = {
         "math": "Matemática", "physics": "Física", "chemistry": "Química",
         "biology": "Biologia", "history": "História", "geography": "Geografia",
         "philosophy": "Filosofia", "sociology": "Sociologia", "portuguese": "Português",
         "literature": "Literatura", "english": "Inglês", "spanish": "Espanhol",
-        "art": "Artes", "physical_education": "Educação Física",
+        "art": "Artes", "physical_education": "Educação Física", "Programação": 'Programin',
         "geral_cronograma": "Geral (Cronograma)",
         "other_task_cron": "Outra Tarefa (Cronograma)"
     };
-    return subjects[value] || value; 
+    return subjects[value] || value;
 }
 
 // Função auxiliar para mapear o nome de exibição da categoria para o valor do select
@@ -56,15 +56,15 @@ function getEventCategoryNameForCron(value) {
             }
         }
     }
-    
+
     // Mapeamento de fallback caso o select não esteja disponível
     const categories = {
         "aula": "Aula", "palestra": "Palestra", "oficina": "Oficina",
-        "reuniao": "Reunião", "estudo_dirigido": "Estudo Dirigido", 
+        "reuniao": "Reunião", "estudo_dirigido": "Estudo Dirigido",
         "exercicio_fisico": "Exercício Físico", "refeicao": "Refeição",
         "pessoal": "Pessoal", "outro_evento": "Outro Evento"
     };
-    return categories[value] || value; 
+    return categories[value] || value;
 }
 
 // Função auxiliar para mapear a categoria de evento para o tipo de visualização
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const weekNav = {
         // Data atual para referência da semana em exibição
         currentDate: new Date(),
-        
+
         // Elementos do DOM utilizados pelo objeto
         elements: {
             prevBtn: document.getElementById("prevWeek"),
@@ -93,45 +93,45 @@ document.addEventListener("DOMContentLoaded", function () {
             weekDisplay: document.getElementById("currentWeek"),
             scheduleTable: document.querySelector(".schedule-table")
         },
-        
+
         // Inicializa o cronograma
         init() {
             this.generateScheduleGrid();
             this.updateWeekDisplay();
-            
+
             // Configura eventos para navegação entre semanas
             if (this.elements.prevBtn) this.elements.prevBtn.addEventListener("click", () => this.changeWeek(-1));
             if (this.elements.nextBtn) this.elements.nextBtn.addEventListener("click", () => this.changeWeek(1));
-            
+
             // Escuta eventos de mudança nas tarefas para atualizar o cronograma
             window.addEventListener("studyItemsChanged", (event) => {
                 if (event.detail && (event.detail.storageKey === "studyTasks" || event.detail.storageKey === "studySchedule")) {
                     this.loadScheduleAndTasks();
                 }
             });
-            
+
             // Carrega tarefas e inicializa funcionalidade de arrastar e soltar
             this.loadScheduleAndTasks(); // Carrega tarefas primeiro
             this.initSortableGrid(); // Depois inicializa o sortable
         },
-        
+
         // Gera a grade do cronograma com células para cada dia e horário
         generateScheduleGrid() {
             if (!this.elements.scheduleTable) return;
-            
+
             // Remove linhas existentes (exceto o cabeçalho)
             const existingRows = this.elements.scheduleTable.querySelectorAll(".row:not(.header-row)");
             existingRows.forEach(row => row.remove());
-            
+
             // Define os dias da semana e classes especiais
             const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
             const dayClasses = { sat: "weekend", sun: "weekend" };
-            
+
             // Cria linhas para cada intervalo de 2 horas (0h às 24h)
             for (let hour = 0; hour < 24; hour += 2) {
                 const row = document.createElement("div");
                 row.classList.add("row");
-                
+
                 // Cria célula de horário
                 const timeCell = document.createElement("div");
                 timeCell.classList.add("cell", "time-cell");
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const endTime = `${String(endTimeHour).padStart(2, "0")}:00`;
                 timeCell.textContent = `${startTime} - ${endTime}`;
                 row.appendChild(timeCell);
-                
+
                 // Cria células para cada dia da semana
                 days.forEach(day => {
                     const dayCell = document.createElement("div");
@@ -150,11 +150,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     dayCell.dataset.time = startTime;
                     row.appendChild(dayCell);
                 });
-                
+
                 this.elements.scheduleTable.appendChild(row);
             }
         },
-        
+
         // Inicializa a funcionalidade de arrastar e soltar nas células
         initSortableGrid() {
             const cells = document.querySelectorAll(".schedule-cell");
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     ghostClass: "sortable-ghost-event", // Classe para o elemento fantasma
                     chosenClass: "sortable-chosen-event", // Classe para o elemento escolhido
                     dragClass: "sortable-drag-event", // Classe para o elemento sendo arrastado
-                    
+
                     // Função chamada quando um item é solto
                     onEnd: (evt) => {
                         const itemEl = evt.item; // O elemento arrastado (.event)
@@ -206,15 +206,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (itemType === "tarefa") {
                                 let studyTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
                                 const originalCategory = fullData.originalCategoryName;
-                                
+
                                 if (studyTasks[originalCategory]) {
                                     const taskIndex = studyTasks[originalCategory].findIndex(t => t.id === itemId);
-                                    
+
                                     if (taskIndex !== -1) {
                                         // Atualiza data e hora da tarefa
                                         studyTasks[originalCategory][taskIndex].due = newDateISO;
                                         studyTasks[originalCategory][taskIndex].time = newTime;
-                                        
+
                                         // Recalcula horário de término se houver duração
                                         if (studyTasks[originalCategory][taskIndex].duration) {
                                             const durationMinutes = parseInt(studyTasks[originalCategory][taskIndex].duration);
@@ -222,26 +222,26 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const endTimeObj = new Date(startTimeObj.getTime() + durationMinutes * 60000);
                                             studyTasks[originalCategory][taskIndex].endTime = endTimeObj.toTimeString().substring(0, 5);
                                         }
-                                        
+
                                         // Salva alterações e dispara evento de atualização
                                         localStorage.setItem("studyTasks", JSON.stringify(studyTasks));
                                         window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
-                                    } else { 
-                                        console.error("Tarefa não encontrada para mover."); 
+                                    } else {
+                                        console.error("Tarefa não encontrada para mover.");
                                     }
-                                } else { 
-                                    console.error("Categoria original da tarefa não encontrada."); 
+                                } else {
+                                    console.error("Categoria original da tarefa não encontrada.");
                                 }
                             } else if (itemType === "evento") {
                                 // Lógica para mover eventos
                                 let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
                                 const eventIndex = studySchedule.findIndex(e => e.id === itemId);
-                                
+
                                 if (eventIndex !== -1) {
                                     // Atualiza data e hora do evento
                                     studySchedule[eventIndex].date = newDateISO;
                                     studySchedule[eventIndex].time = newTime;
-                                    
+
                                     // Recalcula horário de término se houver duração
                                     if (studySchedule[eventIndex].duration) {
                                         const durationMinutes = parseInt(studySchedule[eventIndex].duration);
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         const endTimeObj = new Date(startTimeObj.getTime() + durationMinutes * 60000);
                                         studySchedule[eventIndex].endTime = endTimeObj.toTimeString().substring(0, 5);
                                     }
-                                    
+
                                     // Salva alterações e dispara evento de atualização
                                     localStorage.setItem("studySchedule", JSON.stringify(studySchedule));
                                     window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     console.error("Evento não encontrado para mover.");
                                 }
                             }
-                            
+
                             this.loadScheduleAndTasks();
                             cleanUp();
                         };
@@ -283,42 +283,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             });
         },
-        
+
         // Muda a semana exibida (anterior ou próxima)
         changeWeek(weeks) {
             this.currentDate.setDate(this.currentDate.getDate() + weeks * 7);
             this.updateWeekDisplay();
             this.loadScheduleAndTasks();
         },
-        
+
         // Atualiza o texto de exibição da semana atual
         updateWeekDisplay() {
             const startOfWeek = new Date(this.currentDate);
             const dayOfWeek = startOfWeek.getDay();
             startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
-            
+
             // Calcula o fim da semana (domingo)
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(endOfWeek.getDate() + 6);
-            
+
             // Formata as datas para exibição
             const options = { day: "numeric", month: "long" };
             const startStr = startOfWeek.toLocaleDateString("pt-BR", options);
             const endStr = endOfWeek.toLocaleDateString("pt-BR", options);
-            
+
             // Atualiza o texto de exibição
             if (this.elements.weekDisplay) {
                 this.elements.weekDisplay.textContent = `Semana ${startStr} - ${endStr} ${endOfWeek.getFullYear()}`;
             }
         },
-        
+
         // Obtém um array com as datas ISO da semana atual
         getWeekDays() {
             const weekDays = [];
             const startOfWeek = new Date(this.currentDate);
             const dayOfWeek = startOfWeek.getDay();
             startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
-            
+
             // Gera um array com as datas ISO de cada dia da semana
             for (let i = 0; i < 7; i++) {
                 const day = new Date(startOfWeek);
@@ -327,15 +327,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             return weekDays;
         },
-        
+
         // Carrega e exibe tarefas e eventos no cronograma
         loadScheduleAndTasks() {
             // Remove eventos existentes
             document.querySelectorAll(".schedule-table .event").forEach(eventEl => eventEl.remove());
-            
+
             // Obtém as datas da semana atual
             const weekDaysISO = this.getWeekDays();
-            
+
             try {
                 // Carrega tarefas do localStorage
                 const studyTasksData = JSON.parse(localStorage.getItem("studyTasks")) || {};
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (task.due && weekDaysISO.includes(task.due)) {
                             // Mapeia o nome da categoria para o valor do select
                             let taskOriginalCategorySelectValue = mapTaskCategoryDisplayNameToSelectValue(categoryName, taskSubjectCronSelect);
-                            
+
                             // Prepara dados para exibição
                             const taskDisplayData = {
                                 ...task, // Inclui todos os dados da tarefa original
@@ -356,16 +356,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                 originalCategoryName: categoryName,
                                 originalCategoryKeyForSelect: taskOriginalCategorySelectValue
                             };
-                            
+
                             // Adiciona a tarefa à grade
                             this.addItemToGrid(taskDisplayData);
                         }
                     });
                 });
-                
+
                 // Carrega eventos do localStorage
                 const studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-                
+
                 // Filtra eventos para a semana atual
                 studySchedule.forEach(event => {
                     if (event.date && weekDaysISO.includes(event.date)) {
@@ -377,27 +377,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Erro ao carregar tarefas e eventos:", e);
             }
         },
-        
+
         // Adiciona um item (tarefa ou evento) à grade do cronograma
         addItemToGrid(itemData) {
             // Mapeia a data ISO para o dia da semana
             const itemDate = new Date(itemData.date || itemData.due + "T00:00:00"); // Usa 'due' para tarefas
             const dayOfWeek = itemDate.getDay(); // 0 = Domingo, 1 = Segunda, ...
             const dayAbbrev = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][dayOfWeek];
-            
+
             // Encontra a célula correspondente ao dia e horário
             const timeStr = itemData.time && itemData.time !== "-" ? itemData.time.substring(0, 5) : "08:00";
             const hour = parseInt(timeStr.split(":")[0]);
             const roundedHour = Math.floor(hour / 2) * 2; // Arredonda para o intervalo de 2 horas
             const formattedHour = String(roundedHour).padStart(2, "0") + ":00";
-            
+
             const targetCell = document.querySelector(`.schedule-cell[data-day="${dayAbbrev}"][data-time="${formattedHour}"]`);
             if (!targetCell) return;
-            
+
             // Cria o elemento do evento
             const eventEl = document.createElement("div");
             eventEl.classList.add("event");
-            
+
             // Define atributos e classes com base no tipo de item
             if (itemData.itemType === "tarefa") {
                 eventEl.classList.add("event-task");
@@ -413,27 +413,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 const displayType = mapEventCategoryToDisplayType(itemData.category);
                 eventEl.dataset.type = displayType;
             }
-            
+
             // Define atributos comuns
             eventEl.dataset.id = itemData.id;
             eventEl.dataset.itemType = itemData.itemType;
             eventEl.dataset.fullData = JSON.stringify(itemData);
-            
+
             // Cria o conteúdo do evento
             const titleSpan = document.createElement("span");
             titleSpan.classList.add("event-title");
             titleSpan.textContent = itemData.title;
-            
+
             const timeSpan = document.createElement("span");
             timeSpan.classList.add("event-time");
             if (itemData.time && itemData.time !== "-") {
                 timeSpan.textContent = `${itemData.time.substring(0, 5)}${itemData.endTime && itemData.endTime !== "-" ? ` - ${itemData.endTime.substring(0, 5)}` : ""}`;
             }
-            
+
             // Adiciona os elementos ao evento
             eventEl.appendChild(titleSpan);
             eventEl.appendChild(timeSpan);
-            
+
             // Adiciona tooltip para observações se existirem
             if (itemData.description && itemData.description.trim()) {
                 eventEl.classList.add("tooltip-container");
@@ -442,11 +442,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 tooltipText.textContent = "Observações: " + itemData.description;
                 eventEl.appendChild(tooltipText);
             }
-            
+
             // Adiciona botões de ação
             const actionsDiv = document.createElement("div");
             actionsDiv.classList.add("event-actions");
-            
+
             // Botão de editar
             const editBtn = document.createElement("button");
             editBtn.classList.add("event-action-btn");
@@ -455,7 +455,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.stopPropagation();
                 this.editItem(itemData);
             });
-            
+
             // Botão de excluir
             const deleteBtn = document.createElement("button");
             deleteBtn.classList.add("event-action-btn");
@@ -464,11 +464,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.stopPropagation();
                 this.deleteItem(itemData.id, itemData.itemType, itemData.originalCategoryName);
             });
-            
+
             // Adiciona botões ao container de ações
             actionsDiv.appendChild(editBtn);
             actionsDiv.appendChild(deleteBtn);
-            
+
             // Adiciona botão de marcar como concluído apenas para tarefas
             if (itemData.itemType === "tarefa") {
                 const doneBtn = document.createElement("button");
@@ -480,18 +480,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
                 actionsDiv.appendChild(doneBtn);
             }
-            
+
             eventEl.appendChild(actionsDiv);
-            
+
             // Adiciona evento de clique para editar
             eventEl.addEventListener("click", () => {
                 this.editItem(itemData);
             });
-            
+
             // Adiciona o evento à célula
             targetCell.appendChild(eventEl);
         },
-        
+
         // Abre o modal para editar um item
         editItem(itemData) {
             // Obtém o objeto do modal de eventos
@@ -500,7 +500,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 eventModalObj.open(itemData);
             }
         },
-        
+
         // Exclui um item (tarefa ou evento)
         deleteItem(itemId, itemType, taskCategoryName) {
             // Prepara o modal de confirmação
@@ -509,13 +509,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const confirmMessage = document.getElementById("confirmModalMessage");
             const confirmBtn = document.getElementById("confirmModalConfirm");
             const cancelBtn = document.getElementById("confirmModalCancel");
-            
+
             // Configura o modal de confirmação
             confirmTitle.textContent = "Confirmar Exclusão";
             confirmMessage.textContent = `Tem certeza que deseja excluir este item?`;
-            
+
             confirmModal.style.display = "block";
-            
+
             // Função para confirmar a exclusão
             const handleConfirm = () => {
                 if (itemType === "tarefa") {
@@ -524,12 +524,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (studyTasks[taskCategoryName]) {
                             // Filtra a tarefa a ser excluída
                             studyTasks[taskCategoryName] = studyTasks[taskCategoryName].filter(t => t.id !== itemId);
-                            
+
                             // Remove a categoria se estiver vazia
                             if (studyTasks[taskCategoryName].length === 0) {
                                 delete studyTasks[taskCategoryName];
                             }
-                            
+
                             // Salva alterações e dispara evento de atualização
                             localStorage.setItem("studyTasks", JSON.stringify(studyTasks));
                             window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
@@ -540,10 +540,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else if (itemType === "evento") {
                     try {
                         let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-                        
+
                         // Filtra o evento a ser excluído
                         studySchedule = studySchedule.filter(e => e.id !== itemId);
-                        
+
                         // Salva alterações e dispara evento de atualização
                         localStorage.setItem("studySchedule", JSON.stringify(studySchedule));
                         window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
@@ -551,41 +551,41 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.error("Erro ao excluir evento:", e);
                     }
                 }
-                
+
                 this.loadScheduleAndTasks();
                 cleanUp();
             };
-            
+
             // Função para cancelar a exclusão
             const handleCancel = () => {
                 cleanUp();
             };
-            
+
             // Função para limpar os event listeners
             const cleanUp = () => {
                 confirmBtn.removeEventListener("click", handleConfirm);
                 cancelBtn.removeEventListener("click", handleCancel);
                 confirmModal.style.display = "none";
             };
-            
+
             // Adiciona event listeners aos botões
             confirmBtn.addEventListener("click", handleConfirm, { once: true });
             cancelBtn.addEventListener("click", handleCancel, { once: true });
         },
-        
+
         // Alterna o estado de conclusão de uma tarefa
-        toggleTaskDone(taskId, taskCategoryName) { 
+        toggleTaskDone(taskId, taskCategoryName) {
             try {
                 let currentTasks = JSON.parse(localStorage.getItem("studyTasks")) || {};
-                if (currentTasks[taskCategoryName]){
+                if (currentTasks[taskCategoryName]) {
                     const taskIndex = currentTasks[taskCategoryName].findIndex(t => t.id === taskId);
                     if (taskIndex !== -1) {
                         // Inverte o estado de conclusão
                         currentTasks[taskCategoryName][taskIndex].done = !currentTasks[taskCategoryName][taskIndex].done;
-                        
+
                         // Salva alterações e dispara evento de atualização
                         localStorage.setItem("studyTasks", JSON.stringify(currentTasks));
-                        this.loadScheduleAndTasks(); 
+                        this.loadScheduleAndTasks();
                         window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
                     } else {
                         console.warn("Tarefa não encontrada para marcar como concluída/pendente:", taskId, taskCategoryName);
@@ -615,44 +615,44 @@ document.addEventListener("DOMContentLoaded", function () {
             taskSubjectCronGroup: document.getElementById("taskSubjectCronGroup"),
             taskSubjectCron: document.getElementById("taskSubjectCron"),
             taskPriorityCronGroup: document.getElementById("taskPriorityCronGroup"), // Novo
-            eventDate: document.getElementById("eventDate"), 
+            eventDate: document.getElementById("eventDate"),
             eventTime: document.getElementById("eventTime"),
 
             eventNotes: document.getElementById("eventNotes"),
             eventIdField: document.getElementById("eventIdField"),
             saveButton: document.getElementById("saveActivityButton")
         },
-        
+
         // Variáveis para controle de edição
-        currentEditId: null, 
+        currentEditId: null,
         currentEditItemType: null,
-        currentEditOriginalCategoryName: null, 
+        currentEditOriginalCategoryName: null,
 
         // Inicializa o modal
         init() {
             // Configura eventos para abrir/fechar o modal
             if (this.elements.openBtn) this.elements.openBtn.addEventListener("click", () => this.open());
             if (this.elements.closeBtn) this.elements.closeBtn.addEventListener("click", () => this.close());
-            
+
             // Configura evento de submissão do formulário
             if (this.elements.form) this.elements.form.addEventListener("submit", (e) => this.handleSubmit(e));
-            
+
             // Fecha o modal ao clicar fora dele
             window.addEventListener("click", (e) => {
                 if (e.target === this.elements.modal) this.close();
             });
-            
+
             // Configura evento para alternar campos conforme o tipo de item
             if (this.elements.itemCreationType) {
                 this.elements.itemCreationType.addEventListener("change", (e) => {
                     this.toggleFormFields(e.target.value);
                 });
             }
-            
+
             // Configura campos iniciais - Chamado no open() agora
             // this.toggleFormFields(this.elements.itemCreationType ? this.elements.itemCreationType.value : "evento");
         },
-        
+
         // Alterna a visibilidade dos campos conforme o tipo de item
         toggleFormFields(selectedType) {
             if (selectedType === "evento") {
@@ -667,26 +667,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (this.elements.taskPriorityCronGroup) this.elements.taskPriorityCronGroup.classList.remove("hidden"); // Mostra prioridade para tarefas
             }
         },
-        
+
         // Abre o modal (para adicionar novo item ou editar existente)
-        open(itemData = null) { 
+        open(itemData = null) {
             // Reseta o formulário
             if (this.elements.form) this.elements.form.reset();
             this.currentEditId = null;
             this.currentEditItemType = null;
             this.currentEditOriginalCategoryName = null;
-            if(this.elements.eventIdField) this.elements.eventIdField.value = "";
-            
-            if (itemData) { 
+            if (this.elements.eventIdField) this.elements.eventIdField.value = "";
+
+            if (itemData) {
                 // Modo de edição: preenche o formulário com dados existentes
                 this.currentEditId = itemData.id;
                 this.currentEditItemType = itemData.itemType;
-                if(this.elements.eventIdField) this.elements.eventIdField.value = itemData.id;
-                if(this.elements.title) this.elements.title.textContent = itemData.itemType === "tarefa" ? "Editar Tarefa" : "Editar Evento";
-                if(this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Alterações";
-                if(this.elements.eventTitle) this.elements.eventTitle.value = itemData.title || "";
-                if(this.elements.itemCreationType) {
-                    this.elements.itemCreationType.value = itemData.itemType; 
+                if (this.elements.eventIdField) this.elements.eventIdField.value = itemData.id;
+                if (this.elements.title) this.elements.title.textContent = itemData.itemType === "tarefa" ? "Editar Tarefa" : "Editar Evento";
+                if (this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Alterações";
+                if (this.elements.eventTitle) this.elements.eventTitle.value = itemData.title || "";
+                if (this.elements.itemCreationType) {
+                    this.elements.itemCreationType.value = itemData.itemType;
                     this.elements.itemCreationType.disabled = true; // Não permite mudar o tipo durante edição
                 }
                 this.toggleFormFields(itemData.itemType); // Garante que os campos corretos sejam exibidos para edição
@@ -694,7 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (itemData.itemType === "tarefa") {
                     // Preenche campos específicos de tarefa
                     this.currentEditOriginalCategoryName = itemData.originalCategoryName;
-                    if(this.elements.taskSubjectCron && itemData.originalCategoryKeyForSelect) { 
+                    if (this.elements.taskSubjectCron && itemData.originalCategoryKeyForSelect) {
                         this.elements.taskSubjectCron.value = itemData.originalCategoryKeyForSelect;
                     } else if (this.elements.taskSubjectCron) {
                         // Fallback se originalCategoryKeyForSelect estiver ausente
@@ -707,38 +707,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } else if (itemData.itemType === "evento") {
                     // Preenche campos específicos de evento
-                    if(this.elements.cronEventCategory && itemData.category) {
+                    if (this.elements.cronEventCategory && itemData.category) {
                         this.elements.cronEventCategory.value = itemData.category;
                     }
                 }
-                
+
                 // Preenche campos comuns
-                if(this.elements.eventDate) this.elements.eventDate.value = itemData.date || itemData.due || ""; // Usa due para tarefas
-                if(this.elements.eventTime) this.elements.eventTime.value = itemData.time && itemData.time !== "-" ? itemData.time.substring(0,5) : "";
+                if (this.elements.eventDate) this.elements.eventDate.value = itemData.date || itemData.due || ""; // Usa due para tarefas
+                if (this.elements.eventTime) this.elements.eventTime.value = itemData.time && itemData.time !== "-" ? itemData.time.substring(0, 5) : "";
                 // if(this.elements.eventDuration) this.elements.eventDuration.value = itemData.duration || "30"; // Removido
-                if(this.elements.eventNotes) this.elements.eventNotes.value = itemData.description || ""; 
-            } else { 
+                if (this.elements.eventNotes) this.elements.eventNotes.value = itemData.description || "";
+            } else {
                 // Modo de adição: configura valores padrão
-                if(this.elements.title) this.elements.title.textContent = "Adicionar Atividade";
-                if(this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Atividade";
-                if(this.elements.itemCreationType) {
+                if (this.elements.title) this.elements.title.textContent = "Adicionar Atividade";
+                if (this.elements.saveButton) this.elements.saveButton.textContent = "Salvar Atividade";
+                if (this.elements.itemCreationType) {
                     this.elements.itemCreationType.value = "tarefa"; // CORREÇÃO: Define Tarefa como padrão
                     this.elements.itemCreationType.disabled = false;
                 }
                 this.toggleFormFields("tarefa"); // CORREÇÃO: Garante que os campos de tarefa sejam exibidos por padrão
-                if (this.elements.eventDate) { 
+                if (this.elements.eventDate) {
                     this.elements.eventDate.value = new Date().toISOString().split("T")[0];
                 }
-                if(this.elements.cronEventCategory) this.elements.cronEventCategory.value = "aula"; // Categoria padrão para evento (se mudar)
-                if(this.elements.taskSubjectCron) this.elements.taskSubjectCron.value = "geral_cronograma"; // Matéria padrão para tarefa
+                if (this.elements.cronEventCategory) this.elements.cronEventCategory.value = "aula"; // Categoria padrão para evento (se mudar)
+                if (this.elements.taskSubjectCron) this.elements.taskSubjectCron.value = "geral_cronograma"; // Matéria padrão para tarefa
                 // Define prioridade média como padrão para novas tarefas
                 const mediumPriorityInput = document.querySelector('input[name="priorityCron"][value="medium"]');
                 if (mediumPriorityInput) mediumPriorityInput.checked = true;
             }
-            
+
             if (this.elements.modal) this.elements.modal.style.display = "block";
         },
-        
+
         // Fecha o modal
         close() {
             if (this.elements.modal) this.elements.modal.style.display = "none";
@@ -746,18 +746,18 @@ document.addEventListener("DOMContentLoaded", function () {
             this.currentEditId = null;
             this.currentEditItemType = null;
             this.currentEditOriginalCategoryName = null;
-            if(this.elements.eventIdField) this.elements.eventIdField.value = "";
-            if(this.elements.itemCreationType) this.elements.itemCreationType.disabled = false;
+            if (this.elements.eventIdField) this.elements.eventIdField.value = "";
+            if (this.elements.itemCreationType) this.elements.itemCreationType.disabled = false;
         },
-        
+
         // Processa o envio do formulário
         handleSubmit(e) {
             e.preventDefault();
-            
+
             // Obtém valores do formulário
             const creationType = this.currentEditId ? this.currentEditItemType : this.elements.itemCreationType.value;
             const title = this.elements.eventTitle.value.trim();
-            const itemDateISO = this.elements.eventDate.value; 
+            const itemDateISO = this.elements.eventDate.value;
             const time = this.elements.eventTime.value;
             // const duration = parseInt(this.elements.eventDuration.value); // Removido
             const notes = this.elements.eventNotes.value.trim();
@@ -765,10 +765,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Validação básica (removida validação de duração)
             if (!title || !itemDateISO || !time) {
-                 alert("Por favor, preencha todos os campos obrigatórios corretamente (Título, Data, Horário)."); 
-                 return; 
+                alert("Por favor, preencha todos os campos obrigatórios corretamente (Título, Data, Horário).");
+                return;
             }
-            
+
             // Calcula o horário de término - Removido, pois não há mais duração
             // const startTimeObj = new Date(`${itemDateISO}T${time}:00`);
             // const endTimeObj = new Date(startTimeObj.getTime() + duration * 60000);
@@ -778,27 +778,27 @@ document.addEventListener("DOMContentLoaded", function () {
             if (creationType === "tarefa") {
                 // Processa tarefa (adição ou edição)
                 const taskSubjectValue = this.elements.taskSubjectCron.value;
-                const newTaskCategoryName = getTaskSubjectNameForCron(taskSubjectValue); 
+                const newTaskCategoryName = getTaskSubjectNameForCron(taskSubjectValue);
                 let studyTasksData = JSON.parse(localStorage.getItem("studyTasks")) || {};
 
-                if (this.currentEditId) { 
+                if (this.currentEditId) {
                     // Modo de edição
                     const originalCategoryName = this.currentEditOriginalCategoryName;
                     if (!originalCategoryName || !studyTasksData[originalCategoryName]) {
-                        alert("Erro: Categoria original da tarefa não encontrada para edição."); 
+                        alert("Erro: Categoria original da tarefa não encontrada para edição.");
                         return;
                     }
-                    
+
                     const taskIndex = studyTasksData[originalCategoryName].findIndex(t => t.id === this.currentEditId);
                     if (taskIndex === -1) {
-                        alert("Erro: Tarefa não encontrada para edição."); 
+                        alert("Erro: Tarefa não encontrada para edição.");
                         return;
                     }
-                    
+
                     // Atualiza os dados da tarefa (sem duration e endTime)
                     const originalTask = studyTasksData[originalCategoryName][taskIndex];
                     const updatedTaskData = {
-                        ...originalTask, 
+                        ...originalTask,
                         title: title,
                         due: itemDateISO,
                         time: time,
@@ -818,27 +818,27 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Atualiza a tarefa na mesma categoria
                         studyTasksData[originalCategoryName][taskIndex] = updatedTaskData;
                     }
-                } else { 
+                } else {
                     // Modo de adição (sem duration e endTime)
                     const taskId = `task-cron-${Date.now()}`;
                     const taskData = {
-                        id: taskId, 
-                        title: title, 
-                        itemType: "tarefa", 
-                        due: itemDateISO, 
-                        time: time, 
+                        id: taskId,
+                        title: title,
+                        itemType: "tarefa",
+                        due: itemDateISO,
+                        time: time,
                         endTime: endTimeString, // Atualizado
                         // duration: duration, // Removido
-                        description: notes, 
+                        description: notes,
                         priority: priority, // Salva a prioridade atualizada
-                        done: false, 
+                        done: false,
                     };
-                    
+
                     // Cria a categoria se não existir
                     if (!studyTasksData[newTaskCategoryName]) studyTasksData[newTaskCategoryName] = [];
                     studyTasksData[newTaskCategoryName].push(taskData);
                 }
-                
+
                 // Salva alterações e dispara evento de atualização
                 localStorage.setItem("studyTasks", JSON.stringify(studyTasksData));
                 window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studyTasks" } }));
@@ -847,7 +847,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const eventCategoryValue = this.elements.cronEventCategory.value;
                 const eventCategoryName = getEventCategoryNameForCron(eventCategoryValue);
                 let studySchedule = JSON.parse(localStorage.getItem("studySchedule")) || [];
-                
+
                 if (this.currentEditId) {
                     // Modo de edição (sem duration e endTime)
                     const eventIndex = studySchedule.findIndex(e => e.id === this.currentEditId);
@@ -855,7 +855,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         alert("Erro: Evento não encontrado para edição.");
                         return;
                     }
-                    
+
                     // Atualiza os dados do evento
                     studySchedule[eventIndex] = {
                         ...studySchedule[eventIndex],
@@ -883,12 +883,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     };
                     studySchedule.push(eventData);
                 }
-                
+
                 // Salva alterações e dispara evento de atualização
                 localStorage.setItem("studySchedule", JSON.stringify(studySchedule));
                 window.dispatchEvent(new CustomEvent("studyItemsChanged", { detail: { storageKey: "studySchedule" } }));
             }
-            
+
             // Fecha o modal e recarrega a grade
             this.close();
             weekNav.loadScheduleAndTasks();
@@ -898,10 +898,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inicializa a navegação da semana e o modal
     weekNav.init();
     eventModal.init();
-    
+
     // Expõe o objeto do modal globalmente para edição via clique no evento
     window.eventModal = eventModal;
-    
+
     // Adiciona funcionalidade de impressão
     const printButton = document.getElementById("printSchedule");
     if (printButton) {
@@ -948,49 +948,49 @@ const printStyles = `
 `;
 
 function gerarDatasSemana(baseDate = new Date()) {
-  const dias = [];
-  const diaSemana = baseDate.getDay(); // 0 = domingo, 1 = segunda, etc.
-  const diferenca = diaSemana === 0 ? -6 : 1 - diaSemana;
-  const segunda = new Date(baseDate);
-  segunda.setDate(baseDate.getDate() + diferenca);
+    const dias = [];
+    const diaSemana = baseDate.getDay(); // 0 = domingo, 1 = segunda, etc.
+    const diferenca = diaSemana === 0 ? -6 : 1 - diaSemana;
+    const segunda = new Date(baseDate);
+    segunda.setDate(baseDate.getDate() + diferenca);
 
-  for (let i = 0; i < 7; i++) {
-    const data = new Date(segunda);
-    data.setDate(segunda.getDate() + i);
-    dias.push(data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
-  }
+    for (let i = 0; i < 7; i++) {
+        const data = new Date(segunda);
+        data.setDate(segunda.getDate() + i);
+        dias.push(data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+    }
 
-  return dias;
+    return dias;
 }
 
 function atualizarDatasCabecalho(baseDate = new Date()) {
-  const datas = gerarDatasSemana(baseDate);
-  datas.forEach((data, index) => {
-    const span = document.getElementById(`date-${index}`);
-    if (span) span.textContent = data;
-  });
+    const datas = gerarDatasSemana(baseDate);
+    datas.forEach((data, index) => {
+        const span = document.getElementById(`date-${index}`);
+        if (span) span.textContent = data;
+    });
 
-  // Também atualiza o título da semana
-  const primeira = datas[0];
-  const ultima = datas[6];
-  document.getElementById("currentWeek").textContent = `Semana ${primeira} – ${ultima}`;
+    // Também atualiza o título da semana
+    const primeira = datas[0];
+    const ultima = datas[6];
+    document.getElementById("currentWeek").textContent = `Semana ${primeira} – ${ultima}`;
 }
 
 let dataBaseAtual = new Date();
 
 document.getElementById("prevWeek").addEventListener("click", () => {
-  dataBaseAtual.setDate(dataBaseAtual.getDate() - 7);
-  atualizarDatasCabecalho(dataBaseAtual);
+    dataBaseAtual.setDate(dataBaseAtual.getDate() - 7);
+    atualizarDatasCabecalho(dataBaseAtual);
 });
 
 document.getElementById("nextWeek").addEventListener("click", () => {
-  dataBaseAtual.setDate(dataBaseAtual.getDate() + 7);
-  atualizarDatasCabecalho(dataBaseAtual);
+    dataBaseAtual.setDate(dataBaseAtual.getDate() + 7);
+    atualizarDatasCabecalho(dataBaseAtual);
 });
 
 // Inicializa ao carregar
 document.addEventListener("DOMContentLoaded", () => {
-  atualizarDatasCabecalho(dataBaseAtual);
+    atualizarDatasCabecalho(dataBaseAtual);
 });
 
 
@@ -1005,54 +1005,57 @@ document.head.appendChild(styleSheet);
 let confirmandoDataFutura = false;
 
 document.getElementById("eventForm").addEventListener("submit", function (event) {
-  const inputData = document.getElementById("eventDate");
-  const dataSelecionada = new Date(inputData.value);
-  const dataAtual = new Date();
-  dataAtual.setHours(0, 0, 0, 0);
-  dataSelecionada.setHours(0, 0, 0, 0);
-
-  // ⚠️ Se for confirmação de data futura, passa e reseta flag
-  if (confirmandoDataFutura) {
-    confirmandoDataFutura = false;
-    return true;
-  }
-
-  // ❌ Data anterior: bloqueia
-   // Validação: data no passado
-  if (dataSelecionada < dataAtual) {
+    event.stopImmediatePropagation();
     event.preventDefault();
-    document.getElementById("errorModal").style.display = "block";
-    document.getElementById("errorModalClose").onclick = () => {
-    document.getElementById("errorModal").style.display = "none";
-    };
-    return;
-  }
+    // Impede envio automático
 
-  // ⚠️ Data muito futura
-  const doisAnosDepois = new Date();
-  doisAnosDepois.setFullYear(dataAtual.getFullYear() + 2);
-  if (dataSelecionada > doisAnosDepois) {
-    event.preventDefault(); // ✅ Bloqueia envio por padrão
+    const inputData = document.getElementById("eventDate");
+    const dataSelecionada = new Date(inputData.value);
+    const dataAtual = new Date();
+    dataAtual.setHours(0, 0, 0, 0);
+    dataSelecionada.setHours(0, 0, 0, 0);
 
-    document.getElementById("confirmModalTitle").innerText = "Confirmar Data";
-    document.getElementById("confirmModalMessage").innerText =
-      "🕒 A data está mais de 2 anos à frente. Tem certeza que deseja criar essa tarefa?";
-    document.getElementById("confirmModal").style.display = "block";
+    const doisAnosDepois = new Date();
+    doisAnosDepois.setFullYear(dataAtual.getFullYear() + 2);
+    doisAnosDepois.setHours(0, 0, 0, 0);
 
-    document.getElementById("confirmModalConfirm").onclick = () => {
-      document.getElementById("confirmModal").style.display = "none";
-      confirmandoDataFutura = true;
-      document.getElementById("eventForm").requestSubmit(); // ✅ Reenvia corretamente
-    };
+    if (confirmandoDataFutura) {
+        confirmandoDataFutura = false;
+        this.submit(); // ✅ Envia manualmente após confirmação
+        return;
+    }
 
-    document.getElementById("confirmModalCancel").onclick = () => {
-      document.getElementById("confirmModal").style.display = "none";
-    };
+    if (dataSelecionada < dataAtual) {
+        document.getElementById("errorModal").style.display = "block";
+        document.getElementById("errorModalClose").onclick = () => {
+            document.getElementById("errorModal").style.display = "none";
+        };
+        return;
+    }
 
-    return false;
-  }
+    if (dataSelecionada > doisAnosDepois) {
+        document.getElementById("confirmModalTitle").innerText = "Confirmar Data";
+        document.getElementById("confirmModalMessage").innerText =
+            "🕒 A data está mais de 2 anos à frente. Deseja continuar?";
+        document.getElementById("confirmModal").style.display = "block";
 
-  return true;
+        document.getElementById("confirmModalConfirm").onclick = () => {
+            document.getElementById("confirmModal").style.display = "none";
+            confirmandoDataFutura = true;
+            document.getElementById("eventForm").requestSubmit(); // 🟢 Envia com segurança
+        };
+
+        document.getElementById("confirmModalCancel").onclick = () => {
+            document.getElementById("confirmModal").style.display = "none";
+        };
+
+        return;
+    }
+
+    // ✅ Se tudo OK, envia manualmente
+    this.submit();
 });
+
+
 
 
