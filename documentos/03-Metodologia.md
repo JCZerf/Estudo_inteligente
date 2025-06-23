@@ -64,8 +64,3 @@ Os artefatos do projeto são desenvolvidos a partir de diversas plataformas e a 
 | Projeto de Interface                | Figma                              | www.figma.com/design/jgZHJtqJZlY7nK5QHu8mBy/Estudo-Inteligente?m=auto&t=YuXx62HBEpo2ym0a-6                 |
 | Gerenciamento do Projeto            | GitHub Projects  | https://github.com/orgs/ICEI-PUC-Minas-PMV-ADS/projects/1967 |
 | Hospedagem                          | GitHub Pages                       | https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/                          |
-
-
-### Estratégia de Organização de Codificação 
-
-Todos os artefatos relacionados a implementação e visualização dos conteúdos do projeto do site deverão ser inseridos na pasta [codigo-fonte](http://https://github.com/ICEI-PUC-Minas-PMV-ADS/WebApplicationProject-Template-v2/tree/main/codigo-fonte).
