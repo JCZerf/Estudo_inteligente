@@ -11,23 +11,28 @@ Para simplificar a utilização do Git e a organização das pastas e artefatos 
 - Pasta `src/cadastro/` e `src/login/`: telas de autenticação  
   - Desenvolvedor responsável: **Sávio**
 
-- Pasta `src/ranking/`: ranking de produtividade  
-  - Desenvolvedor responsável: **Juliano**
+- Pasta `src/ranking/`: ranking de produtividade
+- - Desenvolvedor principal: **José Carlos** 
+  - Apoio: **Juliano**
 
 - Pasta `src/cronograma/`: cronograma de estudos  
   - Desenvolvedor principal: **José Carlos**  
   - Apoio: **Igor**
+  - Apoio: **Sávio**
 
 - Pasta `src/tarefas/`: tarefas de estudo  
   - Desenvolvedor principal: **José Carlos**  
   - Apoio: **Guilherme**
+  - Apoio: **Sávio**
 
 - Pasta `src/configuracoes/`: ajustes de tema e preferências  
   - Desenvolvedor principal: **José Carlos**  
   - Apoio: **Hellen**
+  - Apoio: **Sávio**
 
 - Demais telas como `sessao-de-foco`, `guias`, `perfil`, `inicio`, `landing-page`  
   - Desenvolvedor: **José Carlos**
+  - Apoio: **Sávio**
 
 > Todos os arquivos CSS e JS relacionados seguem o mesmo nome base da tela e estão na mesma pasta para facilitar a manutenção.
 
