@@ -63,7 +63,7 @@ Os artefatos do projeto são desenvolvidos a partir de diversas plataformas e a 
 | Documentos do projeto               | GitHub                             | https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/tree/main/documentos                            |
 | Projeto de Interface                | Figma                              | www.figma.com/design/jgZHJtqJZlY7nK5QHu8mBy/Estudo-Inteligente?m=auto&t=YuXx62HBEpo2ym0a-6                 |
 | Gerenciamento do Projeto            | GitHub Projects  | https://github.com/orgs/ICEI-PUC-Minas-PMV-ADS/projects/1967 |
-| Hospedagem                          | GitHub Pages                       | http://....                            |
+| Hospedagem                          | GitHub Pages                       | https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/                          |
 
 
 ### Estratégia de Organização de Codificação 
