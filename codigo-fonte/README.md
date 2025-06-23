@@ -111,7 +111,7 @@ O site **Estudo Inteligente** é um projeto estático (HTML, CSS e JS). Para vis
 |----------------|-------------------------------------------------------------------------------|
 | **José Carlos** | Landing Page, Início, Sessão de Foco, Guias, Perfil, Cronograma, Tarefas, Configurações |
 | **Sávio**       | Cadastro, Login, apoio geral                                                 |
-| **Juliano**     | Ranking                                                                      |
+| **Juliano**     | Apoio em Ranking                                                                      |
 | **Igor**        | Apoio em Cronograma                                                          |
 | **Guilherme**   | Apoio em Tarefas                                                             |
 | **Hellen**      | Apoio em Configurações                                                       |
