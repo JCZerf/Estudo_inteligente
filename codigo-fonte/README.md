@@ -52,7 +52,7 @@ O site **Estudo Inteligente** é um projeto estático (HTML, CSS e JS). Para vis
 3. Abra `index.html` em um navegador moderno.
 
 > 💡 O projeto também pode ser hospedado em Vercel, Netlify, Render, Surge.sh, entre outros.  
-> 🔗 [Insira aqui o link público após a publicação]
+> 🔗 [https://icei-puc-minas-pmv-ads.github.io/pmv-ads-2025-1-e1-proj-web-t8-grupo-2-estudo-inteligente/]
 
 ---
 
